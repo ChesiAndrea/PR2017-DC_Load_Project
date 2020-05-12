@@ -1,0 +1,4 @@
+Record=DiagramHierarchy|SourceDocument=MultiBoardDC_Load.MbsDoc|Kind=Multi-board Schematic Module|Designator=DAS|Source=DAS\PR2019-DataAcquisitionSystem\PR2019-DataAcquisitionSystem.PrjPcb
+Record=SubProject|SourceDocument=MultiBoardDC_Load.MbsDoc|ProjectPath=DAS\PR2019-DataAcquisitionSystem\PR2019-DataAcquisitionSystem.PrjPcb
+Record=DiagramHierarchy|SourceDocument=MultiBoardDC_Load.MbsDoc|Kind=Multi-board Schematic Module|Designator=MotherBoard|Source=Motherboard\PR2017-DC_LoadMotherBoard.PrjPcb
+Record=SubProject|SourceDocument=MultiBoardDC_Load.MbsDoc|ProjectPath=Motherboard\PR2017-DC_LoadMotherBoard.PrjPcb

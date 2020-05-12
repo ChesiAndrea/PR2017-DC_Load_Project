@@ -1,0 +1,10 @@
+Board Information Report
+Filename     : C:\Users\Chesi\Desktop\Altium\Project\PR2017-DC_Load\PR2017-DC_Load\PR2017-DC_Load_4Mosfet.PcbDoc
+Date         : 4/28/2020
+Time         : 1:12:11 PM
+Time Elapsed : 00:00:00
+
+General
+    Board Size, 200mmx85mm
+    Components on board, 123
+count : 2

@@ -1,0 +1,5 @@
+Record=TopLevelDocument|FileName=PR2017-DC_Load.SchDoc
+Record=SheetSymbol|SourceDocument=PR2017-DC_Load.SchDoc|Designator=U_Pwr1|SchDesignator=Repeat(U_Pwr,1,4)|FileName=Pwr.SchDoc|SymbolType=Normal|RawFileName=Pwr.SchDoc|DesignItemId= |SourceLibraryName= |ObjectKind=Sheet Symbol|RevisionGUID= |ItemGUID= |VaultGUID= 
+Record=SheetSymbol|SourceDocument=PR2017-DC_Load.SchDoc|Designator=U_Pwr2|SchDesignator=Repeat(U_Pwr,1,4)|FileName=Pwr.SchDoc|SymbolType=Normal|RawFileName=Pwr.SchDoc|DesignItemId= |SourceLibraryName= |ObjectKind=Sheet Symbol|RevisionGUID= |ItemGUID= |VaultGUID= 
+Record=SheetSymbol|SourceDocument=PR2017-DC_Load.SchDoc|Designator=U_Pwr3|SchDesignator=Repeat(U_Pwr,1,4)|FileName=Pwr.SchDoc|SymbolType=Normal|RawFileName=Pwr.SchDoc|DesignItemId= |SourceLibraryName= |ObjectKind=Sheet Symbol|RevisionGUID= |ItemGUID= |VaultGUID= 
+Record=SheetSymbol|SourceDocument=PR2017-DC_Load.SchDoc|Designator=U_Pwr4|SchDesignator=Repeat(U_Pwr,1,4)|FileName=Pwr.SchDoc|SymbolType=Normal|RawFileName=Pwr.SchDoc|DesignItemId= |SourceLibraryName= |ObjectKind=Sheet Symbol|RevisionGUID= |ItemGUID= |VaultGUID= 

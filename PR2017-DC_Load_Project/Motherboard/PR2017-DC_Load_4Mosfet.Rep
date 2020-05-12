@@ -1,0 +1,114 @@
+Export log for : PR2017-DC_Load_4Mosfet.Rep
+AddingPadStyle (Default)
+AddingPadStyle P:EX118Y118D1181
+AddingPadStyle EF70X120TOP1
+AddingPadStyle EF205X55TOP1
+AddingPadStyle EF138X394TOP1
+AddingPadStyle P:EX118Y118D1381
+AddingPadStyle EF138X394BOT1
+AddingPadStyle EF41X51TOP1
+AddingPadStyle EF98X67TOP1
+AddingPadStyle P:EX87Y87D431
+AddingPadStyle P:EX118Y91D591
+AddingPadStyle EF130X94TOP1
+AddingPadStyle P:EX118Y118D831
+AddingPadStyle P:EX63Y63D351
+AddingPadStyle P:RRX63Y63D351
+AddingPadStyle P:EX63Y63D352
+AddingPadStyle EF51X12TOP1
+AddingPadStyle EF51X12TOP2
+AddingPadStyle EF33X12TOP1
+AddingPadStyle EF16X26TOP1
+AddingPadStyle EF36X36TOP1
+AddingPadStyle EF36X50TOP1
+AddingPadStyle EF47X63TOP1
+AddingPadStyle P:EX118Y118D511
+AddingPadStyle P:RRX118Y118D511
+Adding ViaStyle (Default)
+Adding ViaStyle V:EX39Y39D281
+Adding ViaStyle V:EX51Y51D281
+Adding ViaStyle V:EX28Y28D121
+Adding ViaStyle V:EX39Y39D241
+Adding TextStyle (Default)
+Adding TextStyle T:H60W10
+Adding TextStyle T:H24W4
+Adding TextStyle T:H59W10
+Adding TextStyle T:H118W20
+Adding PatternDef 2512_1
+Adding PatternDef 2220_1
+Adding PatternDef PLUS-247_1
+Adding PatternDef PLUS-247_2
+Adding PatternDef PLUS-247_3
+Adding PatternDef PLUS-247_4
+Adding PatternDef 0805_1
+Adding PatternDef Cestino1_1
+Adding PatternDef SMA_1
+Adding PatternDef RELE_TRS_1
+Adding PatternDef LFUS-DO-214AB-2_V_1
+Adding PatternDef LFUS-DO-214AB-2_V_2
+Adding PatternDef LFUS-DO-214AB-2_V_3
+Adding PatternDef PowerPlus M8_1
+Adding PatternDef IDC-22_1
+Adding PatternDef TSSOP-8_1
+Adding PatternDef SOT-553-5_1
+Adding PatternDef KS-6_L_1
+Adding PatternDef SOT-23_1
+Adding PatternDef 1206_1
+Adding PatternDef M_FIT_JR1X2V_1
+Adding CompDef 2512_1
+Adding CompDef 2220_1
+Adding CompDef PLUS-247_1
+Adding CompDef PLUS-247_2
+Adding CompDef PLUS-247_3
+Adding CompDef PLUS-247_4
+Adding CompDef 0805_1
+Adding CompDef Cestino1_1
+Adding CompDef SMA_1
+Adding CompDef RELE_TRS_1
+Adding CompDef LFUS-DO-214AB-2_V_1
+Adding CompDef LFUS-DO-214AB-2_V_2
+Adding CompDef LFUS-DO-214AB-2_V_3
+Adding CompDef PowerPlus M8_1
+Adding CompDef IDC-22_1
+Adding CompDef TSSOP-8_1
+Adding CompDef SOT-553-5_1
+Adding CompDef KS-6_L_1
+Adding CompDef SOT-23_1
+Adding CompDef 1206_1
+Adding CompDef M_FIT_JR1X2V_1
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Polygon has been imported as unpoured.  It will need to be repoured in PCAD
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopSolder.
+      Warning: Unexpected Poly Region Object Found On Layer TopOverlay.
+      Warning: Unexpected Poly Region Object Found On Layer TopOverlay.
+      Warning: Unexpected Poly Region Object Found On Layer TopOverlay.
+      Warning: Unexpected Poly Region Object Found On Layer TopOverlay.
+ 
+EndLog
