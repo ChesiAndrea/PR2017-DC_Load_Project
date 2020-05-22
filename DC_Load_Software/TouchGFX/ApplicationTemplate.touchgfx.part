@@ -1,0 +1,20 @@
+
+{
+  "Application": {
+    "Name": "DC_Load",
+    "TouchGfxPath": "../Middlewares/ST/touchgfx",
+    "AvailableColorDepths": [ 16 ],
+    "AvailableLCDs":
+    {
+      "16": "LCD16bpp"
+    },
+    "AvailableResolutions" : [
+      {
+        "Width": 800,
+        "Height": 480
+      }
+    ],
+    "PostGenerateTargetCommand" : "touchgfx update_project --project-file=../DC_Load.ioc --platform=m7"
+  },
+  "Version": "4.13.0"
+}

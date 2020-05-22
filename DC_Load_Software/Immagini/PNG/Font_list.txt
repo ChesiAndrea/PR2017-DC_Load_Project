@@ -1,0 +1,6 @@
+Font			| Attribute			| Size				| Option			|
+Roboto			| Regular			| 4.3pt				| Small caps		|
+Roboto			| Medium			| 3.5pt				| Small caps		|
+Roboto			| Medium			| 4.3pt				| Small caps		|
+Roboto			| Medium			| 6pt				| Normal			|
+Roboto			| Bold				| 4.8pt				| Normal			|
