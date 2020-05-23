@@ -97,7 +97,23 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+	//--------------------------------------------------------------
+	// Set the BOR Level 
+	//--------------------------------------------------------------	
+	if (((uint32_t)(FLASH->OPTCR & 0x0C)) != OB_BOR_LEVEL3)
+	{
+		HAL_FLASH_Unlock();
+		/* Unlocks the option bytes block access */
+		HAL_FLASH_OB_Unlock();
+		/* Clears the FLASH pending flags */
+		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP    | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
+													 FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR| FLASH_FLAG_ERSERR);  
+		/* Select The Desired V(BOR) Level------------------------*/
+		MODIFY_REG(FLASH->OPTCR, FLASH_OPTCR_BOR_LEV, OB_BOR_LEVEL3);
+		/* Launch the option byte loading and generate a System Reset */
+		HAL_FLASH_Lock();
+		HAL_FLASH_OB_Launch();
+	}	
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -129,6 +145,22 @@ int main(void)
   MX_TIM7_Init();
   MX_TouchGFX_Init();
   /* USER CODE BEGIN 2 */
+	//===============================================================
+	//===============================================================
+				
+	//-- Quando la frequenza di clock di un pin è settata 50 o 100MHz mode
+	//-- deve essere abilitato il CompensationCell che gestisce in 
+	//-- automatico lo slew rate per il rumore
+	HAL_EnableCompensationCell();
+			
+  //===============================================================
+	//===============================================================
+  MX_SDRAM_InitEx();
+	for(uint32_t* i = ((uint32_t*)0xC0000000); (uint32_t)i < 0xC0200000; i++)
+		*i = 0x00000000;
+	HAL_LTDC_SetPitch(&hltdc, 800, 0);
+	//Deactivate speculative/cache access to first FMC Bank to save FMC bandwidth
+  FMC_Bank1->BTCR[0] = 0x000030D2;
 
   /* USER CODE END 2 */
 

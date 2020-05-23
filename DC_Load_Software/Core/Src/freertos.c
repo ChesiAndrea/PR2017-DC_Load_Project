@@ -26,7 +26,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
-
+#include "stm32746g_bsp.hpp"
+#include "app_touchgfx.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -86,6 +87,8 @@ __weak void vApplicationIdleHook( void )
    important that vApplicationIdleHook() is permitted to return to its calling
    function, because it is the responsibility of the idle task to clean up
    memory allocated by the kernel to any task that has since been deleted. */
+
+	 HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 }
 /* USER CODE END 2 */
 
@@ -191,7 +194,7 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -206,10 +209,11 @@ void StartDefaultTask(void const * argument)
 void StartTouchGFX(void const * argument)
 {
   /* USER CODE BEGIN StartTouchGFX */
+	MX_TouchGFX_Process();// Never Returns
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
   }
   /* USER CODE END StartTouchGFX */
 }
@@ -224,10 +228,12 @@ void StartTouchGFX(void const * argument)
 void StartBSPTask(void const * argument)
 {
   /* USER CODE BEGIN StartBSPTask */
+	BSP_Init();
+	BacklightManagement(100);
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
   }
   /* USER CODE END StartBSPTask */
 }
@@ -245,7 +251,7 @@ void StartLogicTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    osDelay(1000);
   }
   /* USER CODE END StartLogicTask */
 }
