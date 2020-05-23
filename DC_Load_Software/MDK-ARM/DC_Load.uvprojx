@@ -360,7 +360,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>1</umfTarg>
+            <umfTarg>0</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -369,7 +369,7 @@
             <TextAddressRange>0x08000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile></ScatterFile>
+            <ScatterFile>DC_Load\DC_Load.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -1070,7 +1070,7 @@
             <File>
               <FileName>touchgfx_core.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\Middlewares\ST\touchgfx\lib\core\cortex_m7\Keil\touchgfx_core.lib</FilePath>
+              <FilePath>../middlewares/st/touchgfx/lib/core/cortex_m7/Keil/touchgfx_core.lib</FilePath>
             </File>
           </Files>
         </Group>

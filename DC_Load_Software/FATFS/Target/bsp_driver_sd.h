@@ -63,6 +63,9 @@
 
 /* Exported functions --------------------------------------------------------*/
 uint8_t BSP_SD_Init(void);
+int     BspTurnOffSD(void);	
+void 		clearSDQueue(void);
+int     BSP_SD_Init_Retry(void);
 uint8_t BSP_SD_ITConfig(void);
 uint8_t BSP_SD_ReadBlocks(uint32_t *pData, uint32_t ReadAddr, uint32_t NumOfBlocks, uint32_t Timeout);
 uint8_t BSP_SD_WriteBlocks(uint32_t *pData, uint32_t WriteAddr, uint32_t NumOfBlocks, uint32_t Timeout);

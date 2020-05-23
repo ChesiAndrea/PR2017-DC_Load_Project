@@ -100,7 +100,7 @@ __ALIGN_BEGIN static uint8_t scratch[BLOCKSIZE] __ALIGN_END;
 static volatile DSTATUS Stat = STA_NOINIT;
 
 #if (osCMSIS <= 0x20000U)
-static osMessageQId SDQueueID = NULL;
+osMessageQId SDQueueID = NULL;
 #else
 static osMessageQueueId_t SDQueueID = NULL;
 #endif

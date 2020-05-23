@@ -34,7 +34,9 @@
 /* USER CODE END FirstSection */
 /* Includes ------------------------------------------------------------------*/
 #include "bsp_driver_sd.h"
-
+#include "fatfs.h"
+#include "stdio.h"
+#include "string.h"
 /* Extern variables ---------------------------------------------------------*/ 
   
 extern SD_HandleTypeDef hsd1;
@@ -69,6 +71,93 @@ __weak uint8_t BSP_SD_Init(void)
   return sd_state;
 }
 /* USER CODE BEGIN AfterInitSection */
+/* USER CODE BEGIN AfterInitSection */
+/* can be used to modify previous code / undefine following code / add code */
+
+extern osMessageQId SDQueueID;
+
+int BspTurnOffSD()	
+{
+	HAL_Delay(4);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET); // POWERING OFF SD
+	HAL_SD_DeInit(&hsd1);
+	HAL_Delay(4);
+	clearSDQueue();
+	return MSD_OK;
+}
+
+extern uint8_t retSD; /* Return value for SD */
+extern char SDPath[4]; /* SD logical drive path */
+extern FATFS SDFatFS; /* File system object for SD logical drive */
+extern FIL SDFile; /* File object for SD */
+DSTATUS SD_status (BYTE);
+int BspTurnOnSD()		
+{
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET); // POWERING ON SD 
+	HAL_Delay(4);
+	
+	if(strlen(SDPath)==0) 
+	{
+		FATFS_LinkDriver(&SD_Driver, SDPath);
+		if(!BSP_SD_IsDetected())
+		{
+			return MSD_ERROR_SD_NOT_PRESENT;			// Not Detected
+		}	
+	}
+	else
+	{
+		if(!BSP_SD_IsDetected())
+		{
+			return MSD_ERROR_SD_NOT_PRESENT;			// Not Detected
+		}	
+		if(BSP_SD_Init() != MSD_OK)
+		{
+			return MSD_ERROR;		// Error
+		}
+		else
+		{
+			SD_status(0);			
+		}
+	}
+	return MSD_OK;  	// OK
+}
+
+uint32_t RetryMax = 0;
+uint32_t RetryBspTurnOn = 0;
+int BSP_SD_Init_Retry(void)
+{
+	int Turn_On = 0;
+	const int retryMax = 20;
+	int retryCnt = 0;
+	while(retryCnt < retryMax)
+	{
+		Turn_On = BspTurnOnSD();
+		if(Turn_On == MSD_OK)		// OK
+			break;
+		else if(Turn_On == MSD_ERROR_SD_NOT_PRESENT)  // SD Not Detected
+			return MSD_ERROR_SD_NOT_PRESENT;
+		else
+		{
+			BspTurnOffSD();
+			RetryBspTurnOn++;
+		}
+		HAL_Delay(80);
+		retryCnt++;
+	}
+	if(retryCnt>RetryMax)  RetryMax = retryCnt;
+	if(retryCnt >= retryMax)
+		return MSD_ERROR;		// Error
+	else
+		return MSD_OK;		// OK
+}
+void clearSDQueue()
+{
+	if(SDQueueID != NULL)
+	{
+		xQueueReset(SDQueueID);
+	}
+}
+
 /* can be used to modify previous code / undefine following code / add code */
 /* USER CODE END AfterInitSection */
 

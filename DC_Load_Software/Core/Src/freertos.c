@@ -225,6 +225,7 @@ void StartTouchGFX(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_StartBSPTask */
+
 void StartBSPTask(void const * argument)
 {
   /* USER CODE BEGIN StartBSPTask */

@@ -34,6 +34,8 @@ void MX_FATFS_Init(void)
 
   /* USER CODE BEGIN Init */
   /* additional user code for init */     
+	FATFS_UnLinkDriver(SDPath);
+	SDPath[0] = 0;
   /* USER CODE END Init */
 }
 

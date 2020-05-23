@@ -51,6 +51,33 @@ public:
     void initialize();
 
     /**
+     * @fn virtual void HAL::taskEntry();
+     *
+     * @brief Main event loop.
+     *
+     *        Main event loop. Will wait for VSYNC signal, and then process next frame. Call
+     *        this function from your GUI task.
+     *
+     * @note This function never returns!
+     */
+    virtual void taskEntry();
+	
+    /**
+     * @fn virtual bool HAL::blockCopy(void* RESTRICT dest, const void* RESTRICT src, uint32_t numBytes);
+     *
+     * @brief This function performs a platform-specific memcpy.
+     *
+     *        This function performs a platform-specific memcpy, if supported by the hardware.
+     *
+     * @param [out] dest Pointer to destination memory.
+     * @param [in] src   Pointer to source memory.
+     * @param numBytes   Number of bytes to copy.
+     *
+     * @return true if the copy succeeded, false if copy was not performed.
+     */
+    virtual bool blockCopy(void* RESTRICT dest, const void* RESTRICT src, uint32_t numBytes);
+		
+    /**
      * @fn virtual void TouchGFXHAL::disableInterrupts();
      *
      * @brief Disables the DMA and LCD interrupts.
