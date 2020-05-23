@@ -3,7 +3,7 @@
 <title>Static Call Graph - [DC_Load\DC_Load.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image DC_Load\DC_Load.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat May 23 13:06:47 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat May 23 13:29:26 2020
 <BR><P>
 <H3>Maximum Stack Usage =        760 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -3546,7 +3546,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_StallEP
 </UL>
-<BR>[Called By]<UL><LI><a href="#[310]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetConfig
+<BR>[Called By]<UL><LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_Setup
+<LI><a href="#[310]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetConfig
 <LI><a href="#[30f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetAddress
 <LI><a href="#[2ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetStatus
 <LI><a href="#[2fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetDescriptor
@@ -3555,7 +3556,6 @@ Global Symbols
 <LI><a href="#[30b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdItfReq
 <LI><a href="#[30c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdEPReq
 <LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
-<LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_Setup
 </UL>
 
 <P><STRONG><a name="[2f4]"></a>USBD_CtlPrepareRx</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, usbd_ioreq.o(i.USBD_CtlPrepareRx))
@@ -3579,11 +3579,11 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[2ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_Transmit
 </UL>
-<BR>[Called By]<UL><LI><a href="#[2ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetStatus
+<BR>[Called By]<UL><LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_Setup
+<LI><a href="#[2ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetStatus
 <LI><a href="#[2fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetDescriptor
 <LI><a href="#[2fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetConfig
 <LI><a href="#[30c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdEPReq
-<LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_Setup
 </UL>
 
 <P><STRONG><a name="[2f7]"></a>USBD_CtlSendStatus</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, usbd_ioreq.o(i.USBD_CtlSendStatus))
@@ -3775,10 +3775,10 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[21c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_DataInStage
 <LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_ReceivePacket
+<LI><a href="#[1d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_Init
+<LI><a href="#[2f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlPrepareRx
 <LI><a href="#[2fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlReceiveStatus
 <LI><a href="#[2f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlContinueRx
-<LI><a href="#[2f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlPrepareRx
-<LI><a href="#[1d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_Init
 </UL>
 
 <P><STRONG><a name="[250]"></a>USBD_LL_Reset</STRONG> (Thumb, 90 bytes, Stack size 8 bytes, usbd_core.o(i.USBD_LL_Reset))
@@ -3833,8 +3833,8 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_SetupStage
 <LI><a href="#[21c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_DataInStage
-<LI><a href="#[30c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdEPReq
 <LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<LI><a href="#[30c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdEPReq
 </UL>
 
 <P><STRONG><a name="[30d]"></a>USBD_LL_Start</STRONG> (Thumb, 30 bytes, Stack size 16 bytes, usbd_conf.o(i.USBD_LL_Start))
@@ -3857,10 +3857,10 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[22d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_EP_Transmit
 <LI><a href="#[303]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_Get_USB_Status
 </UL>
-<BR>[Called By]<UL><LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
-<LI><a href="#[2f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlContinueSendData
+<BR>[Called By]<UL><LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_DataIn
 <LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
-<LI><a href="#[21]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_DataIn
+<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
+<LI><a href="#[2f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlContinueSendData
 </UL>
 
 <P><STRONG><a name="[309]"></a>USBD_ParseSetupRequest</STRONG> (Thumb, 54 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_ParseSetupRequest))
@@ -3898,14 +3898,14 @@ Global Symbols
 <P><STRONG><a name="[30a]"></a>USBD_StdDevReq</STRONG> (Thumb, 166 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_StdDevReq))
 <BR><BR>[Stack]<UL><LI>Max Depth = 172<LI>Call Chain = USBD_StdDevReq &rArr; USBD_GetDescriptor &rArr; USBD_CtlSendData &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[313]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetFeature
+<BR>[Calls]<UL><LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<LI><a href="#[313]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetFeature
 <LI><a href="#[310]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetConfig
 <LI><a href="#[30f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetAddress
 <LI><a href="#[2ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetStatus
 <LI><a href="#[2fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetDescriptor
 <LI><a href="#[2fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetConfig
 <LI><a href="#[2f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_ClrFeature
-<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
 </UL>
 <BR>[Called By]<UL><LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_SetupStage
 </UL>
@@ -3916,9 +3916,9 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[2fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_StallEP
 <LI><a href="#[314]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_IsStallEP
 <LI><a href="#[302]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_ClearStallEP
-<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
 <LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
 <LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
 </UL>
 <BR>[Called By]<UL><LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_SetupStage
 </UL>
@@ -3926,8 +3926,8 @@ Global Symbols
 <P><STRONG><a name="[30b]"></a>USBD_StdItfReq</STRONG> (Thumb, 126 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_StdItfReq))
 <BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_StdItfReq &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
-<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<BR>[Calls]<UL><LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
 </UL>
 <BR>[Called By]<UL><LI><a href="#[255]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_SetupStage
 </UL>
@@ -8856,6 +8856,82 @@ Local Symbols
 <P><STRONG><a name="[bf]"></a>prvTaskExitError</STRONG> (Thumb, 68 bytes, Stack size 0 bytes, port.o(i.prvTaskExitError))
 <BR>[Address Reference Count : 1]<UL><LI> port.o(i.pxPortInitialiseStack)
 </UL>
+<P><STRONG><a name="[30e]"></a>SWAPBYTE</STRONG> (Thumb, 18 bytes, Stack size 12 bytes, usbd_ctlreq.o(i.SWAPBYTE))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = SWAPBYTE
+</UL>
+<BR>[Called By]<UL><LI><a href="#[309]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_ParseSetupRequest
+</UL>
+
+<P><STRONG><a name="[2f6]"></a>USBD_ClrFeature</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_ClrFeature))
+<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_ClrFeature &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
+</UL>
+<BR>[Calls]<UL><LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
+</UL>
+<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
+</UL>
+
+<P><STRONG><a name="[2fd]"></a>USBD_GetConfig</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_GetConfig))
+<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = USBD_GetConfig &rArr; USBD_CtlSendData &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
+</UL>
+<BR>[Calls]<UL><LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
+<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+</UL>
+<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
+</UL>
+
+<P><STRONG><a name="[2fe]"></a>USBD_GetDescriptor</STRONG> (Thumb, 562 bytes, Stack size 24 bytes, usbd_ctlreq.o(i.USBD_GetDescriptor))
+<BR><BR>[Stack]<UL><LI>Max Depth = 156<LI>Call Chain = USBD_GetDescriptor &rArr; USBD_CtlSendData &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
+</UL>
+<BR>[Calls]<UL><LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
+<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
+</UL>
+<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
+</UL>
+
+<P><STRONG><a name="[300]"></a>USBD_GetLen</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, usbd_ctlreq.o(i.USBD_GetLen))
+<BR><BR>[Called By]<UL><LI><a href="#[2fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetString
+</UL>
+
+<P><STRONG><a name="[2ff]"></a>USBD_GetStatus</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_GetStatus))
+<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = USBD_GetStatus &rArr; USBD_CtlSendData &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
+</UL>
+<BR>[Calls]<UL><LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
+<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+</UL>
+<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
+</UL>
+
+<P><STRONG><a name="[30f]"></a>USBD_SetAddress</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_SetAddress))
+<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_SetAddress &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
+</UL>
+<BR>[Calls]<UL><LI><a href="#[308]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_SetUSBAddress
+<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
+</UL>
+<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
+</UL>
+
+<P><STRONG><a name="[310]"></a>USBD_SetConfig</STRONG> (Thumb, 248 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_SetConfig))
+<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_SetConfig &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
+</UL>
+<BR>[Calls]<UL><LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
+<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
+<LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetClassConfig
+<LI><a href="#[312]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_ClrClassConfig
+</UL>
+<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
+</UL>
+
+<P><STRONG><a name="[313]"></a>USBD_SetFeature</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_SetFeature))
+<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_SetFeature &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
+</UL>
+<BR>[Calls]<UL><LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
+</UL>
+<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
+</UL>
+
 <P><STRONG><a name="[21]"></a>USBD_CDC_DataIn</STRONG> (Thumb, 140 bytes, Stack size 24 bytes, usbd_cdc.o(i.USBD_CDC_DataIn))
 <BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_CDC_DataIn &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
@@ -8902,90 +8978,14 @@ Local Symbols
 <BR>[Address Reference Count : 1]<UL><LI> usbd_cdc.o(.data)
 </UL>
 <P><STRONG><a name="[1f]"></a>USBD_CDC_Setup</STRONG> (Thumb, 250 bytes, Stack size 32 bytes, usbd_cdc.o(i.USBD_CDC_Setup))
-<BR><BR>[Stack]<UL><LI>Max Depth = 164<LI>Call Chain = USBD_CDC_Setup &rArr; USBD_CtlSendData &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
+<BR><BR>[Stack]<UL><LI>Max Depth = 164<LI>Call Chain = USBD_CDC_Setup &rArr; USBD_CtlPrepareRx &rArr; USBD_LL_PrepareReceive &rArr; HAL_PCD_EP_Receive &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
-<LI><a href="#[2f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlPrepareRx
+<BR>[Calls]<UL><LI><a href="#[2f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlPrepareRx
+<LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
 <LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> usbd_cdc.o(.data)
 </UL>
-<P><STRONG><a name="[30e]"></a>SWAPBYTE</STRONG> (Thumb, 18 bytes, Stack size 12 bytes, usbd_ctlreq.o(i.SWAPBYTE))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = SWAPBYTE
-</UL>
-<BR>[Called By]<UL><LI><a href="#[309]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_ParseSetupRequest
-</UL>
-
-<P><STRONG><a name="[2f6]"></a>USBD_ClrFeature</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_ClrFeature))
-<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_ClrFeature &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
-</UL>
-<BR>[Calls]<UL><LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
-<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
-</UL>
-<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
-</UL>
-
-<P><STRONG><a name="[2fd]"></a>USBD_GetConfig</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_GetConfig))
-<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = USBD_GetConfig &rArr; USBD_CtlSendData &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
-</UL>
-<BR>[Calls]<UL><LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
-<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
-</UL>
-<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
-</UL>
-
-<P><STRONG><a name="[2fe]"></a>USBD_GetDescriptor</STRONG> (Thumb, 562 bytes, Stack size 24 bytes, usbd_ctlreq.o(i.USBD_GetDescriptor))
-<BR><BR>[Stack]<UL><LI>Max Depth = 156<LI>Call Chain = USBD_GetDescriptor &rArr; USBD_CtlSendData &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
-</UL>
-<BR>[Calls]<UL><LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
-<LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
-<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
-</UL>
-<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
-</UL>
-
-<P><STRONG><a name="[300]"></a>USBD_GetLen</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, usbd_ctlreq.o(i.USBD_GetLen))
-<BR><BR>[Called By]<UL><LI><a href="#[2fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_GetString
-</UL>
-
-<P><STRONG><a name="[2ff]"></a>USBD_GetStatus</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_GetStatus))
-<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = USBD_GetStatus &rArr; USBD_CtlSendData &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
-</UL>
-<BR>[Calls]<UL><LI><a href="#[2f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendData
-<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
-</UL>
-<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
-</UL>
-
-<P><STRONG><a name="[30f]"></a>USBD_SetAddress</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_SetAddress))
-<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_SetAddress &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
-</UL>
-<BR>[Calls]<UL><LI><a href="#[308]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_SetUSBAddress
-<LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
-<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
-</UL>
-<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
-</UL>
-
-<P><STRONG><a name="[310]"></a>USBD_SetConfig</STRONG> (Thumb, 248 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_SetConfig))
-<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_SetConfig &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
-</UL>
-<BR>[Calls]<UL><LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
-<LI><a href="#[311]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_SetClassConfig
-<LI><a href="#[312]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_ClrClassConfig
-<LI><a href="#[2f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlError
-</UL>
-<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
-</UL>
-
-<P><STRONG><a name="[313]"></a>USBD_SetFeature</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, usbd_ctlreq.o(i.USBD_SetFeature))
-<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = USBD_SetFeature &rArr; USBD_CtlSendStatus &rArr; USBD_LL_Transmit &rArr; HAL_PCD_EP_Transmit &rArr; USB_EPStartXfer &rArr; USB_WritePacket
-</UL>
-<BR>[Calls]<UL><LI><a href="#[2f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CtlSendStatus
-</UL>
-<BR>[Called By]<UL><LI><a href="#[30a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_StdDevReq
-</UL>
-
 <P><STRONG><a name="[37d]"></a>touchgfx::prepareTransition(touchgfx::Screen**, touchgfx::Presenter**, touchgfx::Transition**)</STRONG> (Thumb, 96 bytes, Stack size 24 bytes, frontendapplicationbase.o(i._ZN8touchgfx17prepareTransitionEPPNS_6ScreenEPPNS_9PresenterEPPNS_10TransitionE))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = touchgfx::prepareTransition(touchgfx::Screen**, touchgfx::Presenter**, touchgfx::Transition**)
 </UL>
