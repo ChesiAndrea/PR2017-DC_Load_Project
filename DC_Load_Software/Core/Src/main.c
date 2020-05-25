@@ -114,6 +114,9 @@ int main(void)
 		HAL_FLASH_Lock();
 		HAL_FLASH_OB_Launch();
 	}	
+	
+	MX_GPIO_Init();
+	
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -138,7 +141,6 @@ int main(void)
   MX_I2C1_Init();
   MX_CRC_Init();
   MX_TIM3_Init();
-  MX_IWDG_Init();
   MX_DMA2D_Init();
   MX_FMC_Init();
   MX_LTDC_Init();

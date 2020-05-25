@@ -10,6 +10,7 @@
 #include <touchgfx/widgets/Image.hpp>
 #include <touchgfx/widgets/TextArea.hpp>
 #include <touchgfx/containers/progress_indicators/TextProgress.hpp>
+#include <touchgfx/widgets/Button.hpp>
 
 class Screen1ViewBase : public touchgfx::View<Screen1Presenter>
 {
@@ -29,6 +30,8 @@ protected:
     touchgfx::Image BackGround;
     touchgfx::TextArea ProjectName;
     touchgfx::TextProgress textProgress1;
+    touchgfx::Button button1;
+    touchgfx::Button button2;
 
 private:
 

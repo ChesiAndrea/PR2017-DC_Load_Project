@@ -194,7 +194,8 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1000);
+		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);  //for debug		
+    osDelay(50);
   }
   /* USER CODE END StartDefaultTask */
 }
@@ -213,7 +214,7 @@ void StartTouchGFX(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1000);
+    osDelay(100);
   }
   /* USER CODE END StartTouchGFX */
 }

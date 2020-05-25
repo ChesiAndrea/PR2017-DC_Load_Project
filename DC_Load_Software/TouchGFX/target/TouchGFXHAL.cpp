@@ -29,24 +29,13 @@ using namespace touchgfx;
 // to the cache.
 bool TouchGFXHAL::blockCopy(void* RESTRICT dest, const void* RESTRICT src, uint32_t numBytes)
 {
-  // If requested data is located within the memory block we have assigned for ExtFlashSection, 
-  // provide an implementation for data copying.
-  if (src >= (void *)0xC1000000 && src < (void *)0xC2000000)
-  {
-		if(BSP_SD_IsDetected() == SD_NOT_PRESENT) return 1;  // Return SD not present
-    uint32_t dataOffset = (uint32_t)((uint8_t *)src - 0xC1000000);
-    // In this example we assume graphics is placed in SD card, and that we have an appropriate function
-    // for copying data from there.
-		f_mount(&SDFatFS, SDPath, 1);
-		if (f_open(&SDFile, "extflash.bin", FA_OPEN_EXISTING | FA_READ) == FR_OK)
-		{
-			f_lseek(&SDFile, dataOffset);
-			f_read(&SDFile, dest, numBytes, NULL);
-			f_close(&SDFile);
-		}
-		f_mount(NULL, SDPath, 1);
-    return true;
-  }
+	// If requested data is located within the memory block we have assigned for ExtFlashSection, 
+	// provide an implementation for data copying.
+	if (src >= (void *)0xC1000000 && src < (void *)0xC2000000)
+	{
+		bool res = true;
+		return res;
+	}
 	else
 	{
 		// For all other addresses, just use the default implementation. 
@@ -69,14 +58,26 @@ void TouchGFXHAL::initialize()
 
 void TouchGFXHAL::taskEntry()
 {	
-	// uSD power On
-  BSP_SD_Init_Retry();
-	
-	//delay
-	HAL_Delay(50);	
-	
-	// start the system
-	TouchGFXGeneratedHAL::taskEntry();
+	if(BSP_SD_IsDetected() != SD_NOT_PRESENT)
+	{
+		if(BSP_SD_Init_Retry() == MSD_OK)		// uSD power On and init
+		{
+			HAL_Delay(50);		
+			if (f_mount(&SDFatFS, SDPath, 1) == FR_OK)
+			{
+				if (f_open(&SDFile, "extflash.bin", FA_OPEN_EXISTING | FA_READ) == FR_OK)
+				{
+					UINT br;
+					f_lseek(&SDFile, 0);	
+					int size = f_size(&SDFile);			
+					f_read(&SDFile,(void*) 0xC01E0000, size, &br);
+					f_close(&SDFile);
+				}
+			}
+			f_mount(NULL, SDPath, 1);
+		}
+	}
+	TouchGFXGeneratedHAL::taskEntry();	// start the system
 }
 
 /**

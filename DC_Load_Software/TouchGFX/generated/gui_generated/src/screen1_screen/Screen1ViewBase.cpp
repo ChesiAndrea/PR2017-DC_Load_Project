@@ -13,7 +13,7 @@ Screen1ViewBase::Screen1ViewBase()
     BackGround.setBitmap(touchgfx::Bitmap(BITMAP_BACKGROUND_ID));
 
     ProjectName.setXY(310, 150);
-    ProjectName.setColor(touchgfx::Color::getColorFrom24BitRGB(133, 44, 44));
+    ProjectName.setColor(touchgfx::Color::getColorFrom24BitRGB(55, 105, 230));
     ProjectName.setLinespacing(0);
     ProjectName.setTypedText(touchgfx::TypedText(T_SINGLEUSEID1));
 
@@ -26,9 +26,17 @@ Screen1ViewBase::Screen1ViewBase()
     textProgress1.setBackground(touchgfx::Bitmap(BITMAP_BLUE_PROGRESSINDICATORS_BG_LARGE_TEXT_PROGRESS_BG_ROUND_ID));
     textProgress1.setValue(60);
 
+    button1.setXY(696, 0);
+    button1.setBitmaps(touchgfx::Bitmap(BITMAP_SETTINGS_ID), touchgfx::Bitmap(BITMAP_SETTINGS_PRESSED_ID));
+
+    button2.setXY(162, 142);
+    button2.setBitmaps(touchgfx::Bitmap(BITMAP_POWER_ID), touchgfx::Bitmap(BITMAP_POWER_ID));
+
     add(BackGround);
     add(ProjectName);
     add(textProgress1);
+    add(button1);
+    add(button2);
 }
 
 void Screen1ViewBase::setupScreen()
