@@ -19,21 +19,120 @@
             "Moveable": false
           },
           {
+            "Components": [
+              {
+                "Pressed": "Voltage.png",
+                "Released": "Voltage.png",
+                "Alpha": 255,
+                "Name": "Voltage",
+                "X": 205,
+                "Y": 263,
+                "Width": 130,
+                "Height": 130,
+                "Type": "Button",
+                "Visible": true,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              },
+              {
+                "Pressed": "Resistance.png",
+                "Released": "Resistance.png",
+                "Alpha": 255,
+                "Name": "Resistance",
+                "X": 205,
+                "Y": 94,
+                "Width": 130,
+                "Height": 130,
+                "Type": "Button",
+                "Visible": true,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              },
+              {
+                "Pressed": "Current.png",
+                "Released": "Current.png",
+                "Alpha": 255,
+                "Name": "Ampere",
+                "X": 465,
+                "Y": 263,
+                "Width": 130,
+                "Height": 130,
+                "Type": "Button",
+                "Visible": true,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              },
+              {
+                "Pressed": "POWER.png",
+                "Released": "POWER.png",
+                "Alpha": 255,
+                "Name": "Power",
+                "X": 465,
+                "Y": 94,
+                "Width": 130,
+                "Height": 130,
+                "Type": "Button",
+                "Visible": true,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              }
+            ],
+            "IsCacheableContainer": false,
+            "Name": "Menu_Container",
+            "X": 0,
+            "Y": 1,
+            "Width": 800,
+            "Height": 479,
+            "Type": "Container",
+            "Visible": true,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Color": {
+              "Red": 37,
+              "Green": 38,
+              "Blue": 38
+            },
+            "Alpha": 255,
+            "Name": "UP_Box",
+            "X": 0,
+            "Y": 0,
+            "Width": 800,
+            "Height": 26,
+            "Type": "Box",
+            "Visible": true,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
             "TextId": "SingleUseId1",
             "TextRotation": "0",
             "Color": {
-              "Red": 55,
-              "Green": 105,
-              "Blue": 230
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
             },
             "Alpha": 255,
             "AutoSize": true,
             "LineSpacing": 0,
-            "Name": "ProjectName",
-            "X": 310,
-            "Y": 150,
-            "Width": 180,
-            "Height": 49,
+            "Name": "Project_Name",
+            "X": 288,
+            "Y": 1,
+            "Width": 225,
+            "Height": 25,
             "Type": "TextArea",
             "Visible": true,
             "Draggable": false,
@@ -42,31 +141,24 @@
             "Moveable": false
           },
           {
-            "NumberOfDecimals": 0,
-            "TextId": "SingleUseId2",
             "Color": {
-              "Red": 0,
-              "Green": 0,
-              "Blue": 0
+              "Red": 156,
+              "Green": 156,
+              "Blue": 158
             },
             "Alpha": 255,
-            "Style": "Style6",
-            "FileNameBackground": "__designer\\Blue_ProgressIndicators_bg_large_text_progress_bg_round.png",
-            "IndicatorPositionX": 0,
-            "IndicatorPositionY": 0,
-            "IndicatorPositionWidth": 154,
-            "IndicatorPositionHeight": 54,
-            "ProgressRangeMin": 0,
-            "ProgressRangeMax": 100,
-            "ProgressRangeSteps": 0,
-            "ProgressRangeStepsMin": 0,
-            "ProgressInitialValue": 60,
-            "Name": "textProgress1",
-            "X": 323,
-            "Y": 330,
-            "Width": 154,
-            "Height": 54,
-            "Type": "TextProgress",
+            "StartX": 100,
+            "StartY": 3,
+            "EndX": 700,
+            "EndY": 3,
+            "LineWidth": 10,
+            "LineEndingStyle": "Round",
+            "Name": "Background_line1",
+            "X": 0,
+            "Y": 237,
+            "Width": 800,
+            "Height": 6,
+            "Type": "Line",
             "Visible": true,
             "Draggable": false,
             "Clickable": false,
@@ -74,31 +166,24 @@
             "Moveable": false
           },
           {
-            "Pressed": "SETTINGS_PRESSED.png",
-            "Released": "SETTINGS.png",
+            "Color": {
+              "Red": 156,
+              "Green": 156,
+              "Blue": 158
+            },
             "Alpha": 255,
-            "Name": "button1",
-            "X": 696,
+            "StartX": 3,
+            "StartY": 100,
+            "EndX": 3,
+            "EndY": 380,
+            "LineWidth": 10,
+            "LineEndingStyle": "Round",
+            "Name": "Backgroung_line2",
+            "X": 397,
             "Y": 0,
-            "Width": 104,
-            "Height": 99,
-            "Type": "Button",
-            "Visible": true,
-            "Draggable": false,
-            "Clickable": false,
-            "Fadeable": false,
-            "Moveable": false
-          },
-          {
-            "Pressed": "POWER.png",
-            "Released": "POWER.png",
-            "Alpha": 255,
-            "Name": "button2",
-            "X": 162,
-            "Y": 142,
-            "Width": 61,
-            "Height": 64,
-            "Type": "Button",
+            "Width": 6,
+            "Height": 480,
+            "Type": "Line",
             "Visible": true,
             "Draggable": false,
             "Clickable": false,
@@ -107,7 +192,48 @@
           }
         ],
         "Interactions": [],
-        "Name": "Screen1",
+        "Name": "Main_Screen",
+        "OverrideDefaultBufferSize": false,
+        "CanvasBufferSize": 12000
+      },
+      {
+        "Components": [
+          {
+            "Color": {
+              "Red": 0,
+              "Green": 0,
+              "Blue": 0
+            },
+            "Alpha": 255,
+            "Name": "Init_Screen_Backgroung",
+            "X": 0,
+            "Y": 0,
+            "Width": 800,
+            "Height": 480,
+            "Type": "Box",
+            "Visible": true,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          }
+        ],
+        "Interactions": [
+          {
+            "InteractionName": "Interaction1",
+            "HasCompletedTrigger": false,
+            "Trigger": {
+              "Type": "TriggerScreenEntered"
+            },
+            "Action": {
+              "ScreenTransitionType": "ScreenTransitionCover",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "Main_Screen",
+              "Type": "ActionGotoScreen"
+            }
+          }
+        ],
+        "Name": "Init_Screen",
         "OverrideDefaultBufferSize": false,
         "CanvasBufferSize": 0
       }
@@ -117,10 +243,6 @@
       {
         "TextEntryId": "SingleUseId1",
         "IsResource": false
-      },
-      {
-        "TextEntryId": "SingleUseId2",
-        "IsResource": false
       }
     ],
     "Name": "DC_Load",
@@ -129,7 +251,7 @@
       "Height": 480
     },
     "SelectedColorDepth": 16,
-    "StartupScreenName": "Screen1",
+    "StartupScreenName": "Main_Screen",
     "SelectedStartupLanguage": "GB",
     "Skin": "Blue",
     "TouchGfxPath": "../Middlewares/ST/touchgfx",
