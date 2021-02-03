@@ -1,12 +1,12 @@
 /**
   ******************************************************************************
-  * File Name          : IWDG.c
-  * Description        : This file provides code for the configuration
-  *                      of the IWDG instances.
+  * @file    iwdg.c
+  * @brief   This file provides code for the configuration
+  *          of the IWDG instances.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -21,7 +21,7 @@
 #include "iwdg.h"
 
 /* USER CODE BEGIN 0 */
-
+uint32_t IWDG_TaskFlag;
 /* USER CODE END 0 */
 
 /* IWDG init function */
@@ -36,7 +36,6 @@ void MX_IWDG_Init(void)
   {
   }
 
-  LL_IWDG_SetWindow(IWDG, 4095);
   LL_IWDG_ReloadCounter(IWDG);
 
 }

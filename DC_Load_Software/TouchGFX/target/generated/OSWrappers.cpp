@@ -4,7 +4,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -14,31 +14,30 @@
   *
   ******************************************************************************
   */
-#include <touchgfx/hal/OSWrappers.hpp>
-#include <stm32f7xx_hal.h>
+#include <cassert>
+#include <cmsis_os.h>
 #include <touchgfx/hal/GPIO.hpp>
 #include <touchgfx/hal/HAL.hpp>
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
+#include <touchgfx/hal/OSWrappers.hpp>
 
-static xSemaphoreHandle frame_buffer_sem;
-static xQueueHandle vsync_q = 0;
+static osSemaphoreId frame_buffer_sem;      // Semaphore ID
+osSemaphoreDef(frame_buffer_sem);           // Semaphore definition
+
+static osSemaphoreId vsync_sem;             // Semaphore ID
+osSemaphoreDef(vsync_sem);                  // Semaphore definition
 
 using namespace touchgfx;
-
-// Just a dummy value to insert in the VSYNC queue.
-static uint8_t dummy = 0x5a;
 
 /*
  * Initialize frame buffer semaphore and queue/mutex for VSYNC signal.
  */
 void OSWrappers::initialize()
 {
-    vSemaphoreCreateBinary(frame_buffer_sem);
-    // Create a queue of length 1
-    vsync_q = xQueueGenericCreate(1, 1, 0);
+    frame_buffer_sem = osSemaphoreCreate(osSemaphore(frame_buffer_sem), 1);
+    assert((frame_buffer_sem != NULL) && "Creation of framebuffer semaphore failed");
+
+    vsync_sem = osSemaphoreCreate(osSemaphore(vsync_sem), 1);
+    assert((vsync_sem != NULL) && "Creation of vsync semaphore failed");
 }
 
 /*
@@ -46,7 +45,7 @@ void OSWrappers::initialize()
  */
 void OSWrappers::takeFrameBufferSemaphore()
 {
-    xSemaphoreTake(frame_buffer_sem, portMAX_DELAY);
+    osSemaphoreWait(frame_buffer_sem, osWaitForever);
 }
 
 /*
@@ -54,7 +53,7 @@ void OSWrappers::takeFrameBufferSemaphore()
  */
 void OSWrappers::giveFrameBufferSemaphore()
 {
-    xSemaphoreGive(frame_buffer_sem);
+    osSemaphoreRelease(frame_buffer_sem);
 }
 
 /*
@@ -66,7 +65,7 @@ void OSWrappers::giveFrameBufferSemaphore()
  */
 void OSWrappers::tryTakeFrameBufferSemaphore()
 {
-    xSemaphoreTake(frame_buffer_sem, 0);
+    osSemaphoreWait(frame_buffer_sem, 0);
 }
 
 /*
@@ -78,11 +77,8 @@ void OSWrappers::tryTakeFrameBufferSemaphore()
  */
 void OSWrappers::giveFrameBufferSemaphoreFromISR()
 {
-    // Since this is called from an interrupt, FreeRTOS requires special handling to trigger a
-    // re-scheduling. May be applicable for other OSes as well.
-    portBASE_TYPE px = pdFALSE;
-    xSemaphoreGiveFromISR(frame_buffer_sem, &px);
-    portEND_SWITCHING_ISR(px);
+    // Release of semaphore inside an interrupt is handled by the CMSIS layer
+    osSemaphoreRelease(frame_buffer_sem);
 }
 
 /*
@@ -93,14 +89,8 @@ void OSWrappers::giveFrameBufferSemaphoreFromISR()
  */
 void OSWrappers::signalVSync()
 {
-    if (vsync_q)
-    {
-        // Since this is called from an interrupt, FreeRTOS requires special handling to trigger a
-        // re-scheduling. May be applicable for other OSes as well.
-        portBASE_TYPE px = pdFALSE;
-        xQueueSendFromISR(vsync_q, &dummy, &px);
-        portEND_SWITCHING_ISR(px);
-    }
+    // Release of semaphore inside an interrupt is handled by the CMSIS layer
+    osSemaphoreRelease(vsync_sem);
 }
 
 /*
@@ -112,10 +102,10 @@ void OSWrappers::signalVSync()
 void OSWrappers::waitForVSync()
 {
     // First make sure the queue is empty, by trying to remove an element with 0 timeout.
-    xQueueReceive(vsync_q, &dummy, 0);
+    osSemaphoreWait(vsync_sem, 0);
 
     // Then, wait for next VSYNC to occur.
-    xQueueReceive(vsync_q, &dummy, portMAX_DELAY);
+    osSemaphoreWait(vsync_sem, osWaitForever);
 }
 
 /*
@@ -133,7 +123,7 @@ void OSWrappers::waitForVSync()
  */
 void OSWrappers::taskDelay(uint16_t ms)
 {
-    vTaskDelay(ms);
+    osDelay(static_cast<uint32_t>(ms));
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

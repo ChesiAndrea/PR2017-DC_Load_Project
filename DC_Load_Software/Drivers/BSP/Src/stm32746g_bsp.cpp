@@ -1,41 +1,8 @@
-/**
-  ******************************************************************************
-  * @file    stm32746g_discovery.c
-  * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    25-June-2015
-  * @brief   This file provides a set of firmware functions to manage LEDs, 
-  *          push-buttons and COM ports available on STM32746G-Discovery
-  *          board(MB1191) from STMicroelectronics.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT(c) 2015 STMicroelectronics</center></h2>
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  ******************************************************************************
-  */ 
+//==========================================================================================================================================
+//==========================================================================================================================================
+//  LCD7_CPCM4 Bsp  
+//==========================================================================================================================================
+//==========================================================================================================================================
 
 /* Includes ------------------------------------------------------------------*/
 extern "C" {
@@ -43,18 +10,12 @@ extern "C" {
 #include "string.h" 
 #include "stdio.h" 
 #include "stm32f7xx_hal.h"
+#include "i2c.h"	
 }
 
 #include "stm32746g_bsp.hpp"
 #include "stm32746g_bsp_ts.hpp"
 
-void 											I2Cx_Init(I2C_HandleTypeDef* hi2c);
-static void   					  I2Cx_Write(I2C_HandleTypeDef* hi2c, uint8_t Addr, uint8_t Reg, uint8_t Value);
-static uint8_t  					I2Cx_Read(I2C_HandleTypeDef* hi2c, uint8_t Addr, uint8_t Reg);
-static HAL_StatusTypeDef	I2Cx_ReadMultiple(I2C_HandleTypeDef* hi2c, uint8_t Addr, uint16_t Reg, uint16_t MemAddSize, uint8_t *Buffer, uint16_t Length);
-static HAL_StatusTypeDef	I2Cx_WriteMultiple(I2C_HandleTypeDef* hi2c, uint8_t Addr, uint16_t Reg, uint16_t MemAddSize, uint8_t *Buffer, uint16_t Length);
-static HAL_StatusTypeDef	I2Cx_IsDeviceReady(I2C_HandleTypeDef* hi2c, uint16_t DevAddress, uint32_t Trials);
-static void     					I2Cx_Error(I2C_HandleTypeDef* hi2c, uint8_t Addr);
 
 /* TOUCHSCREEN IO functions */
 void		TS_IO_Init(void);
@@ -64,9 +25,6 @@ void		TS_IO_Delay(uint32_t Delay);
 
 void Set_Backlight(uint16_t Brightness){
 	__HAL_TIM_SET_COMPARE(&htim14, TIM_CHANNEL_1, Brightness);
-}
-void ClockManagement(){
-	HAL_RTCEx_BKUPWrite(&hrtc, 3, SyncClockWithVehicle);
 }
 
 void TouchControllerOff (I2C_HandleTypeDef* hi2c){
@@ -79,7 +37,18 @@ void TouchControllerOn (I2C_HandleTypeDef* hi2c){
 	HAL_I2C_MspInit(hi2c);
 }
 				
-			
+tADC_Measure ADCValue;		
+void Keypad_Decode(uint16_t KeyAnalog){
+//----------------------------
+//-- Decodifica Tasti Premuti Analog Keypad 
+//	
+	if(KeyAnalog < 80) ADCValue.AN_Push |= 0x01; else ADCValue.AN_Push &= ~0x01;
+	if( (KeyAnalog >= 80) && (KeyAnalog < 282) ) ADCValue.AN_Push |= 0x02; else ADCValue.AN_Push &= ~0x02;
+	if( (KeyAnalog >= 282) && (KeyAnalog < 574) ) ADCValue.AN_Push |= 0x04; else ADCValue.AN_Push &= ~0x04;
+	if( (KeyAnalog >= 574) && (KeyAnalog < 1057) ) ADCValue.AN_Push |= 0x08; else ADCValue.AN_Push &= ~0x08;
+	if( (KeyAnalog >= 1057) && (KeyAnalog < 2000) ) ADCValue.AN_Push |= 0x10; else ADCValue.AN_Push &= ~0x10;
+}
+
 void ADC_Clock(void){
 	static uint8_t bsp_ADC_SW=0;
 //----------------------------
@@ -93,31 +62,28 @@ void ADC_Clock(void){
 		break;
 	
 		case 1:
-			BSP_ADC_GetConversion(&My_ADC_TINT, &BSPS.AN_TINT);
+			BSP_ADC_GetConversion(&My_ADC_TINT, &(ADCValue.raw.AN_TINT));
+			ADCValue.Tint.Val = ( ((57.25f - 0.0014211f * (float) (ADCValue.raw.AN_TINT << 4)) ) + (63*ADCValue.Tint.Val) )/64;
+			ADCValue.Tint.INT=(int32_t)(ADCValue.Tint.Val*10);
+			if(ADCValue.Tint.INT > -28) ADCValue.Tint.PLUG=1; else ADCValue.Tint.PLUG=0;		
 			BSP_ADC_StartConversion(&My_ADC_TEXT, My_CH_TEXT);
 			bsp_ADC_SW++;	
 		break;		
 	
 		case 2:		
-			BSP_ADC_GetConversion(&My_ADC_TEXT, &BSPS.AN_TEXT);
+			BSP_ADC_GetConversion(&My_ADC_TEXT, &(ADCValue.raw.AN_TEXT));
+			ADCValue.Text.Val = ( ((57.25f - 0.0014211f * (float) (ADCValue.raw.AN_TEXT << 4)) ) + (63*ADCValue.Text.Val) )/64;
+			ADCValue.Text.INT=(int32_t)(ADCValue.Text.Val*10);
+			if(ADCValue.Text.INT > -28) ADCValue.Text.PLUG=1; else ADCValue.Text.PLUG=0;		
 			BSP_ADC_StartConversion(&My_ADC_AINP, My_CH_AINP);	
 			bsp_ADC_SW++;	
 		break;	
 			
 		case 3:		
-			BSP_ADC_GetConversion(&My_ADC_AINP, &BSPS.AN_AINP);
+			BSP_ADC_GetConversion(&My_ADC_AINP, &(ADCValue.raw.AN_AINP));
+			Keypad_Decode(ADCValue.raw.AN_AINP);		
 			BSP_ADC_StartConversion(&My_ADC_TINT, My_CH_TINT);
 			bsp_ADC_SW=1;	
-			
-			
-			//-- Calcolo Valori Sonde Temperatura
-			BSPS.T0_Val = ( ((57.25f - 0.0014211f * (float) (BSPS.AN_TINT << 4)) ) + (63*BSPS.T0_Val) )/64;
-			BSPS.T0_INT=(int32_t)(BSPS.T0_Val*10);
-			if(BSPS.AN_TINT > 0x0EEE) BSPS.T_INT_PLUG=0; else BSPS.T_INT_PLUG=1;			
-
-			BSPS.T1_Val = ( ((57.25f - 0.0014211f * (float) (BSPS.AN_TEXT << 4)) ) + (63*BSPS.T1_Val) )/64;
-			BSPS.T1_EXT=(int32_t)(BSPS.T1_Val*10);
-			if(BSPS.AN_TEXT > 0x0EEE) BSPS.T_EXT_PLUG=0; else BSPS.T_EXT_PLUG=1;
 		break;	
 			
 		default:
@@ -129,27 +95,15 @@ void ADC_Clock(void){
 	}
 }
 
-void Keypad_Decode(uint16_t KeyAnalog){
-//----------------------------
-//-- Decodifica Tasti Premuti Analog Keypad 
-//	
-	if(KeyAnalog < 80) BSPS.AN_Push |= 0x01; else BSPS.AN_Push &= ~0x01;
-	if( (KeyAnalog >= 80) && (KeyAnalog < 282) ) BSPS.AN_Push |= 0x02; else BSPS.AN_Push &= ~0x02;
-	if( (KeyAnalog >= 282) && (KeyAnalog < 574) ) BSPS.AN_Push |= 0x04; else BSPS.AN_Push &= ~0x04;
-	if( (KeyAnalog >= 574) && (KeyAnalog < 1057) ) BSPS.AN_Push |= 0x08; else BSPS.AN_Push &= ~0x08;
-	if( (KeyAnalog >= 1057) && (KeyAnalog < 2000) ) BSPS.AN_Push |= 0x10; else BSPS.AN_Push &= ~0x10;
-}
-
-
+extern volatile uint8_t TS_EnableFlag;
 void BSP_Init(void){
-	BSP_TS_Init();
+	TS_EnableFlag = BSP_TS_Init();
 	HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);	
 	Beeper_Init(&My_BEEPER, My_CH_BEEP);
 }
 
 void BSP_Clk(void){
 	ADC_Clock();
-	Keypad_Decode(BSPS.AN_AINP);
 	Beeper_Clk();
 }
 
@@ -158,6 +112,14 @@ void BSP_Clk(void){
 *******************************************************************************/
 
 /******************************* I2C Routines *********************************/
+void 											I2Cx_Init(I2C_HandleTypeDef* hi2c);
+static void   					  I2Cx_Write(I2C_HandleTypeDef* hi2c, uint8_t Addr, uint8_t Reg, uint8_t Value);
+static uint8_t  					I2Cx_Read(I2C_HandleTypeDef* hi2c, uint8_t Addr, uint8_t Reg);
+static HAL_StatusTypeDef	I2Cx_ReadMultiple(I2C_HandleTypeDef* hi2c, uint8_t Addr, uint16_t Reg, uint16_t MemAddSize, uint8_t *Buffer, uint16_t Length);
+static HAL_StatusTypeDef	I2Cx_WriteMultiple(I2C_HandleTypeDef* hi2c, uint8_t Addr, uint16_t Reg, uint16_t MemAddSize, uint8_t *Buffer, uint16_t Length);
+static HAL_StatusTypeDef	I2Cx_IsDeviceReady(I2C_HandleTypeDef* hi2c, uint16_t DevAddress, uint32_t Trials);
+static void     					I2Cx_Error(I2C_HandleTypeDef* hi2c, uint8_t Addr);
+
 void I2Cx_Init(I2C_HandleTypeDef* hi2c){
 	if(hi2c == &hi2c1)
 	{
@@ -172,14 +134,6 @@ void I2Cx_Init(I2C_HandleTypeDef* hi2c){
 		{
 			MX_I2C2_Init();
 		}
-	}
-}
-
-void I2Cx_Interrupt_Enable(I2C_HandleTypeDef* hi2c){
-	if(hi2c == &hi2c2)
-	{
-		HAL_NVIC_SetPriority(I2C2_EV_IRQn, 7, 0);
-		HAL_NVIC_EnableIRQ(I2C2_EV_IRQn);
 	}
 }
 
@@ -356,7 +310,7 @@ static HAL_StatusTypeDef I2Cx_WriteMultiple(I2C_HandleTypeDef* hi2c, uint8_t Add
   * @retval HAL status
   */
 static HAL_StatusTypeDef I2Cx_IsDeviceReady(I2C_HandleTypeDef* hi2c, uint16_t DevAddress, uint32_t Trials){ 
-  return (HAL_I2C_IsDeviceReady(hi2c, DevAddress, Trials, 1000));
+  return HAL_I2C_IsDeviceReady(hi2c, DevAddress, Trials, 1000);
 }
 
 /**
@@ -388,7 +342,7 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c){
 uint8_t IOE_GetError(void){
 	return(TS_I2C_Error);
 }
-uint8_t IOE_GetErrorAck(void){ 
+extern "C" uint8_t IOE_GetErrorAck(void){ 
 	uint8_t ans= TS_I2C_Error;
 	TS_I2C_Error=0;	
 	return(ans);
@@ -403,9 +357,6 @@ void IOE_Init(I2C_HandleTypeDef* hi2c) {
   I2Cx_Init(hi2c);
 }
 
-void IOE_Interrupt_Enable(I2C_HandleTypeDef* hi2c) {
-  I2Cx_Interrupt_Enable(hi2c);
-}
 
 /**
   * @brief  IOE writes single data.

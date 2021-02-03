@@ -15,6 +15,26 @@
 	 
 #include "stm32746g_bsp_ts.hpp"
 
+struct sTempValue
+{
+	unsigned char	PLUG;
+	int				INT;
+	float 			Val;
+};
+
+typedef struct
+{
+	struct
+	{
+		unsigned int 	AN_TINT;
+		unsigned int	AN_TEXT;
+		unsigned int	AN_AINP;
+	} raw;
+	struct sTempValue Tint;
+	struct sTempValue Text;
+	unsigned char	AN_Push;
+} tADC_Measure;	 
+	  
 void TouchControllerOff(I2C_HandleTypeDef* hi2c);	 
 void TouchControllerOn(I2C_HandleTypeDef* hi2c);
 	 

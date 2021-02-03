@@ -25,9 +25,11 @@
 #include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */     
+/* USER CODE BEGIN Includes */
 #include "stm32746g_bsp.hpp"
+#include "Logic.hpp"
 #include "app_touchgfx.h"
+#include "iwdg.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -200,6 +202,12 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+		SET_IWDGFLAG(IWDG_USERTASK);
+		if(IS_ALLIWDGFLAGS())
+		{
+			LL_IWDG_ReloadCounter(IWDG);
+			RES_IWDGFLAGS();
+		}
 		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);  //for debug		
     osDelay(50);
   }
@@ -235,7 +243,6 @@ void StartTouchGFX(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_StartBSPTask */
-
 void StartBSPTask(void const * argument)
 {
   /* USER CODE BEGIN StartBSPTask */
@@ -246,6 +253,7 @@ void StartBSPTask(void const * argument)
   for(;;)
   {
 		BSP_Clk();
+		SET_IWDGFLAG(IWDG_BSPTASK);
     osDelay(10);
   }
   /* USER CODE END StartBSPTask */
@@ -268,6 +276,7 @@ void StartLogicTask(void const * argument)
   for(;;)
   {
 		Logic_Clk();
+		SET_IWDGFLAG(IWDG_LOGICTASK);
     osDelay(10);
   }
   /* USER CODE END StartLogicTask */

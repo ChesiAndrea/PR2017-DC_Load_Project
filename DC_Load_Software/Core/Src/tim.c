@@ -1,12 +1,12 @@
 /**
   ******************************************************************************
-  * File Name          : TIM.c
-  * Description        : This file provides code for the configuration
-  *                      of the TIM instances.
+  * @file    tim.c
+  * @brief   This file provides code for the configuration
+  *          of the TIM instances.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -211,8 +211,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
 
   /* USER CODE END TIM5_MspPostInit 0 */
     __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**TIM5 GPIO Configuration    
-    PA2     ------> TIM5_CH3 
+    /**TIM5 GPIO Configuration
+    PA2     ------> TIM5_CH3
     */
     GPIO_InitStruct.Pin = Buzzer_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -230,10 +230,10 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
   /* USER CODE BEGIN TIM14_MspPostInit 0 */
 
   /* USER CODE END TIM14_MspPostInit 0 */
-  
+
     __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**TIM14 GPIO Configuration    
-    PA7     ------> TIM14_CH1 
+    /**TIM14 GPIO Configuration
+    PA7     ------> TIM14_CH1
     */
     GPIO_InitStruct.Pin = BKLight_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -304,7 +304,7 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* tim_pwmHandle)
 
   /* USER CODE END TIM5_MspDeInit 1 */
   }
-} 
+}
 
 /* USER CODE BEGIN 1 */
 

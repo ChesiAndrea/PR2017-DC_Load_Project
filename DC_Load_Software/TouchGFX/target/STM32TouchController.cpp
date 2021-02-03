@@ -4,7 +4,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -21,22 +21,22 @@
 #include "stm32746g_bsp_ts.hpp"
 #include "stm32746g_bsp_beeper.h"
 
-volatile uint8_t TS_EnableFlag=0; 
+volatile uint8_t TS_EnableFlag = TS_DEVICE_NOT_FOUND; 
 void STM32TouchController::init()
 {
-	if(TS_EnableFlag)
+	if(TS_EnableFlag != TS_OK)
 	{
-		BSP_TS_Init();	
+		TS_EnableFlag = BSP_TS_Init();	
 	}
 }
 
-extern int32_t  mX, qX, mY, qY;
+int32_t  mX, qX, mY, qY;
 bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
 {
 /* USER CODE BEGIN  F4TouchController_sampleTouch  */
 	static char pressed = 0;
   TS_StateTypeDef state = { 0 };
-	if( TS_EnableFlag){
+	if( TS_EnableFlag == TS_OK){
     BSP_TS_GetState(&state);
     if (state.touchDetected)
     {		

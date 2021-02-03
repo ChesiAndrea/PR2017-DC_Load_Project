@@ -9,7 +9,6 @@ tsc2013_data_set data_set;
 uint8_t valid_Status = 0;
 uint8_t Reset_Happined = 0;
 static void tsc2013_i2c_init(void);
-static void tsc2013_i2c_Interrupt_Enable(void);
 static void tsc2013_reset(void);
 static void tsc2013_interrupt_init(void);
 
@@ -26,8 +25,7 @@ uint8_t I2C_Mutex = 0;
 uint8_t tsc2013_init(I2C_HandleTypeDef* hi2c)
 {
 	Tsc2013_I2C = hi2c;
-  tsc2013_i2c_init();  
-  tsc2013_i2c_Interrupt_Enable();  
+  tsc2013_i2c_init();    
 	
   tsc2013_reset();
 
@@ -37,11 +35,6 @@ uint8_t tsc2013_init(I2C_HandleTypeDef* hi2c)
 void tsc2013_i2c_init(void)
 {
 	IOE_Init(Tsc2013_I2C); 
-}
-
-void tsc2013_i2c_Interrupt_Enable(void)
-{
-	IOE_Interrupt_Enable(Tsc2013_I2C); 
 }
 
 void tsc2013_interrupt_init(void)

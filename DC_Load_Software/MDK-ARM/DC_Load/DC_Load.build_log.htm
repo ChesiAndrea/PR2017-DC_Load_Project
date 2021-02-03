@@ -28,53 +28,20 @@ Project File Date:  02/03/2021
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'DC_Load'
 Note: source file '..\Drivers\BSP\Src\stm32746g_bsp.cpp' - object file renamed from 'DC_Load\stm32746g_bsp.o' to 'DC_Load\stm32746g_bsp_1.o'.
-compiling main.c...
-../Core/Src/main.c(43): error:  #5: cannot open source input file "stm32746g_bsp.h": No such file or directory
-  #include "stm32746g_bsp.h"
-../Core/Src/main.c: 0 warnings, 1 error
+compiling STM32TouchController.cpp...
 compiling stm32746g_bsp.cpp...
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(69): error:  #20: identifier "hrtc" is undefined
-  	HAL_RTCEx_BKUPWrite(&hrtc, 3, SyncClockWithVehicle);
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(69): error:  #20: identifier "SyncClockWithVehicle" is undefined
-  	HAL_RTCEx_BKUPWrite(&hrtc, 3, SyncClockWithVehicle);
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(96): error:  #20: identifier "BSPS" is undefined
-  			BSP_ADC_GetConversion(&My_ADC_TINT, &BSPS.AN_TINT);
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(136): error:  #20: identifier "BSPS" is undefined
-  	if(KeyAnalog < 80) BSPS.AN_Push |= 0x01; else BSPS.AN_Push &= ~0x01;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(136): error:  #20: identifier "BSPS" is undefined
-  	if(KeyAnalog < 80) BSPS.AN_Push |= 0x01; else BSPS.AN_Push &= ~0x01;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(137): error:  #20: identifier "BSPS" is undefined
-  	if( (KeyAnalog >= 80) && (KeyAnalog < 282) ) BSPS.AN_Push |= 0x02; else BSPS.AN_Push &= ~0x02;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(137): error:  #20: identifier "BSPS" is undefined
-  	if( (KeyAnalog >= 80) && (KeyAnalog < 282) ) BSPS.AN_Push |= 0x02; else BSPS.AN_Push &= ~0x02;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(138): error:  #20: identifier "BSPS" is undefined
-  	if( (KeyAnalog >= 282) && (KeyAnalog < 574) ) BSPS.AN_Push |= 0x04; else BSPS.AN_Push &= ~0x04;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(138): error:  #20: identifier "BSPS" is undefined
-  	if( (KeyAnalog >= 282) && (KeyAnalog < 574) ) BSPS.AN_Push |= 0x04; else BSPS.AN_Push &= ~0x04;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(139): error:  #20: identifier "BSPS" is undefined
-  	if( (KeyAnalog >= 574) && (KeyAnalog < 1057) ) BSPS.AN_Push |= 0x08; else BSPS.AN_Push &= ~0x08;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(139): error:  #20: identifier "BSPS" is undefined
-  	if( (KeyAnalog >= 574) && (KeyAnalog < 1057) ) BSPS.AN_Push |= 0x08; else BSPS.AN_Push &= ~0x08;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(140): error:  #20: identifier "BSPS" is undefined
-  	if( (KeyAnalog >= 1057) && (KeyAnalog < 2000) ) BSPS.AN_Push |= 0x10; else BSPS.AN_Push &= ~0x10;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(140): error:  #20: identifier "BSPS" is undefined
-  	if( (KeyAnalog >= 1057) && (KeyAnalog < 2000) ) BSPS.AN_Push |= 0x10; else BSPS.AN_Push &= ~0x10;
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(152): error:  #20: identifier "BSPS" is undefined
-  	Keypad_Decode(BSPS.AN_AINP);
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(162): error:  #20: identifier "hi2c1" is undefined
-  	if(hi2c == &hi2c1)
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(166): error:  #20: identifier "MX_I2C1_Init" is undefined
-  			MX_I2C1_Init();
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(169): error:  #20: identifier "hi2c2" is undefined
-  	if(hi2c == &hi2c2)
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(173): error:  #20: identifier "MX_I2C2_Init" is undefined
-  			MX_I2C2_Init();
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(179): error:  #20: identifier "hi2c2" is undefined
-  	if(hi2c == &hi2c2)
-..\Drivers\BSP\Src\stm32746g_bsp.cpp(358): warning:  #177-D: function "I2Cx_IsDeviceReady"  was declared but never referenced
+..\Drivers\BSP\Src\stm32746g_bsp.cpp(312): warning:  #177-D: function "I2Cx_IsDeviceReady"  was declared but never referenced
   static HAL_StatusTypeDef I2Cx_IsDeviceReady(I2C_HandleTypeDef* hi2c, uint16_t DevAddress, uint32_t Trials){ 
-..\Drivers\BSP\Src\stm32746g_bsp.cpp: 1 warning, 19 errors
-"DC_Load\DC_Load.axf" - 20 Error(s), 1 Warning(s).
+..\Drivers\BSP\Src\stm32746g_bsp.cpp: 1 warning, 0 errors
+compiling main.c...
+linking...
+DC_Load\DC_Load.sct(16): warning: L6314W: No section matches pattern *.o(StorageSection).
+DC_Load\DC_Load.sct(26): warning: L6314W: No section matches pattern *.o(NoInit).
+Program Size: Code=103744 RO-data=949760 RW-data=1088 ZI-data=187808  
+Finished: 0 information, 2 warning and 0 error messages.
+FromELF: creating hex file...
+After Build - User command #1: C:\Keil_v5\ARM\ARMCC\bin\fromelf.exe --bin --output=binary/ DC_Load\DC_Load.axf
+"DC_Load\DC_Load.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -97,8 +64,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
-Target not created.
-Build Time Elapsed:  00:00:24
+Build Time Elapsed:  00:00:28
 </pre>
 </body>
 </html>
