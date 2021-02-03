@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,74 +13,53 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/transitions/Transition.hpp
+ *
+ * Declares the touchgfx::Transition class.
+ */
 #ifndef TRANSITION_HPP
 #define TRANSITION_HPP
 
 #include <touchgfx/hal/Types.hpp>
-#include <touchgfx/lcd/LCD.hpp>
+#include <touchgfx/Application.hpp>
 
 namespace touchgfx
 {
 class Container;
-class SnapshotWidget;
 
 /**
- * @class Transition Transition.hpp touchgfx/transitions/Transition.hpp
+ * The Transition class is the base class for Transitions. Implementations of Transition defines
+ * what happens when transitioning between Screens, which typically involves visual
+ * effects. An example of a transition implementation can be seen in example
+ * custom_transition_example. The most basic transition is the NoTransition class that
+ * does a transition without any visual effects.
  *
- * @brief The Transition class is the base class for Transitions.
- *
- *        The Transition class is the base class for Transitions. Implementations of Transition
- *        defines what happens when transitioning between Screens, which typically involves
- *        visual effects. An example of a transition implementation can be seen in example
- *        custom_transition_example. The most basic transition is the NoTransition class that
- *        does a transition without any visual effects.
- *
- * @see NoTransition
- * @see SlideTransition
+ * @see NoTransition, SlideTransition
  */
 class Transition
 {
 public:
-
-    /**
-     * @fn Transition::Transition()
-     *
-     * @brief Default constructor.
-     *
-     *        Constructs the Transition.
-     */
-    Transition() :
-        screenContainer(0), done(false)
+    /** Initializes a new instance of the Transition class. */
+    Transition()
+        : screenContainer(0), done(false)
     {
     }
 
-    /**
-     * @fn virtual Transition::~Transition()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
+    /** Finalizes an instance of the Transition class. */
     virtual ~Transition()
     {
     }
 
-    /**
-     * @fn virtual void Transition::handleTickEvent()
-     *
-     * @brief Called for every tick when transitioning.
-     *
-     *        Called for every tick when transitioning. Base does nothing.
-     */
-    virtual void handleTickEvent() { }
+    /** Called for every tick when transitioning. */
+    virtual void handleTickEvent()
+    {
+    }
 
     /**
-     * @fn bool Transition::isDone() const
-     *
-     * @brief Query if the transition is done transitioning.
-     *
-     *        Query if the transition is done transitioning. It is the responsibility of the
-     *        inheriting class to set the underlying done flag.
+     * Query if the transition is done transitioning. It is the responsibility of the
+     * inheriting class to set the underlying done flag once the transition has been
+     * completed.
      *
      * @return True if the transition is done, false otherwise.
      */
@@ -90,34 +69,36 @@ public:
     }
 
     /**
-     * @fn virtual void Transition::tearDown()
-     *
-     * @brief Tears down the Animation.
-     *
-     *        Tears down the Animation. Called before the d.tor. when the application changes
-     *        the transition. Base version does nothing.
+     * Tears down the Animation. Called before the destructor is called, when the
+     * application changes the transition.
      */
-    virtual void tearDown() { }
+    virtual void tearDown()
+    {
+    }
 
     /**
-     * @fn virtual void Transition::init()
-     *
-     * @brief Initializes the transition.
-     *
-     *        Initializes the transition. Called after the c.tor. when the application changes
-     *        the transition. Base version does nothing.
+     * Initializes the transition. Called after the constructor is called, when the
+     * application changes the transition.
      */
-    virtual void init() { }
+    virtual void init()
+    {
+    }
 
     /**
-     * @fn virtual void Transition::setScreenContainer(Container& cont)
+     * Invalidates the screen when starting the Transition. Default is
+     * to invalidate the whole screen. Subclasses can do partial
+     * invalidation.
+     */
+    virtual void invalidate()
+    {
+        Application::getInstance()->draw();
+    }
+
+    /**
+     * Sets the Screen Container. Is used by Screen to enable the transition to access the
+     * Container.
      *
-     * @brief Sets the screen container.
-     *
-     *        Sets the screen container. Is used by Screen to enable the transition to access
-     *        the container.
-     *
-     * @param [in] cont The container the transition should have access to.
+     * @param [in] cont The Container the transition should have access to.
      */
     virtual void setScreenContainer(Container& cont)
     {
@@ -125,8 +106,10 @@ public:
     }
 
 protected:
-    Container* screenContainer;   ///< The screen Container of the Screen transitioning to.
-    bool       done;            ///< Flag that indicates when the transition is done. This should be set by implementing classes.
+    Container* screenContainer; ///< The screen Container of the Screen transitioning to.
+    bool done;                  ///< Flag that indicates when the transition is done. This should be set by implementing classes.
 };
+
 } // namespace touchgfx
+
 #endif // TRANSITION_HPP

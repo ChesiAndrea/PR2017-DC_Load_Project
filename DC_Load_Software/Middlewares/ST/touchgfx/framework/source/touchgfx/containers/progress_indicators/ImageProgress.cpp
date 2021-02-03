@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -22,10 +22,6 @@ ImageProgress::ImageProgress()
 {
     container.add(image);
     progressIndicatorContainer.add(container);
-}
-
-ImageProgress::~ImageProgress()
-{
 }
 
 void ImageProgress::setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height)
@@ -56,9 +52,9 @@ touchgfx::BitmapId ImageProgress::getBitmap() const
     return image.getBitmap();
 }
 
-void ImageProgress::setAlpha(uint8_t alpha)
+void ImageProgress::setAlpha(uint8_t newAlpha)
 {
-    image.setAlpha(alpha);
+    image.setAlpha(newAlpha);
 }
 
 uint8_t ImageProgress::getAlpha() const
@@ -69,7 +65,6 @@ uint8_t ImageProgress::getAlpha() const
 void ImageProgress::setValue(int value)
 {
     AbstractProgressIndicator::setValue(value);
-    container.invalidate();
     uint16_t maxProgress = 0;
     if (progressDirection == AbstractDirectionProgress::RIGHT || progressDirection == AbstractDirectionProgress::LEFT)
     {
@@ -85,25 +80,50 @@ void ImageProgress::setValue(int value)
         switch (progressDirection)
         {
         case AbstractDirectionProgress::RIGHT:
-            container.setPosition(0, 0, progress, progressIndicatorContainer.getHeight());
-            image.setPosition(0, 0, progress, progressIndicatorContainer.getHeight());
-            break;
+            {
+                int16_t oldWidth = container.getWidth();
+                container.setPosition(0, 0, progress, progressIndicatorContainer.getHeight());
+                image.setPosition(0, 0, progress, progressIndicatorContainer.getHeight());
+                int16_t newWidth = container.getWidth();
+                Rect rect(MIN(oldWidth, newWidth), 0, abs(oldWidth - newWidth), container.getHeight());
+                progressIndicatorContainer.invalidateRect(rect);
+                break;
+            }
         case AbstractDirectionProgress::LEFT:
-            container.setPosition(getWidth() - progress, 0, progress, progressIndicatorContainer.getHeight());
-            image.setPosition(-container.getX(), 0, progressIndicatorContainer.getWidth(), progressIndicatorContainer.getHeight());
-            break;
+            {
+                int16_t oldX = container.getX();
+                container.setPosition(getWidth() - progress, 0, progress, progressIndicatorContainer.getHeight());
+                image.setPosition(-container.getX(), 0, progressIndicatorContainer.getWidth(), progressIndicatorContainer.getHeight());
+                int16_t newX = container.getX();
+                Rect rect(MIN(oldX, newX), 0, abs(oldX - newX), container.getHeight());
+                progressIndicatorContainer.invalidateRect(rect);
+                break;
+            }
         case AbstractDirectionProgress::DOWN:
-            container.setPosition(0, 0, progressIndicatorContainer.getWidth(), progress);
-            image.setPosition(0, 0, progressIndicatorContainer.getWidth(), progress);
-            break;
+            {
+                int16_t oldHeight = container.getHeight();
+                container.setPosition(0, 0, progressIndicatorContainer.getWidth(), progress);
+                image.setPosition(0, 0, progressIndicatorContainer.getWidth(), progress);
+                int16_t newHeight = container.getHeight();
+                Rect rect(0, MIN(oldHeight, newHeight), container.getWidth(), abs(oldHeight - newHeight));
+                progressIndicatorContainer.invalidateRect(rect);
+                break;
+            }
         case AbstractDirectionProgress::UP:
-            container.setPosition(0, progressIndicatorContainer.getHeight() - progress, progressIndicatorContainer.getWidth(), progress);
-            image.setPosition(0, -container.getY(), progressIndicatorContainer.getWidth(), progressIndicatorContainer.getHeight());
-            break;
+            {
+                int16_t oldY = container.getY();
+                container.setPosition(0, progressIndicatorContainer.getHeight() - progress, progressIndicatorContainer.getWidth(), progress);
+                image.setPosition(0, -container.getY(), progressIndicatorContainer.getWidth(), progressIndicatorContainer.getHeight());
+                int16_t newY = container.getY();
+                Rect rect(0, MIN(oldY, newY), container.getWidth(), abs(oldY - newY));
+                progressIndicatorContainer.invalidateRect(rect);
+                break;
+            }
         }
     }
     else
     {
+        container.invalidate();
         switch (progressDirection)
         {
         case AbstractDirectionProgress::RIGHT:
@@ -123,7 +143,7 @@ void ImageProgress::setValue(int value)
             image.setPosition(0, 0, progressIndicatorContainer.getWidth(), progress);
             break;
         }
+        container.invalidate();
     }
-    container.invalidate();
 }
-}
+} // namespace touchgfx

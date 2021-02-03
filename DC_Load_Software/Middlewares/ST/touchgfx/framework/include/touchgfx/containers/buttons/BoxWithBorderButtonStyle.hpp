@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/buttons/BoxWithBorderButtonStyle.hpp
+ *
+ * Declares the touchgfx::BoxWithBorderButtonStyle class.
+ */
 #ifndef BOXWITHBORDERBUTTONSTYLE_HPP
 #define BOXWITHBORDERBUTTONSTYLE_HPP
 
@@ -21,60 +26,39 @@
 namespace touchgfx
 {
 /**
- * @class BoxWithBorderButtonStyle BoxWithBorderButtonStyle.hpp touchgfx/containers/buttons/BoxWithBorderButtonStyle.hpp
+ * A box with border button style. This class is supposed to be used with one of the
+ * ButtonTrigger classes to create a functional button. This class will show a box with
+ * a border in different colors depending on the state of the button (pressed or
+ * released).
  *
- * @brief A box with border button style.
- *
- *        A box with border button style. This class is supposed to be
- *        used with one of the ButtonTrigger classes to create a
- *        functional button. This class will show a box with a border
- *        in different colors depending on the state of the button
- *        (pressed or released).
- *
- *        An image button style. This class is supposed to be used
- *        with one of the ButtonTrigger classes to create a functional
- *        button. This class will show one of two images depending on
- *        the state of the button (pressed or released).
+ * An image button style. This class is supposed to be used with one of the
+ * ButtonTrigger classes to create a functional button. This class will show one of two
+ * images depending on the state of the button (pressed or released).
  *
  * @tparam T Generic type parameter. Typically a AbstractButtonContainer subclass.
  *
  * @see AbstractButtonContainer, BoxWithBorder
  */
-template<class T>
+template <class T>
 class BoxWithBorderButtonStyle : public T
 {
 public:
-    /**
-     * @fn BoxWithBorderButtonStyle::BoxWithBorderButtonStyle()
-     *
-     * @brief Default constructor.
-     */
-    BoxWithBorderButtonStyle() : T(), up(), down()
+    BoxWithBorderButtonStyle()
+        : T(), up(), down()
     {
         borderBox.setXY(0, 0);
         T::add(borderBox);
     }
 
     /**
-     * @fn virtual BoxWithBorderButtonStyle::~BoxWithBorderButtonStyle()
+     * Sets the size and position of this BoxWithBorderButtonStyle, relative to its parent.
      *
-     * @brief Destructor.
-     */
-    virtual ~BoxWithBorderButtonStyle() { }
-
-    /**
-     * @fn virtual void BoxWithBorderButtonStyle::setBoxWithBorderPosition(int16_t x, int16_t y, int16_t width, int16_t height)
-     *
-     * @brief Sets the size and position of this BoxWithBorderButtonStyle.
-     *
-     *        Sets the size and position of this BoxWithBorderButtonStyle, relative to its parent.
+     * @param  x      The x coordinate of this BoxWithBorderButtonStyle.
+     * @param  y      The y coordinate of this BoxWithBorderButtonStyle.
+     * @param  width  The width of this BoxWithBorderButtonStyle.
+     * @param  height The height of this BoxWithBorderButtonStyle.
      *
      * @note Changing this does not automatically yield a redraw.
-     *
-     * @param x      The x coordinate of this BoxWithBorderButtonStyle.
-     * @param y      The y coordinate of this BoxWithBorderButtonStyle.
-     * @param width  The width of this BoxWithBorderButtonStyle.
-     * @param height The height of this BoxWithBorderButtonStyle.
      */
     void setBoxWithBorderPosition(int16_t x, int16_t y, int16_t width, int16_t height)
     {
@@ -82,11 +66,9 @@ public:
     }
 
     /**
-     * @fn void BoxWithBorderButtonStyle::setBoxWithBorderWidth(int16_t width)
+     * Sets the width.
      *
-     * @brief Sets a width.
-     *
-     * @param width The width.
+     * @param  width The width.
      */
     void setBoxWithBorderWidth(int16_t width)
     {
@@ -94,11 +76,9 @@ public:
     }
 
     /**
-     * @fn void BoxWithBorderButtonStyle::setBoxWithBorderHeight(int16_t height)
+     * Sets the height.
      *
-     * @brief Sets a height.
-     *
-     * @param height The height.
+     * @param  height The height.
      */
     void setBoxWithBorderHeight(int16_t height)
     {
@@ -106,14 +86,12 @@ public:
     }
 
     /**
-     * @fn void BoxWithBorderButtonStyle::setBoxWithBorderColors(const colortype colorReleased, const colortype colorPressed, const colortype borderColorReleased, const colortype borderColorPressed)
+     * Sets the colors.
      *
-     * @brief Sets the colors.
-     *
-     * @param colorReleased The color released.
-     * @param colorPressed  The color pressed.
-     * @param borderColorReleased The border color released.
-     * @param borderColorPressed  The border color pressed.
+     * @param  colorReleased       The color released.
+     * @param  colorPressed        The color pressed.
+     * @param  borderColorReleased The border color released.
+     * @param  borderColorPressed  The border color pressed.
      */
     void setBoxWithBorderColors(const colortype colorReleased, const colortype colorPressed, const colortype borderColorReleased, const colortype borderColorPressed)
     {
@@ -127,11 +105,9 @@ public:
     }
 
     /**
-     * @fn void BoxWithBorderButtonStyle::setBorderSize(uint8_t size)
+     * Sets border size.
      *
-     * @brief Sets border size.
-     *
-     * @param size The size.
+     * @param  size The size.
      */
     void setBorderSize(uint8_t size)
     {
@@ -145,11 +121,7 @@ protected:
     colortype borderUp;      ///< The border up
     colortype borderDown;    ///< The border down
 
-    /**
-     * @fn virtual void BoxWithBorderButtonStyle::handlePressedUpdated()
-     *
-     * @brief Handles the pressed updated.
-     */
+    /** @copydoc AbstractButtonContainer::handlePressedUpdated() */
     virtual void handlePressedUpdated()
     {
         borderBox.setColor(T::getPressed() ? down : up);
@@ -157,17 +129,14 @@ protected:
         T::handlePressedUpdated();
     }
 
-    /**
-     * @fn virtual void BoxWithBorderButtonStyle::handleAlphaUpdated()
-     *
-     * @brief Handles the alpha updated.
-     */
+    /** @copydoc AbstractButtonContainer::handleAlphaUpdated() */
     virtual void handleAlphaUpdated()
     {
         borderBox.setAlpha(T::getAlpha());
         T::handleAlphaUpdated();
     }
 };
+
 } // namespace touchgfx
 
 #endif // BOXWITHBORDERBUTTONSTYLE_HPP

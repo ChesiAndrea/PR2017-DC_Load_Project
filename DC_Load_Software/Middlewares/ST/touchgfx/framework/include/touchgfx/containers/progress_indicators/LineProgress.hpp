@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,96 +13,55 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/progress_indicators/LineProgress.hpp
+ *
+ * Declares the touchgfx::LineProgress class.
+ */
 #ifndef LINEPROGRESS_HPP
 #define LINEPROGRESS_HPP
 
 #include <touchgfx/containers/progress_indicators/AbstractProgressIndicator.hpp>
-#include <touchgfx/widgets/canvas/Line.hpp>
 #include <touchgfx/widgets/canvas/AbstractPainter.hpp>
+#include <touchgfx/widgets/canvas/Line.hpp>
 
 namespace touchgfx
 {
 /**
- * @class LineProgress LineProgress.hpp touchgfx/containers/progress_indicators/LineProgress.hpp
- *
- * @brief A line progress.
- *
- *        Using Line from canvas widgets, progress will be rendered as a line. The line does
- *        not need to horizontal or vertical, but can start at any coordinate and finish at any
- *        coordinate.
+ * Using Line from CanvasWidgetRenderer, progress will be rendered as a line. This means that
+ * the user must create a painter for painting the circle. The line does not need to
+ * horizontal or vertical, but can start at any coordinate and finish at any coordinate.
  *
  * @note As LineProgress uses CanvasWidgetRenderer, it is important that a buffer is set up by
- *        calling CanvasWidgetRendere::setBuffer().
+ *       calling CanvasWidgetRendere::setBuffer().
  */
 class LineProgress : public AbstractProgressIndicator
 {
 public:
-
-    /**
-     * @fn LineProgress::LineProgress();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
     LineProgress();
 
-    /**
-     * @fn virtual LineProgress::~LineProgress();
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~LineProgress();
-
-    /**
-     * @fn virtual void LineProgress::setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height);
-     *
-     * @brief Sets the position and dimension of the line progress indicator.
-     *
-     *        Sets the position and dimension of the line progress indicator relative to the
-     *        background image.
-     *
-     * @param x      The x coordinate.
-     * @param y      The y coordinate.
-     * @param width  The width of the line progress indicator.
-     * @param height The height of the line progress indicator.
-     */
     virtual void setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height);
 
     /**
-     * @fn virtual void LineProgress::setPainter(AbstractPainter& painter);
-     *
-     * @brief Sets a painter.
-     *
-     *        Sets a painter to be used for drawing the line. This can be any Painter, a simple
-     *        single color painter, a bitmap painter or a custom painter.
+     * Sets a painter to be used for drawing the line. This can be any Painter, a simple
+     * single color painter, a bitmap painter or a custom painter.
      *
      * @param [in] painter The painter.
      */
     virtual void setPainter(AbstractPainter& painter);
 
     /**
-     * @fn virtual void LineProgress::setStart(int x, int y);
+     * Sets a starting point for the line.
      *
-     * @brief Sets a starting point for the line.
-     *
-     *        Sets a starting point for the line.
-     *
-     * @param x The x coordinate of the start point.
-     * @param y The y coordinate of the start point.
+     * @param  x The x coordinate of the start point.
+     * @param  y The y coordinate of the start point.
      *
      * @see setEnd
      */
     virtual void setStart(int x, int y);
 
     /**
-     * @fn virtual void LineProgress::getStart(int& x, int& y) const;
-     *
-     * @brief Gets the coordinates of the starting point of the line.
-     *
-     *        Gets the coordinates of the starting point of the line.
+     * Gets the coordinates of the starting point of the line.
      *
      * @param [out] x The x coordinate.
      * @param [out] y The y coordinate.
@@ -110,28 +69,20 @@ public:
     virtual void getStart(int& x, int& y) const;
 
     /**
-     * @fn virtual void LineProgress::setEnd(int x, int y);
+     * Sets the end point for the line. When progress is at 100%, the line will go from the
+     * coordinates set by setStart() to the coordinates set by setEnd()
      *
-     * @brief Sets an end point for the line.
-     *
-     *        Sets an end point for the line. When progress is at 100%, the line will go from
-     *        the coordinates set by setStart() to these coordinates set by setEnd()
-     *
-     * @param x The x coordinate of the end point.
-     * @param y The y coordinate of the end point.
+     * @param  x The x coordinate of the end point.
+     * @param  y The y coordinate of the end point.
      *
      * @see setStart
      */
     virtual void setEnd(int x, int y);
 
     /**
-     * @fn virtual void LineProgress::getEnd(int& x, int& y) const;
-     *
-     * @brief Gets the coordinates of the end point of the line.
-     *
-     *        Gets the coordinates of the end point of the line. Beware that this is not the
-     *        coordinates of the current progress of the line, but the coordinates when the
-     *        line is at 100%.
+     * Gets the coordinates of the end point of the line. Beware that this is not the
+     * coordinates of the current progress of the line, but the coordinates when the line is
+     * at 100%.
      *
      * @param [out] x The x coordinate.
      * @param [out] y The y coordinate.
@@ -139,76 +90,44 @@ public:
     virtual void getEnd(int& x, int& y) const;
 
     /**
-     * @fn virtual void LineProgress::setLineWidth(int width);
+     * Sets the line width.
      *
-     * @brief Sets line width.
-     *
-     *        Sets line width.
-     *
-     * @param width The width.
+     * @param  width The width.
      *
      * @see Line::setLineWidth
      */
     virtual void setLineWidth(int width);
 
     /**
-     * @fn virtual int LineProgress::getLineWidth() const;
-     *
-     * @brief Gets line width.
-     *
-     *        Gets line width.
+     * Gets the line width.
      *
      * @return The line width.
      */
     virtual int getLineWidth() const;
 
     /**
-     * @fn virtual void LineProgress::setLineEndingStyle(Line::LINE_ENDING_STYLE lineEndingStyle);
+     * Sets line ending style.
      *
-     * @brief Sets line ending style.
-     *
-     *        Sets line ending style.
-     *
-     * @param lineEndingStyle The line ending style.
+     * @param  lineEndingStyle The line ending style.
      *
      * @see Line::setLineEndingStyle
      */
     virtual void setLineEndingStyle(Line::LINE_ENDING_STYLE lineEndingStyle);
 
     /**
-     * @fn virtual Line::LINE_ENDING_STYLE LineProgress::getLineEndingStyle() const
-     *
-     * @brief Gets line ending style.
-     *
-     *        Gets line ending style.
+     * Gets line ending style.
      *
      * @return The line ending style.
      */
     virtual Line::LINE_ENDING_STYLE getLineEndingStyle() const;
 
     /**
-     * @fn virtual void LineProgress::setAlpha(uint8_t alpha);
-     *
-     * @brief Sets the alpha.
-     *
-     *        Sets the alpha for the line.
-     *
-     * @param alpha The alpha.
-     *
-     * @see Line::setAlpha
+     * @copydoc Image::setAlpha
      */
-    virtual void setAlpha(uint8_t alpha);
+    virtual void setAlpha(uint8_t newAlpha);
 
     /**
-     * @fn virtual uint8_t LineProgress::getAlpha() const;
-     *
-     * @brief Gets the alpha.
-     *
-     *        Gets the alpha.
-     *
-     * @return The alpha.
-     *
-     * @see Line::getAlpha
+     * @copydoc Image::getAlpha
      */
     virtual uint8_t getAlpha() const;
 
@@ -221,6 +140,7 @@ protected:
     CWRUtil::Q5 endX;   ///< The end x coordinate
     CWRUtil::Q5 endY;   ///< The end y coordinate
 };
-}
+
+} // namespace touchgfx
 
 #endif // LINEPROGRESS_HPP

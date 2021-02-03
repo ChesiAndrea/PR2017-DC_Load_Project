@@ -18,28 +18,38 @@
 /* USER CODE BEGIN STM32TouchController */
 
 #include <STM32TouchController.hpp>
+#include "stm32746g_bsp_ts.hpp"
+#include "stm32746g_bsp_beeper.h"
 
+volatile uint8_t TS_EnableFlag=0; 
 void STM32TouchController::init()
 {
-    /**
-     * Initialize touch controller and driver
-     *
-     */
+	if(TS_EnableFlag)
+	{
+		BSP_TS_Init();	
+	}
 }
 
+extern int32_t  mX, qX, mY, qY;
 bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
 {
-    /**
-     * By default sampleTouch returns false,
-     * return true if a touch has been detected, otherwise false.
-     *
-     * Coordinates are passed to the caller by reference by x and y.
-     *
-     * This function is called by the TouchGFX framework.
-     * By default sampleTouch is called every tick, this can be adjusted by HAL::setTouchSampleRate(int8_t);
-     *
-     */
-    return false;
+/* USER CODE BEGIN  F4TouchController_sampleTouch  */
+	static char pressed = 0;
+  TS_StateTypeDef state = { 0 };
+	if( TS_EnableFlag){
+    BSP_TS_GetState(&state);
+    if (state.touchDetected)
+    {		
+				x =(((mX * state.touchX[0]) + qX)/1000);
+				y =(((mY * state.touchY[0]) + qY)/1000);
+			
+				if (!pressed) Beep_on_Keys();
+				pressed = 1;
+        return true;
+    }/**/
+	}
+		pressed = 0;
+    return false; 
 }
 
 /* USER CODE END STM32TouchController */

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,23 +13,24 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/canvas/AbstractPainterRGB888.hpp
+ *
+ * Declares the touchgfx::AbstractPainterRGB888 class.
+ */
 #ifndef ABSTRACTPAINTERRGB888_HPP
 #define ABSTRACTPAINTERRGB888_HPP
 
 #include <assert.h>
-#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
 #include <touchgfx/hal/HAL.hpp>
 #include <touchgfx/lcd/LCD.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
 
 namespace touchgfx
 {
 /**
- * @class AbstractPainterRGB888 AbstractPainterRGB888.hpp touchgfx/widgets/canvas/AbstractPainterRGB888.hpp
- *
- * @brief A Painter that will paint using a color and an alpha value.
- *
- *        The AbstractPainterRGB888 class allows a shape to be filled with a given color and
- *        alpha value. This allows transparent, anti-aliased elements to be drawn.
+ * The AbstractPainterRGB888 class is an abstract class for creating a painter to draw on a
+ * RGB888 display using CanvasWidgetRenderer.
  *
  * @see AbstractPainter
  */
@@ -37,24 +38,16 @@ class AbstractPainterRGB888 : public AbstractPainter
 {
 public:
     AbstractPainterRGB888()
+        : AbstractPainter(), currentX(0), currentY(0)
     {
         assert(compatibleFramebuffer(Bitmap::RGB888) && "The chosen painter only works with RGB888 displays");
     }
 
-    virtual ~AbstractPainterRGB888() {}
-
     virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
 protected:
-
     /**
-     * @fn virtual bool AbstractPainterRGB888::renderInit()
-     *
-     * @brief Initialize rendering of a single scan line of pixels for the render.
-     *
-     *        Initialize rendering of a single scan line of pixels for the render.
-     *
-     * @return true if it succeeds, false if it fails.
+     * @copydoc AbstractPainterRGB565::renderInit()
      */
     virtual bool renderInit()
     {
@@ -62,39 +55,19 @@ protected:
     }
 
     /**
-     * @fn virtual bool AbstractPainterRGB888::renderNext(uint8_t& red, uint8_t& green, uint8_t& blue, uint8_t& alpha) = 0;
-     *
-     * @brief Get the color of the next pixel in the scan line.
-     *
-     *        Get the color of the next pixel in the scan line.
-     *
-     * @param [out] red   The red.
-     * @param [out] green The green.
-     * @param [out] blue  The blue.
-     * @param [out] alpha The alpha.
-     *
-     * @return true if the pixel should be painted, false otherwise.
+     * @copydoc AbstractPainterRGB565::renderNext(uint8_t&,uint8_t&,uint8_t&,uint8_t&)
      */
     virtual bool renderNext(uint8_t& red, uint8_t& green, uint8_t& blue, uint8_t& alpha) = 0;
 
     /**
-     * @fn virtual void AbstractPainterRGB888::renderPixel(uint16_t* p, uint8_t red, uint8_t green, uint8_t blue);
-     *
-     * @brief Renders the pixel.
-     *
-     *        Renders the pixel into the frame buffer. The colors are reduced from 8,8,8 to 5,6,
-     *        5.
-     *
-     * @param [in] p pointer into the frame buffer where the given color should be written.
-     * @param red    The red color.
-     * @param green  The green color.
-     * @param blue   The blue color.
+     * @copydoc AbstractPainterRGB565::renderPixel(uint16_t*,uint8_t,uint8_t,uint8_t)
      */
     virtual void renderPixel(uint16_t* p, uint8_t red, uint8_t green, uint8_t blue);
 
     int currentX; ///< Current x coordinate relative to the widget
     int currentY; ///< Current y coordinate relative to the widget
-}; // class AbstractPainterRGB888
+};
+
 } // namespace touchgfx
 
 #endif // ABSTRACTPAINTERRGB888_HPP

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/buttons/ClickButtonTrigger.hpp
+ *
+ * Declares the touchgfx::ClickButtonTrigger class.
+ */
 #ifndef CLICKBUTTONTRIGGER_HPP
 #define CLICKBUTTONTRIGGER_HPP
 
@@ -21,45 +26,24 @@
 namespace touchgfx
 {
 /**
- * @class ClickButtonTrigger ClickButtonTrigger.hpp touchgfx/containers/buttons/ClickButtonTrigger.hpp
+ * A click button trigger. This trigger will create a button that reacts on clicks. This means
+ * it will call the set action when it gets a touch released event. The
+ * ClickButtonTrigger can be combined with one or more of the ButtonStyle classes to
+ * create a fully functional button.
  *
- * @brief A click button trigger.
- *
- *        A click button trigger. This trigger will create a button
- *        that reacts on clicks. This means it will call the action
- *        when it gets a touch released event.
- *
- *        The ClickButtonTrigger can be combined with one or more of
- *        the ButtonStyle classes to create a functional button.
+ * @see TouchButtonTrigger
  */
 class ClickButtonTrigger : public AbstractButtonContainer
 {
 public:
     /**
-     * @fn ClickButtonTrigger::ClickButtonTrigger()
+     * Handles a ClickAvent. The action callback is called when the ClickButtonTrigger
+     * receives a ClickEvent::RELEASED event in PRESSED state. Function setPressed() will
+     * be called with the new button state.
      *
-     * @brief Default constructor.
-     */
-    ClickButtonTrigger() :
-        AbstractButtonContainer() { }
-
-    /**
-     * @fn virtual ClickButtonTrigger::~ClickButtonTrigger()
+     * @param  event The click event.
      *
-     * @brief Destructor.
-     */
-    virtual ~ClickButtonTrigger() { }
-
-    /**
-     * @fn virtual void ClickButtonTrigger::handleClickEvent(const ClickEvent& event)
-     *
-     * @brief Handles the click event described by event.
-     *
-     *        Handles the click event described by event. The action
-     *        callback is called when receiving a REALEASED event in
-     *        PRESSED state.
-     *
-     * @param event The event.
+     * @see setAction, setPressed, getPressed
      */
     virtual void handleClickEvent(const ClickEvent& event)
     {
@@ -79,6 +63,7 @@ public:
         }
     }
 };
+
 } // namespace touchgfx
 
 #endif // CLICKBUTTONTRIGGER_HPP

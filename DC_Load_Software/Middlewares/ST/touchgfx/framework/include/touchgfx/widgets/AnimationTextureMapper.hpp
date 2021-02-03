@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,36 +13,31 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/AnimationTextureMapper.hpp
+ *
+ * Declares the touchgfx::AnimationTextureMapper class.
+ */
 #ifndef ANIMATIONTEXTUREMAPPER_HPP
 #define ANIMATIONTEXTUREMAPPER_HPP
 
-#include <touchgfx/widgets/TextureMapper.hpp>
 #include <touchgfx/Callback.hpp>
 #include <touchgfx/EasingEquations.hpp>
 #include <touchgfx/Math3D.hpp>
+#include <touchgfx/widgets/TextureMapper.hpp>
 
 namespace touchgfx
 {
 /**
- * @class AnimationTextureMapper AnimationTextureMapper.hpp touchgfx/widgets/AnimationTextureMapper.hpp
- *
- * @brief A texture mapper with animation capabilities.
- *
- *        A texture mapper with animation capabilities. Note that the angles of the
- *        TextureMapper is moved to the [0; 2PI] range at the beginning at the animation. The
- *        end angles should be relative to this and are limited to values in the range [-32.7;
- *        32.7].
- *
- * @see TextureMapper
+ * A TextureMapper with animation capabilities. Note that the angles of the TextureMapper is
+ * normalized to lie in the range [0; 2PI[ at the beginning at the animation. The end
+ * angles should be relative to this and are limited to values in the range [-32.7;
+ * 32.7].
  */
 class AnimationTextureMapper : public TextureMapper
 {
 public:
-    /**
-     * @enum AnimationParameter
-     *
-     * @brief Values that represent different animation parameter.
-     */
+    /** Values that represent different animation parameter. */
     enum AnimationParameter
     {
         X_ROTATION = 0, ///< Rotation around the X axis
@@ -53,157 +48,104 @@ public:
 
     static const int NUMBER_OF_ANIMATION_PARAMETERS = SCALE + 1; ///< Number of animation parameters
 
-    /**
-     * @fn AnimationTextureMapper::AnimationTextureMapper();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
     AnimationTextureMapper();
 
     /**
-     * @fn virtual AnimationTextureMapper::~AnimationTextureMapper()
+     * Associates an action to be performed for every step in the animation. Will not be called
+     * during the delay period.
      *
-     * @brief Destructor.
-     *
-     *        Destructor. Destroys the AnimationTextureMapper.
-     */
-    virtual ~AnimationTextureMapper();
-
-    /**
-     * @fn void AnimationTextureMapper::setTextureMapperAnimationStepAction(GenericCallback<const AnimationTextureMapper& >& callback)
-     *
-     * @brief Associates an action to be performed when the animation steps.
-     *
-     *        Associates an action to be performed when the animation steps. Will not be called
-     *        during delay period.
-     *
-     * @param callback The callback to be executed. The callback will be given a reference to
-     *                 the AnimationTextureMapper.
+     * @param  callback The callback to be executed. The callback will be given a reference
+     *                  to the AnimationTextureMapper.
      *
      * @see GenericCallback
      */
-    void setTextureMapperAnimationStepAction(GenericCallback<const AnimationTextureMapper& >& callback);
+    void setTextureMapperAnimationStepAction(GenericCallback<const AnimationTextureMapper&>& callback);
 
     /**
-     * @fn void AnimationTextureMapper::setTextureMapperAnimationEndedAction(GenericCallback<const AnimationTextureMapper& >& callback)
+     * Associates an action to be performed when the animation ends.
      *
-     * @brief Associates an action to be performed when the animation ends.
-     *
-     *        Associates an action to be performed when the animation ends.
-     *
-     * @param callback The callback to be executed. The callback will be given a reference to
-     *                 the AnimationTextureMapper.
+     * @param  callback The callback to be executed. The callback will be given a reference
+     *                  to the AnimationTextureMapper.
      *
      * @see GenericCallback
      */
-    void setTextureMapperAnimationEndedAction(GenericCallback<const AnimationTextureMapper& >& callback);
+    void setTextureMapperAnimationEndedAction(GenericCallback<const AnimationTextureMapper&>& callback);
 
     /**
-     * @fn virtual bool AnimationTextureMapper::isTextureMapperAnimationRunning() const
-     *
-     * @brief Gets whether or not the animation is running.
-     *
-     *        Gets whether or not the animation is running.
+     * Gets whether or not the animation is running.
      *
      * @return true if the animation is running.
      */
     virtual bool isTextureMapperAnimationRunning() const;
 
     /**
-     * @fn virtual void AnimationTextureMapper::setupAnimation(AnimationParameter parameter, float endValue, uint16_t duration, uint16_t delay, EasingEquation progressionEquation = &EasingEquations::linearEaseNone);
+     * Sets up the animation for a specific parameter (angle/scale) for the next animation.
+     * The specific parameter is chosen using the AnimationType enum. AnimationTypes that
+     * are not setup using this method will keep their value during the animation.
      *
-     * @brief Sets up the animation for a specific parameter (angle/scale) for the next animation.
-     *
-     *        Sets up the animation for a specific parameter (angle/scale) for the next
-     *        animation. The specific parameter is chosen using the AnimationType enum.
-     *        AnimationTypes that are not setup using this method will keep their value during
-     *        the animation.
-     *
-     * @param parameter           The parameter which animation details are being specified.
-     * @param endValue            The end value for the parameter.
-     * @param duration            The duration for the animation of this parameter. Specified in
-     *                            ticks.
-     * @param delay               The delay for the animation of this parameter. Specified in ticks.
-     * @param progressionEquation the progression equation for the animation of this parameter.
+     * @param  parameter           The parameter of the TextureMapper that should be animated.
+     * @param  endValue            The end value for the parameter.
+     * @param  duration            The duration for the animation of the parameter. Specified in
+     *                             ticks.
+     * @param  delay               The delay before the animation of the parameter starts.
+     *                             Specified in ticks.
+     * @param  progressionEquation (Optional) the progression equation for the animation of this
+     *                             parameter. Default is EasingEquations::linearEaseNone.
      */
     virtual void setupAnimation(AnimationParameter parameter, float endValue, uint16_t duration, uint16_t delay, EasingEquation progressionEquation = &EasingEquations::linearEaseNone);
 
     /**
-     * @fn virtual void AnimationTextureMapper::startAnimation();
-     *
-     * @brief Starts the animation.
-     *
-     *        Starts the animation from the current position to the specified end angles/scale.
-     *        The progression of the angles/scale during the animation is described by the
-     *        supplied EasingEquations.
+     * Starts the animation from the current position to the specified end angles/scale, as
+     * specified by one or more calls to setupAnimation().
      */
     virtual void startAnimation();
 
     /**
-     * @fn virtual void AnimationTextureMapper::cancelAnimationTextureMapperAnimation();
-     *
-     * @brief Cancel move animation.
-     *
-     *        Cancel move animation.
+     * Cancel move animation. Stops any running animation at the current position regardless
+     * of the progress made so far. Disables all animation parameters set using
+     * setupAnimation and mark the animation as stopped.
      */
     virtual void cancelAnimationTextureMapperAnimation();
 
     /**
-     * @fn virtual uint16_t AnimationTextureMapper::getAnimationStep()
-     *
-     * @brief Gets the current animation step.
+     * Gets the current animation step measured in ticks since the call to startAnimation().
+     * The steps during the initial delay are also counted.
      *
      * @return The current animation step.
      */
     virtual uint16_t getAnimationStep();
 
 protected:
-    /**
-     * @fn virtual void AnimationTextureMapper::handleTickEvent()
-     *
-     * @brief The tick handler that handles the actual animation steps.
-     *
-     *        The tick handler that handles the actual animation steps.
-     */
     virtual void handleTickEvent();
 
-    /**
-     * @struct AnimationSetting AnimationTextureMapper.hpp touchgfx/widgets/AnimationTextureMapper.hpp
-     *
-     * @brief Information about how a specific animation parameter should be animated.
-     */
+    /** Information about how a specific animation parameter should be animated. */
     struct AnimationSetting
     {
-        bool           animationActive;              ///< Should this animation be performed
-        float          animationStart;               ///< The animation start value
-        float          animationEnd;                 ///< The animation end value
-        uint16_t       animationDelay;               ///< A delay that is applied before animation start. Expressed in ticks.
-        uint16_t       animationDuration;            ///< The complete duration of the animation. Expressed in ticks.
+        bool animationActive;                        ///< Should this animation be performed?
+        float animationStart;                        ///< The animation start value
+        float animationEnd;                          ///< The animation end value
+        uint16_t animationDelay;                     ///< A delay before the actual animation start. Expressed in ticks.
+        uint16_t animationDuration;                  ///< The complete duration of the animation. Expressed in ticks.
         EasingEquation animationProgressionEquation; ///< EasingEquation expressing the development of the value during the animation.
     };
 
-    /**
-     * @enum AnimationState
-     *
-     * @brief Values that represent different states during an animation.
-     */
+    /** Values that represent different states during an animation. */
     enum AnimationState
     {
         ANIMATION_FINISHED = 0, ///< The animation is finished
         ANIMATION_DELAYED,      ///< The animation is in the delay mode
-        ANIMATION_RUNNING       ///< The animation is currently runnnig
+        ANIMATION_RUNNING       ///< The animation is currently running
     };
 
-    AnimationSetting animations[NUMBER_OF_ANIMATION_PARAMETERS];    ///< Descriptions of the animation of specific animation parameters
+    AnimationSetting animations[NUMBER_OF_ANIMATION_PARAMETERS]; ///< Descriptions of the animation of specific animation parameters
 
-    GenericCallback<const AnimationTextureMapper& >* textureMapperAnimationStepCallback;  ///< Animation has performed a step Callback.
-    GenericCallback<const AnimationTextureMapper& >* textureMapperAnimationEndedCallback; ///< Animation ended Callback.
+    GenericCallback<const AnimationTextureMapper&>* textureMapperAnimationStepCallback;  ///< Callback that is executed after every step of the animation.
+    GenericCallback<const AnimationTextureMapper&>* textureMapperAnimationEndedCallback; ///< Callback that is executed after the animation ends.
 
-    uint16_t animationCounter;   ///< Counter that is equal to the current step in the animation
-    bool     animationRunning;   ///< Boolean that is true if the animation is running
+    uint16_t animationCounter; ///< Counter that is equal to the current step in the animation
+    bool animationRunning;     ///< Boolean that is true if the animation is running
 };
+
 } // namespace touchgfx
 
 #endif // ANIMATIONTEXTUREMAPPER_HPP

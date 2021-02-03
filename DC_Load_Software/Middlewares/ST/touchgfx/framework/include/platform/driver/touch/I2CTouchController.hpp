@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,74 +13,45 @@
   ******************************************************************************
   */
 
+/**
+ * @file platform/driver/touch/I2CTouchController.hpp
+ *
+ * Declares the touchgfx::I2CTouchController interface class.
+ */
 #ifndef I2CTOUCHCONTROLLER_HPP
 #define I2CTOUCHCONTROLLER_HPP
 
-#include <touchgfx/hal/Types.hpp>
-#include <platform/driver/touch/TouchController.hpp>
 #include <platform/driver/i2c/I2C.hpp>
+#include <platform/driver/touch/TouchController.hpp>
+#include <touchgfx/hal/Types.hpp>
 
 namespace touchgfx
 {
 /**
- * @class I2CTouchController I2CTouchController.hpp platform/driver/touch/I2CTouchController.hpp
+ * Specific I2C-enabled type of Touch Controller.
  *
- * @brief Specific I2C-enabled type of Touch Controller.
- *
- *        Specific I2C-enabled type of Touch Controller.
- *
- * @sa TouchController
+ * @see TouchController
  */
 class I2CTouchController : public TouchController
 {
 public:
     /**
-     * @fn I2CTouchController::I2CTouchController(I2C& i2c)
+     * Constructor. Initializes I2C driver.
      *
-     * @brief Constructor.
-     *
-     *        Constructor. Initializes I2C driver.
-     *
-     * @param [in,out] i2c I2C driver.
+     * @param [in] i2c I2C driver.
      */
-    I2CTouchController(I2C& i2c):
-        i2c(i2c)
+    I2CTouchController(I2C& i2c)
+        : i2c(i2c)
     {
         i2c.init();
     }
 
-    /**
-     * @fn virtual I2CTouchController::~I2CTouchController()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
     virtual ~I2CTouchController()
     {
     }
 
-    /**
-     * @fn virtual void I2CTouchController::init() = 0;
-     *
-     * @brief Initializes touch controller.
-     *
-     *        Initializes touch controller.
-     */
     virtual void init() = 0;
 
-    /**
-     * @fn virtual bool I2CTouchController::sampleTouch(int32_t& x, int32_t& y) = 0;
-     *
-     * @brief Checks whether the touch screen is being touched.
-     *
-     *        Checks whether the touch screen is being touched, and if so, what coordinates.
-     *
-     * @param [out] x The x position of the touch
-     * @param [out] y The y position of the touch
-     *
-     * @return True if a touch has been detected, otherwise false.
-     */
     virtual bool sampleTouch(int32_t& x, int32_t& y) = 0;
 
 protected:

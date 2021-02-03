@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file platform/driver/touch/TouchController.hpp
+ *
+ * Declares the touchgfx::TouchController interface class.
+ */
 #ifndef TOUCHCONTROLLER_HPP
 #define TOUCHCONTROLLER_HPP
 
@@ -20,45 +25,23 @@
 
 namespace touchgfx
 {
-/**
- * @class TouchController TouchController.hpp platform/driver/touch/TouchController.hpp
- *
- * @brief Basic Touch Controller interface.
- *
- *        Basic Touch Controller interface.
- */
+/** Basic Touch Controller interface. */
 class TouchController
 {
 public:
-    /**
-     * @fn virtual TouchController::~TouchController()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
+    /** Finalizes an instance of the TouchController class. */
     virtual ~TouchController()
     {
     }
 
-    /**
-     * @fn virtual void TouchController::init() = 0;
-     *
-     * @brief Initializes touch controller.
-     *
-     *        Initializes touch controller.
-     */
+    /** Initializes touch controller. */
     virtual void init() = 0;
 
     /**
-     * @fn virtual bool TouchController::sampleTouch(int32_t& x, int32_t& y) = 0;
+     * Checks whether the touch screen is being touched, and if so, what coordinates.
      *
-     * @brief Checks whether the touch screen is being touched, and if so, what coordinates.
-     *
-     *        Checks whether the touch screen is being touched, and if so, what coordinates.
-     *
-     * @param [out] x The x position of the touch
-     * @param [out] y The y position of the touch
+     * @param [out] x The x position of the touch.
+     * @param [out] y The y position of the touch.
      *
      * @return True if a touch has been detected, otherwise false.
      */

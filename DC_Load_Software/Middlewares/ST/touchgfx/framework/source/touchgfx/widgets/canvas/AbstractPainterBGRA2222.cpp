@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,8 +13,8 @@
   ******************************************************************************
   */
 
-#include <touchgfx/widgets/canvas/AbstractPainterBGRA2222.hpp>
 #include <touchgfx/Color.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainterBGRA2222.hpp>
 
 namespace touchgfx
 {
@@ -58,13 +58,12 @@ void AbstractPainterBGRA2222::render(uint8_t* ptr,
             }
             p++;
             currentX++;
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
 }
 
 void AbstractPainterBGRA2222::renderPixel(uint8_t* p, uint8_t red, uint8_t green, uint8_t blue)
 {
-    *p = static_cast<uint8_t>(LCD8bpp_BGRA2222::getColorFromRGB(red, green, blue));
+    *p = LCD8bpp_BGRA2222::getColorFromRGB(red, green, blue);
 }
 } // namespace touchgfx

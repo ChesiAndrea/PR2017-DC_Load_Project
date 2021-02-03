@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -216,7 +216,7 @@ void SwipeContainer::handleGestureEvent(const GestureEvent& evt)
         return;
     }
 
-    if (evt.getType() == evt.SWIPE_HORIZONTAL)
+    if (evt.getType() == GestureEvent::SWIPE_HORIZONTAL)
     {
         // Save current position for use during animation
         animateDistance = dragX;
@@ -342,10 +342,6 @@ SwipeContainer::PageIndicator::PageIndicator() :
     Container::add(selectedPage);
 }
 
-SwipeContainer::PageIndicator::~PageIndicator()
-{
-}
-
 void SwipeContainer::PageIndicator::setNumberOfPages(uint8_t size)
 {
     numberOfPages = size;
@@ -399,4 +395,4 @@ void SwipeContainer::PageIndicator::setHighlightPosition(uint8_t index)
     }
     invalidate();
 }
-}
+} // namespace touchgfx

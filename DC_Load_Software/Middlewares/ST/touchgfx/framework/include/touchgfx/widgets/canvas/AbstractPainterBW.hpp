@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,23 +13,25 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/canvas/AbstractPainterBW.hpp
+ *
+ * Declares the touchgfx::AbstractPainterBW class.
+ */
 #ifndef ABSTRACTPAINTERBW_HPP
 #define ABSTRACTPAINTERBW_HPP
 
 #include <assert.h>
-#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
 #include <touchgfx/hal/HAL.hpp>
 #include <touchgfx/lcd/LCD.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
 
 namespace touchgfx
 {
 /**
- * @class AbstractPainterBW AbstractPainterBW.hpp touchgfx/widgets/canvas/AbstractPainterBW.hpp
- *
- * @brief A Painter that will paint using a color on a LCD1bpp display.
- *
- *        AbstractPainterBW is used for drawing one 1bpp displays. The color is either on or
- *        off No transparency is supported.
+ * The AbstractPainterBW class is an abstract class for creating a painter to draw on a BW
+ * display using CanvasWidgetRenderer. Pixels are either set or removed, alpha blending
+ * (and transparancy) is not supported.
  *
  * @see AbstractPainter
  */
@@ -37,23 +39,16 @@ class AbstractPainterBW : public AbstractPainter
 {
 public:
     AbstractPainterBW()
+        : currentX(0), currentY(0)
     {
         assert(compatibleFramebuffer(Bitmap::BW) && "The chosen painter only works with BW displays");
     }
-
-    virtual ~AbstractPainterBW() {}
 
     virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
 protected:
     /**
-     * @fn virtual bool AbstractPainterBW::renderInit()
-     *
-     * @brief Initialize rendering of a single scan line of pixels for the render.
-     *
-     *        Initialize rendering of a single scan line of pixels for the render.
-     *
-     * @return true if it succeeds, false if it fails.
+     * @copydoc AbstractPainterABGR2222::renderInit()
      */
     virtual bool renderInit()
     {
@@ -61,13 +56,9 @@ protected:
     }
 
     /**
-     * @fn virtual bool AbstractPainterBW::renderNext(uint8_t& color) = 0;
+     * Get the color of the next pixel in the scan line to blend into the framebuffer.
      *
-     * @brief Get the color of the next pixel in the scan line.
-     *
-     *        Get the color of the next pixel in the scan line.
-     *
-     * @param [out] color Color of the pixel, 0 or 1.
+     * @param [out] color The color (0 or 1).
      *
      * @return true if the pixel should be painted, false otherwise.
      */
@@ -75,7 +66,8 @@ protected:
 
     uint16_t currentX; ///< Current x coordinate relative to the widget
     uint16_t currentY; ///< Current y coordinate relative to the widget
-}; // class AbstractPainterBW
+};
+
 } // namespace touchgfx
 
 #endif // ABSTRACTPAINTERBW_HPP

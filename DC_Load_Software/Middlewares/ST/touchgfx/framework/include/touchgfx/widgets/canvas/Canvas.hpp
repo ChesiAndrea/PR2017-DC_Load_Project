@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,111 +13,89 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/canvas/Canvas.hpp
+ *
+ * Declares the touchgfx::Canvas class.
+ */
 #ifndef CANVAS_HPP
 #define CANVAS_HPP
 
-#include <touchgfx/transforms/DisplayTransformation.hpp>
 #include <touchgfx/Bitmap.hpp>
-#include <touchgfx/widgets/Widget.hpp>
-#include <touchgfx/widgets/canvas/CWRUtil.hpp>
-#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
-#include <touchgfx/widgets/canvas/CanvasWidget.hpp>
 #include <touchgfx/canvas_widget_renderer/Rasterizer.hpp>
 #include <touchgfx/hal/HAL.hpp>
+#include <touchgfx/transforms/DisplayTransformation.hpp>
+#include <touchgfx/widgets/Widget.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
+#include <touchgfx/widgets/canvas/CWRUtil.hpp>
+#include <touchgfx/widgets/canvas/CanvasWidget.hpp>
 
 namespace touchgfx
 {
 /**
- * @class Canvas Canvas.hpp touchgfx/widgets/canvas/Canvas.hpp
+ * Class for easy rendering using CanvasWidgetRenderer.
  *
- * @brief Class for easy rendering using CanvasWidgetRenderer.
+ * The Canvas class will make implementation of a new CanvasWidget very easy. The few
+ * simple primitives allows moving a "pen" and drawing the outline of a shape which can
+ * then be rendered.
  *
- *        The Canvas class will make implementation of a new CanvasWidget very easy. The few
- *        simple primitives allows moving a "pen" and drawing the outline of a shape which can
- *        then be rendered.
- *
- *        The Canvas class has been optimized to eliminate drawing unnecessary lines above and
- *        below the currently invalidated rectangle. This was chosen because
- *        CanvasWidgetRenderer works with horizontal scan lines, and eliminating unnecessary
- *        lines on the left and right does result in as good optimizations, and in some cases
- *        (as e.g. Circle) work against the desired (and expected) optimization.
+ * The Canvas class has been optimized to eliminate drawing unnecessary lines outside
+ * the currently invalidated rectangle.
  */
 class Canvas
 {
 public:
-
     /**
-     * @fn Canvas::Canvas(const CanvasWidget* _widget, const Rect& invalidatedArea);
+     * Canvas Constructor. Locks the framebuffer and prepares for drawing only in the
+     * allowed area which has been invalidated. The color depth of the LCD is taken into
+     * account.
      *
-     * @brief Canvas Constructor.
-     *
-     *        Canvas Constructor. Locks the frame buffer and prepares for drawing only in the
-     *        allowed area which has been invalidated. The color depth of the LCD is taken into
-     *        account.
-     *
-     * @param _widget         a pointer to the CanvasWidget using this Canvas. Used for getting the
-     *                        canvas dimensions.
-     * @param invalidatedArea the are which should be updated.
+     * @param  _widget         a pointer to the CanvasWidget using this Canvas. Used for
+     *                         getting the canvas dimensions.
+     * @param  invalidatedArea the are which should be updated.
+     * @note Locks the framebuffer.
      */
     Canvas(const CanvasWidget* _widget, const Rect& invalidatedArea);
 
     /**
-     * @fn virtual Canvas::~Canvas();
+     * Finalizes an instance of the Canvas class.
      *
-     * @brief Destructor.
-     *
-     *        Destructor. Takes care of unlocking the frame buffer.
+     * @note Unlocks the framebuffer.
      */
     virtual ~Canvas();
 
     /**
-     * @fn void Canvas::moveTo(CWRUtil::Q5 x, CWRUtil::Q5 y);
+     * Move the current pen position to (x, y). If the pen is outside the drawing area,
+     * nothing is done, but the coordinates are saved in case the next operation is lineTo a
+     * coordinate which is inside (or on the opposite side of) the drawing area.
      *
-     * @brief Move the current pen position.
+     * @param  x The x coordinate for the pen position in CWRUtil::Q5 format.
+     * @param  y The y coordinate for the pen position in CWRUtil::Q5 format.
      *
-     *        Move the current pen position to (x, y). If the pen is outside (above or below)
-     *        the drawing area, nothing is done, but the coordinates are saved in case the next
-     *        operation is lineTo a coordinate which is inside (or on the opposite side of) the
-     *        drawing area.
-     *
-     * @param x The x coordinate for the pen position in Q5 format.
-     * @param y The y coordinate for the pen position in Q5 format.
-     *
-     * @see CWRUtil::Q5
-     * @see lineTo
+     * @see CWRUtil::Q5, lineTo
      */
     void moveTo(CWRUtil::Q5 x, CWRUtil::Q5 y);
 
     /**
-     * @fn void Canvas::lineTo(CWRUtil::Q5 x, CWRUtil::Q5 y);
+     * Draw line from the current (x, y) to the new (x, y) as part of the shape being drawn.
+     * As for moveTo, lineTo commands completely outside the drawing are are discarded.
      *
-     * @brief Draw line from current pen position.
+     * @param  x The x coordinate for the pen position in CWRUtil::Q5 format.
+     * @param  y The y coordinate for the pen position in CWRUtil::Q5 format.
      *
-     *        Mark the line from the current (x, y) to the new (x, y) as part of the shape
-     *        being drawn. As for moveTo, moveTo and lineTo commands completely outside the
-     *        drawing are are discarded.
-     *
-     * @param x The x coordinate for the pen position in Q5 format.
-     * @param y The y coordinate for the pen position in Q5 format.
-     *
-     * @see CWRUtil::Q5
-     * @see moveTo
+     * @see CWRUtil::Q5, moveTo
      */
     void lineTo(CWRUtil::Q5 x, CWRUtil::Q5 y);
 
     /**
-     * @fn template <typename T> void Canvas::moveTo(T x, T y)
-     *
-     * @brief Move the current pen position.
-     *
-     *        Move the current pen position to (x, y). If the pen is outside (above or below)
-     *        the drawing area, nothing is done, but the coordinates are saved in case the next
-     *        operation is lineTo a coordinate which is inside (or on the opposite side of) the
-     *        drawing area.
+     * Move the current pen position to (x, y). If the pen is outside (above or below)
+     * the drawing area, nothing is done, but the coordinates are saved in case the next
+     * operation is lineTo a coordinate which is inside (or on the opposite side of) the
+     * drawing area.
      *
      * @tparam T Either int or float.
-     * @param x The x coordinate for the pen position.
-     * @param y The y coordinate for the pen position.
+     * @param  x The x coordinate for the pen position.
+     * @param  y The y coordinate for the pen position.
      */
     template <typename T>
     void moveTo(T x, T y)
@@ -126,17 +104,12 @@ public:
     }
 
     /**
-     * @fn template <typename T> void Canvas::lineTo(T x, T y)
-     *
-     * @brief Draw line from current pen position.
-     *
-     *        Mark the line from the current (x, y) to the new (x, y) as part of the shape
-     *        being drawn. As for moveTo, moveTo and lineTo commands completely outside the
-     *        drawing are are discarded.
+     * Draw line from the current (x, y) to the new (x, y) as part of the shape being drawn.
+     * As for moveTo, lineTo commands completely outside the drawing are are discarded.
      *
      * @tparam T either int or float.
-     * @param x The x coordinate for the pen position.
-     * @param y The y coordinate for the pen position.
+     * @param  x The x coordinate for the pen position.
+     * @param  y The y coordinate for the pen position.
      */
     template <typename T>
     void lineTo(T x, T y)
@@ -145,19 +118,18 @@ public:
     }
 
     /**
-     * @fn bool Canvas::render();
+     * Render the graphical shape drawn using moveTo() and lineTo() with the given Painter. The
+     * shape is automatically closed, i.e. a lineTo() is automatically inserted connecting the
+     * current pen position with the initial pen position given in the first moveTo() command.
      *
-     * @brief Render the drawn shape.
-     *
-     *        Render the graphical shape drawn (using moveTo() and lineTo()) using the widgets
-     *        Painter. The shape is automatically closed,
-     *        i.e. a lineTo() is automatically inserted connecting the current pen position
-     *        with the initial pen position given in the previous moveTo() command.
+     * @param  customAlpha (Optional) Alpha to apply to the entire canvas. Useful if the canvas
+     *                     is part of a more complex container setup that needs to be faded.
+     *                     Default is solid.
      *
      * @return true if the widget was rendered, false if insufficient memory was available to
      *         render the widget.
      */
-    bool render();
+    bool render(uint8_t customAlpha = 255);
 
 private:
     // Pointer to the widget using the Canvas
@@ -193,29 +165,11 @@ private:
 
     uint8_t isOutside(const CWRUtil::Q5& x, const CWRUtil::Q5& y, const CWRUtil::Q5& width, const CWRUtil::Q5& height) const;
 
-    /**
-     * @fn void Canvas::transformFrameBufferToDisplay(CWRUtil::Q5& x, CWRUtil::Q5& y) const;
-     *
-     * @brief Transform frame buffer coordinates to display coordinates.
-     *
-     *        Transform frame buffer coordinates to display coordinates for Q5 coordinates.
-     *
-     * @param [in,out] x The x coordinate.
-     * @param [in,out] y The y coordinate.
-     *
-     * @see DisplayTransformation::transformFrameBufferToDisplay()
-     */
     void transformFrameBufferToDisplay(CWRUtil::Q5& x, CWRUtil::Q5& y) const;
 
-    /**
-        * @fn void Canvas::close()
-        *
-        * @brief Closes the path being drawn.
-        *
-        *        Closes the path being drawn using moveTo and lineTo.
-        */
     void close();
 };
+
 } // namespace touchgfx
 
 #endif // CANVAS_HPP

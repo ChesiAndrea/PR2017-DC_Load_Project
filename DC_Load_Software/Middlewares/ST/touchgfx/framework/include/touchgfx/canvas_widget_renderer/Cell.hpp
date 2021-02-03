@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,20 +13,22 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/canvas_widget_renderer/Cell.hpp
+ *
+ * Declares the touchgfx::Cell struct. Used internally by CanvasWidgetRenderer.
+ */
 #ifndef CELL_HPP
 #define CELL_HPP
 
 #include <touchgfx/hal/Types.hpp>
 
+/// @cond
 namespace touchgfx
 {
 /**
- * @struct Cell Cell.hpp touchgfx/canvas_widget_renderer/Cell.hpp
- *
- * @brief A pixel cell.
- *
- *        A pixel cell. There are no constructors defined and it was done intentionally in
- *        order to avoid extra overhead when allocating an array of cells.
+ * A pixel cell. There are no constructors defined and it was done intentionally in order to
+ * avoid extra overhead when allocating an array of cells.
  */
 struct Cell
 {
@@ -36,16 +38,12 @@ struct Cell
     int16_t area;  ///< The area (see http://projects.tuxee.net/cl-vectors/section-the-cl-aa-algorithm for further information).
 
     /**
-     * @fn void set(int _x, int _y, int _cover, int _area)
+     * Sets all the Cell parameters.
      *
-     * @brief Sets all the Cell parameters.
-     *
-     *        Sets all the Cell parameters.
-     *
-     * @param _x     The x coordinate.
-     * @param _y     The y coordinate.
-     * @param _cover The cover.
-     * @param _area  The area.
+     * @param  _x     The x coordinate.
+     * @param  _y     The y coordinate.
+     * @param  _cover The cover.
+     * @param  _area  The area.
      */
     void set(int _x, int _y, int _cover, int _area)
     {
@@ -54,14 +52,10 @@ struct Cell
     }
 
     /**
-     * @fn void setCoord(int _x, int _y)
+     * Sets the coordinate of the Cell.
      *
-     * @brief Sets the coordinate of the Cell.
-     *
-     *        Sets the coordinate of the Cell.
-     *
-     * @param _x The Cell's x coordinate.
-     * @param _y The Cell's y coordinate.
+     * @param  _x The Cell's x coordinate.
+     * @param  _y The Cell's y coordinate.
      */
     void setCoord(int _x, int _y)
     {
@@ -70,14 +64,10 @@ struct Cell
     }
 
     /**
-     * @fn void setCover(int _cover, int _area)
+     * Sets the cover of area cell.
      *
-     * @brief Sets the cover of area cell.
-     *
-     *        Sets the cover of area cell.
-     *
-     * @param _cover The cover.
-     * @param _area  The area.
+     * @param  _cover The cover.
+     * @param  _area  The area.
      */
     void setCover(int _cover, int _area)
     {
@@ -86,14 +76,10 @@ struct Cell
     }
 
     /**
-     * @fn void addCover(int _cover, int _area)
+     * Adds a cover to a Cell.
      *
-     * @brief Adds a cover to a Cell.
-     *
-     *        Adds a cover to a Cell.
-     *
-     * @param _cover The cover to add to the Cell.
-     * @param _area  The area to add to the Cell.
+     * @param  _cover The cover to add to the Cell.
+     * @param  _area  The area to add to the Cell.
      */
     void addCover(int _cover, int _area)
     {
@@ -102,12 +88,8 @@ struct Cell
     }
 
     /**
-     * @fn int packedCoord() const
-     *
-     * @brief Packed coordinates of the Cell.
-     *
-     *        Packed coordinates of the Cell. By packing the x coordinate and y coordinate into
-     *        one int, it is possible to sort Cells using a single comparison.
+     * Packed coordinates of the Cell. By packing the x coordinate and y coordinate into one
+     * int, it is possible to sort Cells using a single comparison.
      *
      * @return The packed coordinates with y in the high part and x in the low part.
      */
@@ -116,6 +98,8 @@ struct Cell
         return (y << 16) + x;
     }
 }; // struct Cell
+
 } // namespace touchgfx
+/// @endcond
 
 #endif // CELL_HPP

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file platform/driver/button/ButtonController.hpp
+ *
+ * Declares the touchgfx::ButtonController interface class.
+ */
 #ifndef BUTTONCONTROLLER_HPP
 #define BUTTONCONTROLLER_HPP
 
@@ -20,59 +25,32 @@
 
 namespace touchgfx
 {
-/**
- * @class ButtonController ButtonController.hpp platform/driver/button/ButtonController.hpp
- *
- * @brief Interface for sampling external key events.
- *
- *        Interface for sampling external key events.
- */
+/** Interface for sampling external key events. */
 class ButtonController
 {
 public:
-    /**
-     * @fn virtual ButtonController::~ButtonController()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
+    /** Finalizes an instance of the ButtonController class. */
     virtual ~ButtonController()
     {
     }
 
-    /**
-     * @fn virtual void ButtonController::init() = 0;
-     *
-     * @brief Initializes button controller.
-     *
-     *        Initializes button controller.
-     */
+    /** Initializes button controller. */
     virtual void init() = 0;
 
     /**
-     * @fn virtual bool ButtonController::sample(uint8_t& key) = 0;
+     * Sample external key events.
      *
-     * @brief Sample external key events.
-     *
-     *        Sample external key events.
-     *
-     * @param [in,out] key Output parameter that will be set to the key value if a keypress was
+     * @param [out] key Output parameter that will be set to the key value if a keypress was
      *                     detected.
      *
      * @return True if a keypress was detected and the "key" parameter is set to a value.
      */
     virtual bool sample(uint8_t& key) = 0;
 
-    /**
-     * @fn virtual void reset()
-     *
-     * @brief Resets button controller.
-     *
-     *        Resets button controller. Does nothing in the default implementation.
-     *
-     */
-    virtual void reset() {}
+    /** Resets button controller. Does nothing in the default implementation. */
+    virtual void reset()
+    {
+    }
 };
 
 } // namespace touchgfx

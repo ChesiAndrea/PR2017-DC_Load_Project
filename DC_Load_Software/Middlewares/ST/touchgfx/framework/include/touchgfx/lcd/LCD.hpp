@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,17 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/lcd/LCD.hpp
+ *
+ * This file contains two super classes, namely LCD and DebugPrinter. The LCD class specifies
+ * various functions that allow drawing images, texts and boxes on the display. In general,
+ * these functions are available through various widgets which encapsulates these drawing
+ * operations and keep track of the state of image/text/etc. Please consult the documentation
+ * for the widgets for more information.
+ *
+ * @see touchgfx::LCD, touchgfx::DebugPrinter
+ */
 #ifndef LCD_HPP
 #define LCD_HPP
 
@@ -32,118 +43,103 @@ struct Edge;
 #undef LCD
 
 /**
- * @class LCD LCD.hpp touchgfx/lcd/LCD.hpp
+ * This class contains the various low-level drawing routines for drawing bitmaps, texts and
+ * rectangles/boxes. Normally, these draw operations are called from widgets, which also
+ * keep track of logical states such as visibility etc.
  *
- * @brief This class contains the various low-level drawing routines for drawing bitmaps, texts and
- *        rectangles.
+ * The LCD class cannot be instantiated, instead use one of the subclasses which
+ * implements the LCD drawing operations for a specific display configuration.
  *
- *        This class contains the various low-level drawing routines for drawing bitmaps, texts
- *        and rectangles.
- *
- * @note All coordinates are expected to be in absolute coordinates!
+ * @note All coordinates sent to functions in the LCD class are expected to be in absolute
+ *       coordinates, i.e. (0, 0) is upper left corner of the display.
  */
 class LCD
 {
 public:
-    /**
-     * @fn virtual LCD::~LCD()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
+    /** Finalizes an instance of the LCD class. */
     virtual ~LCD()
     {
     }
 
     /**
-     * @fn virtual void LCD::init()
+     * Draws all (or a part) of a \a bitmap. The coordinates of the corner of the bitmap is
+     * given in (\a x, \a y) and \a rect describes which part of the \a bitmap should be
+     * drawn. The bitmap can be drawn as it is or more or less transparent depending on the
+     * value of \a alpha. The value of \a alpha is independent of the transparency of the
+     * individual pixels of the given \a bitmap.
      *
-     * @brief Performs initialization.
-     *
-     *        Performs initialization.
+     * @param  bitmap       The bitmap to draw.
+     * @param  x            The absolute x coordinate to place (0, 0) of the bitmap on the screen.
+     * @param  y            The absolute y coordinate to place (0, 0) of the bitmap on the screen.
+     * @param  rect         A rectangle describing what region of the bitmap is to be drawn.
+     * @param  alpha        (Optional) Optional alpha value ranging from 0=invisible to
+     *                      255=solid. Default is 255 (solid).
+     * @param  useOptimized (Optional) if false, do not attempt to substitute (parts of) this
+     *                      bitmap with faster fillrects.
      */
-    virtual void init()
-    {
-    }
-
-    /**
-    * @fn virtual void LCD::drawPartialBitmap(const Bitmap& bitmap, int16_t x, int16_t y, const Rect& rect, uint8_t alpha = 255, bool useOptimized = true) = 0;
-    *
-    * @brief Draws a portion of a bitmap.
-    *
-    *        Draws a portion of a bitmap.
-    *
-    * @param bitmap       The bitmap to draw.
-    * @param x            The absolute x coordinate to place pixel (0,0) on the screen.
-    * @param y            The absolute y coordinate to place pixel (0,0) on the screen.
-    * @param rect         A rectangle describing what region of the bitmap is to be drawn.
-    * @param alpha        Optional alpha value. Default is 255 (solid).
-    * @param useOptimized if false, do not attempt to substitute (parts of) this bitmap with
-    *                     faster fillrects.
-    */
     virtual void drawPartialBitmap(const Bitmap& bitmap, int16_t x, int16_t y, const Rect& rect, uint8_t alpha = 255, bool useOptimized = true) = 0;
 
     /**
-     * @fn virtual void LCD::blitCopy(const uint16_t* sourceData, const Rect& source, const Rect& blitRect, uint8_t alpha, bool hasTransparentPixels) = 0;
+     * Blits (directly copies) a block of data to the framebuffer, performing alpha blending
+     * (and tranparency keying) as specified. Performs a software blend if HAL does not
+     * support BLIT_COPY_WITH_ALPHA and alpha != 255 (solid).
      *
-     * @brief Blits a 2D source-array to the framebuffer.
-     *
-     *        Blits a 2D source-array to the framebuffer perfoming alpha-blending (and
-     *        tranparency keying) as specified. Performs a software blend if HAL does not
-     *        support BLIT_COPY_WITH_ALPHA and alpha != 255.
-     *
-     * @param sourceData           The source-array pointer (points to the beginning of the
-     *                             data). The sourceData must be stored in a format suitable for
-     *                             the selected display.
-     * @param source               The location and dimension of the source.
-     * @param blitRect             A rectangle describing what region is to be drawn.
-     * @param alpha                The alpha value to use for blending (255 = solid, no blending)
-     * @param hasTransparentPixels If true, this data copy contains transparent pixels and
-     *                             require hardware support for that to be enabled.
+     * @param  sourceData           The source array pointer (points to the beginning of the
+     *                              data). The sourceData must be stored in a format
+     *                              suitable for the selected display.
+     * @param  source               The position and dimensions of the source. The x and y of this
+     *                              rect should both be 0.
+     * @param  blitRect             A rectangle describing what region of the \a sourceData is to
+     *                              be copied to the framebuffer.
+     * @param  alpha                The alpha value to use for blending ranging from 0=invisible
+     *                              to 255=solid=no blending.
+     * @param  hasTransparentPixels If true, this data copy contains transparent pixels and
+     *                              require hardware support for that to be enabled.
      */
     virtual void blitCopy(const uint16_t* sourceData, const Rect& source, const Rect& blitRect, uint8_t alpha, bool hasTransparentPixels) = 0;
 
     /**
-     * @fn virtual void LCD::blitCopy(const uint8_t* sourceData, Bitmap::BitmapFormat sourceFormat, const Rect& source, const Rect& blitRect, uint8_t alpha, bool hasTransparentPixels) = 0;
+     * Blits (directly copies) a block of data to the framebuffer, performing alpha blending
+     * (and tranparency keying) as specified. Performs a software blend if HAL does not
+     * support BLIT_COPY_WITH_ALPHA and alpha < 255 (solid).
      *
-     * @brief Blits a 2D source-array to the frame buffer while converting the format.
+     * If the display does not support the specified \a sourceFormat, an \a assert will be
+     * raised.
      *
-     *        Blits a 2D source-array to the frame buffer performing alpha-blending (and
-     *        transparency keying) as specified. Performs a software blend if HAL does not
-     *        support BLIT_COPY_WITH_ALPHA and alpha != 255.
-     *
-     * @param sourceData           The source-array pointer (points to the beginning of the
-     *                             data). The sourceData must be stored in a format suitable for
-     *                             the selected display.
-     * @param sourceFormat         The bitmap format used in the source data.
-     * @param source               The location and dimension of the source.
-     * @param blitRect             A rectangle describing what region is to be drawn.
-     * @param alpha                The alpha value to use for blending (255 = solid, no blending)
-     * @param hasTransparentPixels If true, this data copy contains transparent pixels and
-     *                             require hardware support for that to be enabled.
+     * @param  sourceData           The source array pointer (points to the beginning of the
+     *                              data). The sourceData must be stored in a format
+     *                              suitable for the selected display.
+     * @param  sourceFormat         The bitmap format used in the source data.
+     * @param  source               The position and dimensions of the source. The x and y of this
+     *                              rect should both be 0.
+     * @param  blitRect             A rectangle describing what region of the \a sourceData is to
+     *                              be copied to the framebuffer.
+     * @param  alpha                The alpha value to use for blending ranging from 0=invisible
+     *                              to 255=solid=no blending.
+     * @param  hasTransparentPixels If true, this data copy contains transparent pixels and
+     *                              require hardware support for that to be enabled.
      */
     virtual void blitCopy(const uint8_t* sourceData, Bitmap::BitmapFormat sourceFormat, const Rect& source, const Rect& blitRect, uint8_t alpha, bool hasTransparentPixels) = 0;
 
     /**
-     * @fn uint16_t* LCD::copyFrameBufferRegionToMemory(const Rect& region, const BitmapId bitmapId = BITMAP_ANIMATION_STORAGE)
+     * Copies part of the framebuffer to the data section of a bitmap. The bitmap must be a
+     * dynamic bitmap or animation storage (BITMAP_ANIMATION_STORAGE). Only the part
+     * specified with by parameter \a region is copied.
      *
-     * @brief Copies a part of the frame buffer.
+     * If \a region has negative x/y coordinates of if width/height exceeds those of the
+     * given bitmap, only the visible and legal part of the framebuffer is copied. The rest
+     * of the bitmap image is left untouched.
      *
-     *        Copies a part of the frame buffer to a bitmap. The bitmap must be a dynamic bitmap or
-     *        animation storage (default). Only the part specified with by parameter region is
-     *        copied.
+     * @param  region   The part of the framebuffer to copy.
+     * @param  bitmapId (Optional) The bitmap to store the data in. Default is to use
+     *                  Animation Storage.
      *
-     * @note There is only one instance of animation storage. The content of the animation storage
-     *       outside the given region is undefined.
-     *
-     * @param region   The part to copy.
-     * @param bitmapId (Optional) The bitmap to store the data in. Default parameter is Animation
-     *                 Storage.
-     *
-     * @returns A pointer to the copy.
+     * @return A pointer to the copy.
      *
      * @see blitCopy
+     *
+     * @note There is only one instance of animation storage. The content of the bitmap data (or
+     *       animation storage) outside the given region is left untouched.
      */
     uint16_t* copyFrameBufferRegionToMemory(const Rect& region, const BitmapId bitmapId = BITMAP_ANIMATION_STORAGE)
     {
@@ -151,110 +147,114 @@ public:
     }
 
     /**
-     * @fn virtual uint16_t* LCD::copyFrameBufferRegionToMemory(const Rect& visRegion, const Rect& absRegion, const BitmapId bitmapId) = 0;
+     * Copies part of the framebuffer to the data section of a bitmap. The bitmap must be a
+     * dynamic bitmap or animation storage (BITMAP_ANIMATION_STORAGE). The two regions given
+     * are the visible region and the absolute region on screen. This is used to copy only a
+     * part of the framebuffer. This might be the case if a SnapshotWidget is placed inside
+     * a Container where parts of the SnapshowWidget is outside the area defined by the
+     * Container. The visible region must be completely inside the absolute region.
      *
-     * @brief Copies part of the frame buffer region to memory.
+     * @param  visRegion The visible region.
+     * @param  absRegion The absolute region.
+     * @param  bitmapId  Identifier for the bitmap.
      *
-     *        Copies part of the framebuffer region to memory. The memory is given as BitmapId,
-     *        which can be BITMAP_ANIMATION_STORAGE. The two regions given are the visible region
-     *        and the absolute region on screen. This is used to copy only a part of an area. This
-     *        might be the case if a SnapshotWidget is placed inside a Container where parts of the
-     *        SnapshowWidget is outside the area defined by the Container. The visible region must
-     *        be completely inside the absolute region.
-     *
-     * @note There is only one instance of animation storage. The content of the animation storage
-     *       outside the given region is undefined.
-     *
-     * @param visRegion The visible region.
-     * @param absRegion The absolute region.
-     * @param bitmapId  Identifier for the bitmap.
-     *
-     * @returns Null if it fails, else a pointer to the data in the given bitmap.
+     * @return Null if it fails, else a pointer to the data in the given bitmap.
      *
      * @see blitCopy
+     *
+     * @note There is only one instance of animation storage. The content of the bitmap data
+     *       /animation storage outside the given region is left untouched.
      */
     virtual uint16_t* copyFrameBufferRegionToMemory(const Rect& visRegion, const Rect& absRegion, const BitmapId bitmapId) = 0;
 
     /**
-     * @fn virtual void LCD::fillRect(const Rect& rect, colortype color, uint8_t alpha = 255) = 0;
+     * Draws a filled rectangle in the framebuffer in the specified color and opacity. By
+     * default the rectangle will be drawn as a solid box. The rectangle can be drawn with
+     * transparancy by specifying alpha from 0=invisible to 255=solid.
      *
-     * @brief Draws a filled rectangle in the specified color.
-     *
-     *        Draws a filled rectangle in the specified color.
-     *
-     * @param rect  The rectangle to draw in absolute coordinates.
-     * @param color The rectangle color.
-     * @param alpha The rectangle opacity (255=solid)
+     * @param  rect  The rectangle to draw in absolute display coordinates.
+     * @param  color The rectangle color.
+     * @param  alpha (Optional) The rectangle opacity, from 0=invisible to 255=solid.
      */
     virtual void fillRect(const Rect& rect, colortype color, uint8_t alpha = 255) = 0;
 
+    ///@cond
     /**
-     * @fn void LCD::drawHorizontalLine(int16_t x, int16_t y, uint16_t width, uint16_t lineWidth, colortype color, uint8_t alpha = 255);
+     * Draws a horizontal line with the specified color and opacity. By default the line
+     * will be drawn as a solid line. The line can be drawn with transparency by specifying
+     * alpha from 0=invisible to 255=solid.
      *
-     * @brief Draws a horizontal line with the specified color.
+     * @param  x         The x coordinate of the starting point in absolute display
+     *                   coordinates.
+     * @param  y         The y coordinate of the starting point in absolute display
+     *                   coordinates.
+     * @param  width     The length of the line.
+     * @param  lineWidth The width of the line.
+     * @param  color     The color to use.
+     * @param  alpha     (Optional) The rectangle opacity, from 0=invisible to 255=solid.
      *
-     *        Draws a horizontal line with the specified color.
-     *
-     * @param x         The x coordinate of the starting point, in absolute coordinates.
-     * @param y         The y coordinate of the starting point, in absolute coordinates.
-     * @param width     The length of the line.
-     * @param lineWidth The width of the line.
-     * @param color     The color to use.
-     * @param alpha     The alpha value to use (default=solid)
+     * @deprecated Use LCD::fillRect().
      */
-    void drawHorizontalLine(int16_t x, int16_t y, uint16_t width, uint16_t lineWidth, colortype color, uint8_t alpha = 255);
+    TOUCHGFX_DEPRECATED(
+        "Use LCD::fillRect().",
+        void drawHorizontalLine(int16_t x, int16_t y, uint16_t width, uint16_t lineWidth, colortype color, uint8_t alpha = 255));
+    ///@endcond
 
+    ///@cond
     /**
-     * @fn void LCD::drawVerticalLine(int16_t x, int16_t y, uint16_t height, uint16_t lineWidth, colortype color, uint8_t alpha = 255);
+     * Draws a vertical line with the specified color and opacity. By default the line will
+     * be drawn as a solid line. The line can be drawn with transparency by specifying alpha
+     * from 0=invisible to 255=solid.
      *
-     * @brief Draws a vertical line with the specified color.
+     * @param  x         The x coordinate of the starting point in absolute display
+     *                   coordinates.
+     * @param  y         The y coordinate of the starting point in absolute display
+     *                   coordinates.
+     * @param  height    The length of the line.
+     * @param  lineWidth The width of the line.
+     * @param  color     The color to use.
+     * @param  alpha     (Optional) The rectangle opacity, from 0=invisible to 255=solid.
      *
-     *        Draws a vertical line with the specified color.
-     *
-     * @param x         The x coordinate of the starting point, in absolute coordinates.
-     * @param y         The y coordinate of the starting point, in absolute coordinates.
-     * @param height    The length of the line.
-     * @param lineWidth The width of the line.
-     * @param color     The color to use.
-     * @param alpha     The alpha value to use (default=solid)
+     * @deprecated Use LCD::fillRect().
      */
-    void drawVerticalLine(int16_t x, int16_t y, uint16_t height, uint16_t lineWidth, colortype color, uint8_t alpha = 255);
+    TOUCHGFX_DEPRECATED(
+        "Use LCD::fillRect().",
+        void drawVerticalLine(int16_t x, int16_t y, uint16_t height, uint16_t lineWidth, colortype color, uint8_t alpha = 255));
+    ///@endcond
 
+    ///@cond
     /**
-     * @fn void LCD::drawRect(const Rect& rect, colortype color, uint8_t alpha = 255);
+     * Draws a rectangle using the specified line color and opacity. This is the same as
+     * calling drawBorder with a line width of 1.
      *
-     * @brief Draws a rectangle using the specified line color.
+     * @param  rect  The rectangle to draw in absolute display coordinates.
+     * @param  color The color to use.
+     * @param  alpha (Optional) The rectangle opacity, from 0=invisible to 255=solid.
      *
-     *        Draws a rectangle using the specified line color. Same as calling drawBorder with
-     *        a line width of 1.
-     *
-     * @param rect  The rectangle x, y, width, height in absolute coordinates.
-     * @param color The color to use.
-     * @param alpha The alpha value to use (default=solid)
+     * @deprecated Use 4 calls to LCD::fillRect().
      */
-    void drawRect(const Rect& rect, colortype color, uint8_t alpha = 255);
+    TOUCHGFX_DEPRECATED(
+        "Use 4 calls to LCD::fillRect().",
+        void drawRect(const Rect& rect, colortype color, uint8_t alpha = 255));
+    ///@endcond
 
+    ///@cond
     /**
-     * @fn void LCD::drawBorder(const Rect& rect, uint16_t lineWidth, colortype color, uint8_t alpha = 255);
+     * Draws a rectangle width the specified line width, color and opacity.
      *
-     * @brief Draws a rectangle width the specified line width and color.
+     * @param  rect      The rectangle x, y, width, height in absolute coordinates.
+     * @param  lineWidth The width of the line.
+     * @param  color     The color to use.
+     * @param  alpha     (Optional) The rectangle opacity, from 0=invisible to 255=solid.
      *
-     *        Draws a rectangle width the specified line width and color.
-     *
-     * @param rect      The rectangle x, y, width, height in absolute coordinates.
-     * @param lineWidth The width of the line.
-     * @param color     The color to use.
-     * @param alpha     The alpha value to use (default=solid)
+     * @deprecated Use four calls to LCD::fillRect().
      */
-    void drawBorder(const Rect& rect, uint16_t lineWidth, colortype color, uint8_t alpha = 255);
+    TOUCHGFX_DEPRECATED(
+        "Use four calls to LCD::fillRect().",
+        void drawBorder(const Rect& rect, uint16_t lineWidth, colortype color, uint8_t alpha = 255));
+    ///@endcond
 
-    /**
-     * @struct StringVisuals LCD.hpp touchgfx/lcd/LCD.hpp
-     *
-     * @brief The visual elements when writing a string.
-     *
-     *        The visual elements when writing a string.
-     */
+    /** The visual elements when writing a string. */
     struct StringVisuals
     {
         const Font* font;              ///< The font to use.
@@ -267,34 +267,27 @@ public:
         uint8_t indentation;           ///< Indentation of text inside rectangle. Text will start this far from the left/right edge
         WideTextAction wideTextAction; ///< What to do with wide text lines
 
-        /**
-         * @fn StringVisuals()
-         *
-         * @brief Construct an empty StringVisuals object.
-         *
-         *        Construct an empty StringVisuals object.
-         */
+        /** Initializes a new instance of the LCD class. */
         StringVisuals()
             : font(0), alignment(LEFT), textDirection(TEXT_DIRECTION_LTR), rotation(TEXT_ROTATE_0), color(0), linespace(0), alpha(255), indentation(0), wideTextAction(WIDE_TEXT_NONE)
         {
         }
 
         /**
-         * @fn StringVisuals(const Font* font, colortype color, uint8_t alpha, Alignment alignment, int16_t linespace, TextRotation rotation, TextDirection textDirection, uint8_t indentation, WideTextAction wideTextAction = WIDE_TEXT_NONE)
+         * Construct a StringVisual object for rendering text.
          *
-         * @brief Construct a StringVisual object for rendering text.
-         *
-         * @param font           The Font with which to draw the text.
-         * @param color          The color with which to draw the text.
-         * @param alpha          Alpha blending. Default value is 255 (solid)
-         * @param alignment      How to align the text.
-         * @param linespace      Line space in pixels between each line, in case the text contains
-         *                       newline characters.
-         * @param rotation       How to rotate the text.
-         * @param textDirection  The text direction.
-         * @param indentation    The indentation of the text from the left and right of the text
-         *                       area rectangle.
-         * @param wideTextAction What to do with lines longer than the width of the TextArea.
+         * @param  font           The Font with which to draw the text.
+         * @param  color          The color with which to draw the text.
+         * @param  alpha          Alpha blending. Default value is 255 (solid)
+         * @param  alignment      How to align the text.
+         * @param  linespace      Line space in pixels between each line, in case the text
+         *                        contains newline characters.
+         * @param  rotation       How to rotate the text.
+         * @param  textDirection  The text direction.
+         * @param  indentation    The indentation of the text from the left and right of the
+         *                        text area rectangle.
+         * @param  wideTextAction (Optional) What to do with lines longer than the width of the
+         *                        TextArea.
          */
         StringVisuals(const Font* font, colortype color, uint8_t alpha, Alignment alignment, int16_t linespace, TextRotation rotation, TextDirection textDirection, uint8_t indentation, WideTextAction wideTextAction = WIDE_TEXT_NONE)
         {
@@ -311,23 +304,20 @@ public:
     };
 
     /**
-     * @fn void LCD::drawString(Rect widgetArea, const Rect& invalidatedArea, const StringVisuals& stringVisuals, const Unicode::UnicodeChar* format, ...);
+     * Draws the specified Unicode string. Breaks line on newline.
      *
-     * @brief Draws the specified unicode string.
-     *
-     *        Draws the specified unicode string. Breaks line on newline.
-     *
-     * @param widgetArea      The area covered by the drawing widget in absolute coordinates.
-     * @param invalidatedArea The (sub)region of the widget area to draw, expressed relative to
-     *                        the widget area. If the widgetArea is (x, y, width, height) = (10,
-     *                        10, 20, 20) and invalidatedArea is (x, y, width, height) = (5, 5,
-     *                        6, 6) the widgetArea drawn on the LCD is (x, y, width, height) =
-     *                        (15, 15, 6, 6).
-     * @param stringVisuals   The string visuals (font, alignment, line space, color)
-     *                        with which to draw this string.
-     * @param format          A pointer to a zero terminated text string with optional
-     *                        additional wildcard arguments.
-     * @param ...             Variable arguments providing additional information.
+     * @param  widgetArea      The area covered by the drawing widget in absolute
+     *                         coordinates.
+     * @param  invalidatedArea The (sub)region of the widget area to draw, expressed
+     *                         relative to the widget area. If the widgetArea is x=10, y=10,
+     *                         width=20, height=20 and invalidatedArea is x=5, y=5, width=6,
+     *                         height=6 the widgetArea drawn on the LCD is x=15, y=15,
+     *                         width=6, height=6.
+     * @param  stringVisuals   The string visuals (font, alignment, line space, color)
+     *                         with which to draw this string.
+     * @param  format          A pointer to a null-terminated text string with optional
+     *                         additional wildcard arguments.
+     * @param  ...             Variable arguments providing additional information.
      */
     void drawString(Rect widgetArea,
                     const Rect& invalidatedArea,
@@ -336,113 +326,79 @@ public:
                     ...);
 
     /**
-     * @fn virtual uint8_t LCD::bitDepth() const = 0;
-     *
-     * @brief Number of bits per pixel used by the display.
-     *
-     *        Number of bits per pixel used by the display.
+     * Number of bits per pixel used by the display.
      *
      * @return The number of bits per pixel.
      */
     virtual uint8_t bitDepth() const = 0;
 
     /**
-     * @fn virtual Bitmap::BitmapFormat LCD::framebufferFormat() const = 0;
-     *
-     * @brief Framebuffer format used by the display
-     *
-     *        Framebuffer format used by the display
+     * Framebuffer format used by the display.
      *
      * @return A Bitmap::BitmapFormat.
      */
     virtual Bitmap::BitmapFormat framebufferFormat() const = 0;
 
     /**
-     * @fn virtual uint16_t LCD::framebufferStride() const = 0;
-     *
-     * @brief Framebuffer stride in bytes
-     *
-     *        Framebuffer stride in bytes. The distance (in bytes) from the start of one
-     *        framebuffer row, to the next.
+     * Framebuffer stride in bytes. The distance (in bytes) from the start of one
+     * framebuffer row, to the next.
      *
      * @return The number of bytes in one framebuffer row.
      */
     virtual uint16_t framebufferStride() const = 0;
 
     /**
-     * @fn virtual colortype LCD::getColorFrom24BitRGB(uint8_t red, uint8_t green, uint8_t blue) const = 0;
+     * Generates a color representation to be used on the LCD, based on 24 bit RGB values.
+     * Depending on your chosen color bit depth, the color will be interpreted internally as
+     * either a 16 bit or 24 bit color value. This function can be safely used regardless of
+     * whether your application is configured for 16 or 24 bit colors.
      *
-     * @brief Generates a color representation to be used on the LCD, based on 24 bit RGB values.
-     *        Depending on your chosen color bit depth, the color will be interpreted internally as
-     *        either a 16 bit or 24 bit color value.
-     *
-     *        Generates a color representation to be used on the LCD, based on 24 bit RGB values.
-     *        Depending on your chosen color bit depth, the color will be interpreted internally as
-     *        either a 16 bit or 24 bit color value. This function can be safely used regardless of
-     *        whether your application is configured for 16 or 24 bit colors.
-     *
-     * @param red   Value of the red part (0-255).
-     * @param green Value of the green part (0-255).
-     * @param blue  Value of the blue part (0-255).
+     * @param  red   Value of the red part (0-255).
+     * @param  green Value of the green part (0-255).
+     * @param  blue  Value of the blue part (0-255).
      *
      * @return The color representation depending on LCD color format.
      */
     virtual colortype getColorFrom24BitRGB(uint8_t red, uint8_t green, uint8_t blue) const = 0;
 
     /**
-     * @fn virtual uint8_t LCD::getRedColor(colortype color) const = 0;
+     * Gets the red color part of a color. As this function must work for all color depths,
+     * it can be somewhat slow if used in speed critical sections. Consider finding the
+     * color in another way, if possible.
      *
-     * @brief Gets the red color part of a color.
-     *
-     *        Gets the red color part of a color. As this function must work for all color depths,
-     *        it can be somewhat slow if used in speed critical sections. Consider finding the
-     *        color in another way, if possible.
-     *
-     * @param color The color value.
+     * @param  color The color value.
      *
      * @return The red part of the color.
      */
     virtual uint8_t getRedColor(colortype color) const = 0;
 
     /**
-     * @fn virtual uint8_t LCD::getGreenColor(colortype color) const = 0;
+     * Gets the green color part of a color. As this function must work for all color depths,
+     * it can be somewhat slow if used in speed critical sections. Consider finding the
+     * color in another way, if possible.
      *
-     * @brief Gets the green color part of a color.
-     *
-     *        Gets the green color part of a color. As this function must work for all color depths,
-     *        it can be somewhat slow if used in speed critical sections. Consider finding the
-     *        color in another way, if possible.
-     *
-     * @param color The 16 bit color value.
+     * @param  color The 16 bit color value.
      *
      * @return The green part of the color.
      */
     virtual uint8_t getGreenColor(colortype color) const = 0;
 
     /**
-     * @fn virtual uint8_t LCD::getBlueColor(colortype color) const = 0;
+     * Gets the blue color part of a color. As this function must work for all color depths,
+     * it can be somewhat slow if used in speed critical sections. Consider finding the
+     * color in another way, if possible.
      *
-     * @brief Gets the blue color part of a color.
-     *
-     *        Gets the blue color part of a color. As this function must work for all color depths,
-     *        it can be somewhat slow if used in speed critical sections. Consider finding the
-     *        color in another way, if possible.
-     *
-     * @param color The 16 bit color value.
+     * @param  color The 16 bit color value.
      *
      * @return The blue part of the color.
      */
     virtual uint8_t getBlueColor(colortype color) const = 0;
 
     /**
-     * @fn void LCD::setDefaultColor(colortype color)
+     * Sets default color as used by alpha level only bitmap formats, e.g. A4. The default
+     * color, if no color is set, is black.
      *
-     * @brief Sets default color as used by alpha level only bitmap formats, e.g. A4.
-     *
-     *        Sets default color as used by alpha level only bitmap formats, e.g. A4. The
-     *        default color, if no color is set, is black.
-     *
-     * @param color The color.
+     * @param  color The color.
      *
      * @see getDefaultColor
      */
@@ -452,11 +408,7 @@ public:
     }
 
     /**
-     * @fn colortype LCD::getDefaultColor() const
-     *
-     * @brief Gets default color previously set using setDefaultColor.
-     *
-     *        Gets default color previously set using setDefaultColor.
+     * Gets default color previously set using setDefaultColor.
      *
      * @return The default color.
      *
@@ -468,25 +420,24 @@ public:
     }
 
     /**
-     * @fn void LCD::drawTextureMapTriangle(const DrawingSurface& dest, const Point3D* vertices, const TextureSurface& texture, const Rect& absoluteRect, const Rect& dirtyAreaAbsolute, RenderingVariant renderVariant, uint8_t alpha = 255, uint16_t subDivisionSize = 12);
+     * Texture map triangle. Draw a perspective correct texture mapped triangle. The
+     * vertices describes the surface, the x,y,z coordinates and the u,v coordinates of the
+     * texture. The texture contains the image data to be drawn The triangle line will be
+     * placed and clipped using the absolute and dirty rectangles The alpha will determine
+     * how the triangle should be alpha blended. The subDivisionSize will determine the size
+     * of the piecewise affine texture mapped portions of the triangle.
      *
-     * @brief Texture map triangle. Draw a perspective correct texture mapped triangle. The
-     *        vertices describes the surface, the x,y,z coordinates and the u,v coordinates of
-     *        the texture. The texture contains the image data to be drawn The triangle line
-     *        will be placed and clipped using the absolute and dirty rectangles The alpha will
-     *        determine how the triangle should be alpha blended. The subDivisionSize will
-     *        determine the size of the piecewise affine texture mapped portions of the
-     *        triangle.
-     *
-     * @param dest              The description of where the texture is drawn - can be used to
-     *                          issue a draw off screen.
-     * @param vertices          The vertices of the triangle.
-     * @param texture           The texture.
-     * @param absoluteRect      The containing rectangle in absolute coordinates.
-     * @param dirtyAreaAbsolute The dirty area in absolute coordinates.
-     * @param renderVariant     The render variant - includes the algorithm and the pixel format.
-     * @param alpha             the alpha. Default = 255.
-     * @param subDivisionSize   the size of the subdivisions of the scan line. Default = 12.
+     * @param  dest              The description of where the texture is drawn - can be used
+     *                           to issue a draw off screen.
+     * @param  vertices          The vertices of the triangle.
+     * @param  texture           The texture.
+     * @param  absoluteRect      The containing rectangle in absolute coordinates.
+     * @param  dirtyAreaAbsolute The dirty area in absolute coordinates.
+     * @param  renderVariant     The render variant - includes the algorithm and the pixel
+     *                           format.
+     * @param  alpha             (Optional) the alpha. Default is 255 (solid).
+     * @param  subDivisionSize   (Optional) the size of the subdivisions of the scan line.
+     *                           Default is 12.
      */
     void drawTextureMapTriangle(const DrawingSurface& dest,
                                 const Point3D* vertices,
@@ -498,12 +449,8 @@ public:
                                 uint16_t subDivisionSize = 12);
 
     /**
-     * @fn FORCE_INLINE_FUNCTION static uint8_t LCD::div255(uint16_t num)
-     *
-     * @brief Approximates an integer division of a 16bit value by 255.
-     *
-     *        Divides numerator num (e.g. the sum resulting from an alpha-blending operation) by
-     *        255.
+     * Approximates an integer division of a 16bit value by 255. Divides numerator num (e.g.
+     * the sum resulting from an alpha-blending operation) by 255.
      *
      * @param [in] num The numerator to divide by 255.
      *
@@ -515,14 +462,10 @@ public:
     }
 
     /**
-     * @fn FORCE_INLINE_FUNCTION static uint32_t LCD::div255rb(uint32_t pixelxAlpha)
+     * Divides the red and blue components of pixelxAlpha by 255.
      *
-     * @brief Divides the red and blue components of pixelxAlpha by 255.
-     *
-     *        Divides the red and blue components of pixelxAlpha by 255.
-     *
-     * @param [in] pixelxAlpha The red and blue components of a 32bit ARGB pixel multiplied by an
-     *                         alpha factor.
+     * @param [in] pixelxAlpha The red and blue components of a 32bit ARGB pixel multiplied
+     *                         by an alpha factor.
      *
      * @return pixelxAlpha with its red and blue components divided by 255.
      */
@@ -532,14 +475,10 @@ public:
     }
 
     /**
-     * @fn FORCE_INLINE_FUNCTION static uint32_t LCD::div255g(uint32_t pixelxAlpha)
+     * Divides the green component of pixelxAlpha by 255.
      *
-     * @brief Divides the green component of pixelxAlpha by 255.
-     *
-     *        Divides the green component of pixelxAlpha by 255.
-     *
-     * @param [in] pixelxAlpha The green component of a 32bit ARGB pixel multiplied by an alpha
-     *                         factor.
+     * @param [in] pixelxAlpha The green component of a 32bit ARGB pixel multiplied by an
+     *                         alpha factor.
      *
      * @return pixelxAlpha with its green component divided by 255.
      */
@@ -553,56 +492,44 @@ protected:
 
     static colortype defaultColor; ///< Default Color to use when displaying transparency-only elements, e.g. A4 bitmaps
 
-    /**
-     * @class DrawTextureMapScanLineBase LCD.hpp touchgfx/lcd/LCD.hpp
-     *
-     * @brief Base class for drawing scanline by the texture mapper.
-     *
-     *        Base class for drawing scanline by the texture mapper.
-     */
+    /** Base class for drawing scanline by the texture mapper. */
     class DrawTextureMapScanLineBase
     {
     public:
-        /**
-         * @fn virtual DrawTextureMapScanLineBase::~DrawTextureMapScanLineBase()
-         *
-         * @brief Default destructor
-         */
+        /** Finalizes an instance of the DrawTextureMapScanLineBase class. */
         virtual ~DrawTextureMapScanLineBase()
         {
         }
 
         /**
-         * @fn virtual void DrawTextureMapScanLineBase::drawTextureMapScanLineSubdivisions(int subdivisions, const int widthModLength, int pixelsToDraw, const int affineLength, float oneOverZRight, float UOverZRight, float VOverZRight, fixed16_16 U, fixed16_16 V, fixed16_16 deltaU, fixed16_16 deltaV, float ULeft, float VLeft, float URight, float VRight, float ZRight, const DrawingSurface& dest, const int destX, const int destY, const int16_t bitmapWidth, const int16_t bitmapHeight, const TextureSurface& texture, uint8_t alpha, const float dOneOverZdXAff, const float dUOverZdXAff, const float dVOverZdXAff) = 0;
+         * Draw texture map scan line subdivisions.
          *
-         * @brief Draw texture map scan line subdivisions
-         *
-         * @param subdivisions   The number of subdivisions.
-         * @param widthModLength Remainder of length (after subdivisions).
-         * @param pixelsToDraw   The pixels to draw.
-         * @param affineLength   Length of one subdivision.
-         * @param oneOverZRight  1/Z right.
-         * @param UOverZRight    U/Z right.
-         * @param VOverZRight    V/Z right.
-         * @param U              U Coordinate in fixed16_16 notation.
-         * @param V              V Coordinate in fixed16_16 notation.
-         * @param deltaU         U delta to get to next pixel coordinate.
-         * @param deltaV         V delta to get to next pixel coordinate.
-         * @param ULeft          The left U.
-         * @param VLeft          The left V.
-         * @param URight         The right U.
-         * @param VRight         The right V.
-         * @param ZRight         The right Z.
-         * @param dest           Destination drawing surface.
-         * @param destX          Destination x coordinate.
-         * @param destY          Destination y coordinate.
-         * @param bitmapWidth    Width of the bitmap.
-         * @param bitmapHeight   Height of the bitmap.
-         * @param texture        The texture.
-         * @param alpha          The global alpha.
-         * @param dOneOverZdXAff 1/ZdX affine.
-         * @param dUOverZdXAff   U/ZdX affine.
-         * @param dVOverZdXAff   V/ZdX affine.
+         * @param  subdivisions   The number of subdivisions.
+         * @param  widthModLength Remainder of length (after subdivisions).
+         * @param  pixelsToDraw   The pixels to draw.
+         * @param  affineLength   Length of one subdivision.
+         * @param  oneOverZRight  1/Z right.
+         * @param  UOverZRight    U/Z right.
+         * @param  VOverZRight    V/Z right.
+         * @param  U              U Coordinate in fixed16_16 notation.
+         * @param  V              V Coordinate in fixed16_16 notation.
+         * @param  deltaU         U delta to get to next pixel coordinate.
+         * @param  deltaV         V delta to get to next pixel coordinate.
+         * @param  ULeft          The left U.
+         * @param  VLeft          The left V.
+         * @param  URight         The right U.
+         * @param  VRight         The right V.
+         * @param  ZRight         The right Z.
+         * @param  dest           Destination drawing surface.
+         * @param  destX          Destination x coordinate.
+         * @param  destY          Destination y coordinate.
+         * @param  bitmapWidth    Width of the bitmap.
+         * @param  bitmapHeight   Height of the bitmap.
+         * @param  texture        The texture.
+         * @param  alpha          The global alpha.
+         * @param  dOneOverZdXAff 1/ZdX affine.
+         * @param  dUOverZdXAff   U/ZdX affine.
+         * @param  dVOverZdXAff   V/ZdX affine.
          */
         virtual void drawTextureMapScanLineSubdivisions(int subdivisions, const int widthModLength, int pixelsToDraw, const int affineLength, float oneOverZRight, float UOverZRight, float VOverZRight, fixed16_16 U, fixed16_16 V, fixed16_16 deltaU, fixed16_16 deltaV, float ULeft, float VLeft, float URight, float VRight, float ZRight, const DrawingSurface& dest, const int destX, const int destY, const int16_t bitmapWidth, const int16_t bitmapHeight, const TextureSurface& texture, uint8_t alpha, const float dOneOverZdXAff, const float dUOverZdXAff, const float dVOverZdXAff) = 0;
 
@@ -610,9 +537,7 @@ protected:
         static const fixed16_16 half = 0x8000; ///< 1/2 in fixed16_16 format
 
         /**
-         * @fn FORCE_INLINE_FUNCTION void DrawTextureMapScanLineBase::drawTextureMapNextSubdivision(float& ULeft, float& VLeft, float& ZRight, float& URight, float& VRight, float& oneOverZRight, const float dOneOverZdXAff, float& UOverZRight, const float dUOverZdXAff, float& VOverZRight, const float dVOverZdXAff, const int affineLength, fixed16_16& U, fixed16_16& V, fixed16_16& deltaU, fixed16_16& deltaV)
-         *
-         * @brief Draw texture map next subdivision
+         * Draw texture map next subdivision.
          *
          * @param [out]    ULeft          U left.
          * @param [out]    VLeft          V left.
@@ -651,11 +576,7 @@ protected:
         }
 
         /**
-         * @fn FORCE_INLINE_FUNCTION bool DrawTextureMapScanLineBase::is1Inside(int value, int limit)
-         *
-         * @brief Check if value is inside [0..limit[
-         *
-         *        Check if value is inside [0..limit[
+         * Check if value is inside [0..limit[.
          *
          * @param [in] value Value to check.
          * @param [in] limit Upper limit.
@@ -668,11 +589,7 @@ protected:
         }
 
         /**
-         * @fn FORCE_INLINE_FUNCTION bool DrawTextureMapScanLineBase::is1x1Inside(int x, int y, int width, int height)
-         *
-         * @brief Check if (x,y) is inside ([0..width[, [0..height[)
-         *
-         *        Check if (x,y) is inside ([0..width[, [0..height[)
+         * Check if (x,y) is inside ([0..width[, [0..height[)
          *
          * @param [in] x      X coordinate.
          * @param [in] y      Y coordinate.
@@ -687,11 +604,7 @@ protected:
         }
 
         /**
-         * @fn FORCE_INLINE_FUNCTION bool DrawTextureMapScanLineBase::is2Inside(int value, int limit)
-         *
-         * @brief Check if both value and value+1 are inside [0..limit[
-         *
-         *        Check if both value and value+1 are inside [0..limit[
+         * Check if both value and value+1 are inside [0..limit[.
          *
          * @param [in] value Value to check.
          * @param [in] limit Upper limit.
@@ -704,11 +617,7 @@ protected:
         }
 
         /**
-         * @fn FORCE_INLINE_FUNCTION bool DrawTextureMapScanLineBase::is2x2Inside(int x, int y, int width, int height)
-         *
-         * @brief Check if both (x,y) and (x+1,y+1) are inside ([0..width[,[0..height[)
-         *
-         *        Check if both (x,y) and (x+1,y+1) are inside ([0..width[,[0..height[)
+         * Check if both (x,y) and (x+1,y+1) are inside ([0..width[,[0..height[)
          *
          * @param [in] x      X coordinate.
          * @param [in] y      Y coordinate.
@@ -723,11 +632,7 @@ protected:
         }
 
         /**
-         * @fn FORCE_INLINE_FUNCTION bool DrawTextureMapScanLineBase::is2PartiallyInside(int value, int limit)
-         *
-         * @brief Check if either value or value+1 is inside [0..limit[
-         *
-         *        Check if either value or value+1 is inside [0..limit[
+         * Check if either value or value+1 is inside [0..limit[.
          *
          * @param [in] value Value to check.
          * @param [in] limit Upper limit.
@@ -740,11 +645,7 @@ protected:
         }
 
         /**
-         * @fn FORCE_INLINE_FUNCTION bool DrawTextureMapScanLineBase::is2x2PartiallyInside(int x, int y, int width, int height)
-         *
-         * @brief Check if either (x,y) or (x+1,y+1) is inside ([0..width[,[0..height[)
-         *
-         *        Check if either (x,y) or (x+1,y+1) is inside ([0..width[,[0..height[)
+         * Check if either (x,y) or (x+1,y+1) is inside ([0..width[,[0..height[)
          *
          * @param [in] x      X coordinate.
          * @param [in] y      Y coordinate.
@@ -760,144 +661,122 @@ protected:
     };
 
     /**
-     * @fn virtual DrawTextureMapScanLineBase* LCD::getTextureMapperDrawScanLine(const TextureSurface& texture, RenderingVariant renderVariant, uint8_t alpha);
+     * Gets pointer to object that can draw a scan line which allows for highly specialized
+     * and optimized implementation.
      *
-     * @brief Gets pointer to object that can draw a scan line.
+     * @param  texture       The texture Surface.
+     * @param  renderVariant The render variant.
+     * @param  alpha         The global alpha.
      *
-     *        Gets pointer to object that can draw a scan line which allows for highly specialized and optimized implementation.
-     *
-     * @param texture       The texture Surface.
-     * @param renderVariant The render variant.
-     * @param alpha         The global alpha.
-     *
-     * @return Null if it fails, else the pointer to the texture mapper draw scan line object.
+     * @return Null if it fails, else the pointer to the texture mapper draw scan line
+     *         object.
      */
     virtual DrawTextureMapScanLineBase* getTextureMapperDrawScanLine(const TextureSurface& texture, RenderingVariant renderVariant, uint8_t alpha);
 
     /**
-     * @fn virtual void LCD::drawTextureMapScanLine(const DrawingSurface& dest, const Gradients& gradients, const Edge* leftEdge, const Edge* rightEdge, const TextureSurface& texture, const Rect& absoluteRect, const Rect& dirtyAreaAbsolute, RenderingVariant renderVariant, uint8_t alpha, uint16_t subDivisionSize);
+     * Draw scan line. Draw one horizontal line of the texture map on screen. The scan line
+     * will be drawn using perspective correct texture mapping. The appearance of the line
+     * is determined by the left and right edge and the gradients structure. The edges
+     * contain the information about the x,y,z coordinates of the left and right side
+     * respectively and also information about the u,v coordinates of the texture map used.
+     * The gradients structure contains information about how to interpolate all the values
+     * across the scan line. The data drawn should be present in the texture argument.
      *
-     * @brief Draw scan line. Draw one horizontal line of the texture map on screen. The scan line
-     *        will be drawn using perspective correct texture mapping. The appearance of the
-     *        line is determined by the left and right edge and the gradients structure. The
-     *        edges contain the information about the x,y,z coordinates of the left and right
-     *        side respectively and also information about the u,v coordinates of the texture
-     *        map used. The gradients structure contains information about how to interpolate
-     *        all the values across the scan line. The data drawn should be present in the
-     *        texture argument.
+     * The scan line will be drawn using the additional arguments. The scan line will be
+     * placed and clipped using the absolute and dirty rectangles The alpha will determine
+     * how the scan line should be alpha blended. The subDivisionSize will determine the
+     * size of the piecewise affine texture mapped lines.
      *
-     *        The scan line will be drawn using the additional arguments. The scan line will be
-     *        placed and clipped using the absolute and dirty rectangles The alpha will
-     *        determine how the scan line should be alpha blended. The subDivisionSize will
-     *        determine the size of the piecewise affine texture mapped lines.
-     *
-     * @param dest              The description of where the texture is drawn - can be used to
-     *                          issue a draw off screen.
-     * @param gradients         The gradients using in interpolation across the scan line.
-     * @param leftEdge          The left edge of the scan line.
-     * @param rightEdge         The right edge of the scan line.
-     * @param texture           The texture.
-     * @param absoluteRect      The containing rectangle in absolute coordinates.
-     * @param dirtyAreaAbsolute The dirty area in absolute coordinates.
-     * @param renderVariant     The render variant - includes the algorithm and the pixel format.
-     * @param alpha             The alpha.
-     * @param subDivisionSize   The size of the subdivisions of the scan line. A value of 1 will
-     *                          give a completely perspective correct texture mapped scan line. A
-     *                          large value will give an affine texture mapped scan line.
+     * @param  dest              The description of where the texture is drawn - can be used
+     *                           to issue a draw off screen.
+     * @param  gradients         The gradients using in interpolation across the scan line.
+     * @param  leftEdge          The left edge of the scan line.
+     * @param  rightEdge         The right edge of the scan line.
+     * @param  texture           The texture.
+     * @param  absoluteRect      The containing rectangle in absolute coordinates.
+     * @param  dirtyAreaAbsolute The dirty area in absolute coordinates.
+     * @param  renderVariant     The render variant - includes the algorithm and the pixel
+     *                           format.
+     * @param  alpha             The alpha.
+     * @param  subDivisionSize   The size of the subdivisions of the scan line. A value of 1
+     *                           will give a completely perspective correct texture mapped
+     *                           scan line. A large value will give an affine texture mapped
+     *                           scan line.
      */
     virtual void drawTextureMapScanLine(const DrawingSurface& dest, const Gradients& gradients, const Edge* leftEdge, const Edge* rightEdge, const TextureSurface& texture, const Rect& absoluteRect, const Rect& dirtyAreaAbsolute, RenderingVariant renderVariant, uint8_t alpha, uint16_t subDivisionSize);
 
     /**
-     * @fn virtual void LCD::drawGlyph(uint16_t* wbuf, Rect widgetArea, int16_t x, int16_t y, uint16_t offsetX, uint16_t offsetY, const Rect& invalidatedArea, const GlyphNode* glyph, const uint8_t* glyphData, uint8_t dataFormatA4, colortype color, uint8_t bitsPerPixel, uint8_t alpha, TextRotation rotation) = 0;
+     * Private version of draw-glyph with explicit destination buffer pointer argument. For
+     * all parameters (except the buffer pointer) see the public function drawString().
      *
-     * @brief Private version of draw-glyph.
-     *
-     *        Private version of draw-glyph with explicit destination buffer pointer argument.
-     *        For all parameters (except the buffer pointer) see the public function drawString().
-     *
-     * @param [out] wbuf      The destination (frame) buffer to draw to.
-     * @param widgetArea      The canvas to draw the glyph inside.
-     * @param x               Horizontal offset to start drawing the glyph.
-     * @param y               Vertical offset to start drawing the glyph.
-     * @param offsetX         Horizontal offset in the glyph to start drawing from.
-     * @param offsetY         Vertical offset in the glyph to start drawing from.
-     * @param invalidatedArea The area to draw inside.
-     * @param glyph           Specifications of the glyph to draw.
-     * @param glyphData       Data containing the actual glyph (dense format)
-     * @param dataFormatA4    The glyph is saved using ST A4 format.
-     * @param color           The color of the glyph.
-     * @param bitsPerPixel    Bit depth of the glyph.
-     * @param alpha           The transparency of the glyph.
-     * @param rotation        Rotation to do before drawing the glyph.
+     * @param [out] wbuf16          The destination (frame) buffer to draw to.
+     * @param       widgetArea      The canvas to draw the glyph inside.
+     * @param       x               Horizontal offset to start drawing the glyph.
+     * @param       y               Vertical offset to start drawing the glyph.
+     * @param       offsetX         Horizontal offset in the glyph to start drawing from.
+     * @param       offsetY         Vertical offset in the glyph to start drawing from.
+     * @param       invalidatedArea The area to draw inside.
+     * @param       glyph           Specifications of the glyph to draw.
+     * @param       glyphData       Data containing the actual glyph (dense format)
+     * @param       byteAlignRow    Each row of glyph data starts in a new byte.
+     * @param       color           The color of the glyph.
+     * @param       bitsPerPixel    Bit depth of the glyph.
+     * @param       alpha           The transparency of the glyph.
+     * @param       rotation        Rotation to do before drawing the glyph.
      */
-    virtual void drawGlyph(uint16_t* wbuf, Rect widgetArea, int16_t x, int16_t y, uint16_t offsetX, uint16_t offsetY, const Rect& invalidatedArea, const GlyphNode* glyph, const uint8_t* glyphData, uint8_t dataFormatA4, colortype color, uint8_t bitsPerPixel, uint8_t alpha, TextRotation rotation) = 0;
+    virtual void drawGlyph(uint16_t* wbuf16, Rect widgetArea, int16_t x, int16_t y, uint16_t offsetX, uint16_t offsetY, const Rect& invalidatedArea, const GlyphNode* glyph, const uint8_t* glyphData, uint8_t byteAlignRow, colortype color, uint8_t bitsPerPixel, uint8_t alpha, TextRotation rotation) = 0;
 
     /**
-     * @fn static void LCD::rotateRect(Rect& rect, const Rect& canvas, const TextRotation rotation);
+     * Rotate a rectangle inside another rectangle.
      *
-     * @brief Rotate a rectangle inside another rectangle.
-     *
-     *        Rotate a rectangle inside another rectangle.
-     *
-     * @param [in,out] rect The rectangle to rotate.
-     * @param canvas        The rectangle containing the rect to rotate.
-     * @param rotation      Rotation to perform on rect.
+     * @param [in,out] rect     The rectangle to rotate.
+     * @param          canvas   The rectangle containing the rect to rotate.
+     * @param          rotation Rotation to perform on rect.
      */
     static void rotateRect(Rect& rect, const Rect& canvas, const TextRotation rotation);
 
     /**
-     * @fn static int LCD::realX(const Rect& widgetArea, int16_t x, int16_t y, TextRotation rotation);
-     *
-     * @brief Find the real, absolute x coordinate of a point inside a widget.
-     *
-     *        Find the real, absolute x coordinate of a point inside a widget with regards to
-     *        rotation.
+     * Find the real, absolute x coordinate of a point inside a widget with regards to
+     * rotation.
      *
      * @param [in] widgetArea The widget containing the point.
-     * @param x               The x coordinate.
-     * @param y               The y coordinate.
-     * @param rotation        Rotation to perform.
+     * @param      x          The x coordinate.
+     * @param      y          The y coordinate.
+     * @param      rotation   Rotation to perform.
      *
      * @return The absolute x coordinate after applying appropriate rotation.
      */
     static int realX(const Rect& widgetArea, int16_t x, int16_t y, TextRotation rotation);
 
     /**
-     * @fn static int LCD::realY(const Rect& widgetArea, int16_t x, int16_t y, TextRotation rotation);
-     *
-     * @brief Find the real, absolute y coordinate of a point inside a widget.
-     *
-     *        Find the real, absolute y coordinate of a point inside a widget with regards to
-     *        rotation.
+     * Find the real, absolute y coordinate of a point inside a widget with regards to
+     * rotation.
      *
      * @param [in] widgetArea The widget containing the point.
-     * @param x               The x coordinate.
-     * @param y               The y coordinate.
-     * @param rotation        Rotation to perform.
+     * @param      x          The x coordinate.
+     * @param      y          The y coordinate.
+     * @param      rotation   Rotation to perform.
      *
      * @return The absolute y coordinate after applying appropriate rotation.
      */
     static int realY(const Rect& widgetArea, int16_t x, int16_t y, TextRotation rotation);
 
     /**
-     * @fn void LCD::drawStringLTR(Rect widgetArea, const Rect& invalidatedArea, const StringVisuals& visuals, const Unicode::UnicodeChar* format, va_list pArg);
+     * Draws the specified Unicode string. Breaks line on newline. The string is assumed to
+     * contain only Latin characters written left-to-right.
      *
-     * @brief Draws the specified unicode string.
-     *
-     *        Draws the specified unicode string. Breaks line on newline. The string is assumed
-     *        to contain only latin characters written left-to-right.
-     *
-     * @param widgetArea      The area covered by the drawing widget in absolute coordinates.
-     * @param invalidatedArea The (sub)region of the widget area to draw, expressed relative to the
-     *                        widget area. If the widgetArea is (x, y, width, height) = (10, 10,
-     *                        20, 20) and invalidatedArea is (x, y, width, height) = (5, 5, 6,
-     *                        6) the widgetArea drawn on the LCD is (x, y, width, height) = (15,
-     *                        15, 6, 6).
-     * @param [in] visuals    The string visuals (font, alignment, line space, color)
-     *                        with which to draw this string.
-     * @param format          A pointer to a zero terminated text string with optional additional
-     *                        wildcard arguments.
-     * @param pArg            Variable arguments providing additional information.
+     * @param      widgetArea      The area covered by the drawing widget in absolute
+     *                             coordinates.
+     * @param      invalidatedArea The (sub)region of the widget area to draw, expressed
+     *                             relative to the widget area. If the widgetArea is
+     *                             x=10, y=10, width=20, height=20 and invalidatedArea
+     *                             is x=5, y=5, width=6, height=6 the widgetArea drawn
+     *                             on the LCD is x=15, y=15, width=6, height=6.
+     * @param [in] visuals         The string visuals (font, alignment, line space, color)
+     *                             with which to draw this string.
+     * @param      format          A pointer to a null-terminated text string with optional
+     *                             additional wildcard arguments.
+     * @param      pArg            Variable arguments providing additional information.
      *
      * @see drawString
      */
@@ -908,25 +787,22 @@ protected:
                        va_list pArg);
 
     /**
-     * @fn void LCD::drawStringRTL(Rect widgetArea, const Rect& invalidatedArea, const StringVisuals& visuals, const Unicode::UnicodeChar* format, va_list pArg);
+     * Draws the specified Unicode string. Breaks line on newline. The string can be either
+     * right-to-left or left-to-right and may contain sequences of Arabic / Hebrew and Latin
+     * characters.
      *
-     * @brief Draws the specified unicode string.
-     *
-     *        Draws the specified unicode string. Breaks line on newline. The string can be
-     *        either right-to-left or left-to-right and may contain sequences of Arabic /Hebrew
-     *        and Latin characters.
-     *
-     * @param widgetArea      The area covered by the drawing widget in absolute coordinates.
-     * @param invalidatedArea The (sub)region of the widget area to draw, expressed relative to the
-     *                        widget area. If the widgetArea is (x, y, width, height) = (10, 10,
-     *                        20, 20) and invalidatedArea is (x, y, width, height) = (5, 5, 6,
-     *                        6) the widgetArea drawn on the LCD is (x, y, width, height) = (15,
-     *                        15, 6, 6).
-     * @param [in] visuals    The string visuals (font, alignment, line space, color)
-     *                        with which to draw this string.
-     * @param format          A pointer to a zero terminated text string with optional additional
-     *                        wildcard arguments.
-     * @param pArg            Variable arguments providing additional information.
+     * @param      widgetArea      The area covered by the drawing widget in absolute
+     *                             coordinates.
+     * @param      invalidatedArea The (sub)region of the widget area to draw, expressed
+     *                             relative to the widget area. If the widgetArea is
+     *                             x=10, y=10, width=20, height=20 and invalidatedArea
+     *                             is x=5, y=5, width=6, height=6 the widgetArea drawn
+     *                             on the LCD is x=15, y=15, width=6, height=6.
+     * @param [in] visuals         The string visuals (font, alignment, line space, color)
+     *                             with which to draw this string.
+     * @param      format          A pointer to a null-terminated text string with optional
+     *                             additional wildcard arguments.
+     * @param      pArg            Variable arguments providing additional information.
      *
      * @see drawString
      */
@@ -937,56 +813,48 @@ protected:
                        va_list pArg);
 
     /**
-     * @fn static uint16_t LCD::stringWidth(TextProvider& textProvider, const Font& font, const int numChars, TextDirection textDirection);
+     * Find string width of the given number of ligatures read from the given TextProvider.
+     * After the introduction of Arabic, Thai, Hindi and other languages, ligatures are
+     * counted instead of characters. For Latin languages, number of characters equal number
+     * of ligatures.
      *
-     * @brief Find string width.
-     *
-     *        Find string with of the given number of ligatures read from the given
-     *        TextProvider. After the introduction of Arabic, Thai, Hindi and other
-     *        languages, ligatures are counted instead of characters. For Latin
-     *        languages, number of characters equal number of ligatures.
-     *
-     * @param [in,out] textProvider The text provider.
-     * @param font                  The font.
-     * @param numChars              Number of characters (ligatures).
-     * @param textDirection         The text direction.
+     * @param [in] textProvider  The text provider.
+     * @param      font          The font.
+     * @param      numChars      Number of characters (ligatures).
+     * @param      textDirection The text direction.
      *
      * @return An int16_t.
      */
     static uint16_t stringWidth(TextProvider& textProvider, const Font& font, const int numChars, TextDirection textDirection);
 
     /**
-     * @fn static uint16_t LCD::getNumLines(TextProvider& textProvider, WideTextAction wideTextAction, TextDirection textDirection, const Font* font, int16_t width);
+     * Gets number of lines for a given text taking word wrap into consideration. The font
+     * and width are required to find the number of lines in case word wrap is true.
      *
-     * @brief Gets number lines.
-     *
-     *        Gets number of lines for a given text taking word wrap into consideration. The
-     *        font and width are required to find the number of lines in case word wrap is true.
-     *
-     * @param [in] textProvider The text provider.
-     * @param wideTextAction    The wide text action in case lines are longer than the width of the text area.
-     * @param textDirection     The text direction (LTR or RTL).
-     * @param font              The font.
-     * @param width             The width.
+     * @param [in] textProvider   The text provider.
+     * @param      wideTextAction The wide text action in case lines are longer than the width
+     *                            of the text area.
+     * @param      textDirection  The text direction (LTR or RTL).
+     * @param      font           The font.
+     * @param      width          The width.
      *
      * @return The number lines.
      */
     static uint16_t getNumLines(TextProvider& textProvider, WideTextAction wideTextAction, TextDirection textDirection, const Font* font, int16_t width);
 
+    /** A font. */
     friend class Font;
+    /** A text area. */
     friend class TextArea;
+    /** A text area with wildcard base. */
     friend class TextAreaWithWildcardBase;
 
     /**
-     * @fn FORCE_INLINE_FUNCTION static uint8_t LCD::getAlphaFromA4(const uint16_t* data, uint32_t offset)
+     * Gets alpha from A4 image at given offset. The value is scaled up from range 0-15 to 0-
+     * 255.
      *
-     * @brief Gets alpha from A4 image at given offset
-     *
-     *        Gets alpha from A4 image at given offset. The value is scaled up from range 0-15
-     *        to 0-255.
-     *
-     * @param data   A pointer to the start of the A4 data.
-     * @param offset The offset into the A4 image.
+     * @param  data   A pointer to the start of the A4 data.
+     * @param  offset The offset into the A4 image.
      *
      * @return The alpha from A4 (0-255).
      */
@@ -998,9 +866,8 @@ protected:
 
 private:
     DrawTextureMapScanLineBase* textureMapperClass; ///< Used during faster TextureMapper rendering
-    typedef void (LCD::*DrawStringFunctionPointer)(const Rect& widgetArea, const Rect& invalidatedArea, const StringVisuals& stringVisuals, const Unicode::UnicodeChar* format, va_list _pArg);
-    static DrawStringFunctionPointer drawStringFunction; ///< The draw string function, either LTR or RTL
 
+    /** A draw string internal structure. */
     class DrawStringInternalStruct
     {
     public:
@@ -1009,22 +876,30 @@ private:
         int16_t widgetRectY;
         const Rect* toDraw;
         const StringVisuals* stringVisuals;
-        TextProvider* drawTextProvider;
 
+        /** Initializes a new instance of the DrawStringInternalStruct class. */
         DrawStringInternalStruct()
-            : frameBuffer(0), widgetArea(0), widgetRectY(0), toDraw(0), stringVisuals(0), drawTextProvider(0)
+            : frameBuffer(0), widgetArea(0), widgetRectY(0), toDraw(0), stringVisuals(0)
         {
         }
     };
-    typedef void (LCD::*DrawStringInternalFunctionPointer)(int16_t& offset, const Font* font, const TextDirection textDirection, TextProvider& widthTextProvider, const int numChars, const bool useEllipsis, DrawStringInternalStruct const* data);
-    bool drawStringRTLLine(int16_t& offset, const Font* font, TextDirection textDirection, Unicode::UnicodeChar& currChar, TextProvider& textProvider, TextProvider& widthTextProvider, DrawStringInternalFunctionPointer internalFunction, const int numChars, const bool useEllipsis, DrawStringInternalStruct const* data);
-    void drawStringWidthInternal(int16_t& offset, const Font* font, const TextDirection textDirection, TextProvider& textProvider, const int numChars, const bool useEllipsis, DrawStringInternalStruct const* data);
-    void drawStringRTLInternal(int16_t& offset, const Font* font, const TextDirection textDirection, TextProvider& widthTextProvider, const int numChars, const bool useEllipsis, DrawStringInternalStruct const* data);
+    void drawStringRTLLine(int16_t& offset, const Font* font, TextDirection textDirection, TextProvider& textProvider, const int numChars, const bool useEllipsis, DrawStringInternalStruct const* data);
+    void drawStringRTLInternal(int16_t& offset, const Font* font, const TextDirection textDirection, TextProvider& drawTextProvider, const int numChars, const uint16_t widthOfNumChars, DrawStringInternalStruct const* data);
     bool drawStringInternal(uint16_t* frameBuffer, Rect const* widgetArea, int16_t widgetRectY, int16_t& offset, const Rect& invalidatedArea, StringVisuals const* stringVisuals, const TextDirection textDirection, TextProvider& textProvider, const int numChars, bool useEllipsis);
 
+    /** A wide text internal structure. */
     class WideTextInternalStruct
     {
     public:
+        /**
+         * Initializes a new instance of the WideTextInternalStruct class.
+         *
+         * @param [in] _textProvider  The text provider.
+         * @param      _maxWidth      The maximum width.
+         * @param      _textDirection The text direction.
+         * @param      _font          The font.
+         * @param      action         The action.
+         */
         WideTextInternalStruct(TextProvider& _textProvider, uint16_t _maxWidth, TextDirection _textDirection, const Font* _font, WideTextAction action)
             : currChar(0), textProvider(_textProvider), textDirection(_textDirection), wideTextAction(action), font(_font), maxWidth(_maxWidth), charsRead(0), width(0), charsReadAhead(0), widthAhead(0), widthWithoutWhiteSpaceAtEnd(0), ellipsisGlyphWidth(0), useEllipsis(false)
         {
@@ -1039,24 +914,70 @@ private:
                 }
             }
         }
+
+        /**
+         * Adds a word.
+         *
+         * @param  widthBeforeCurrChar        The width before curr character.
+         * @param  widthBeforeWhiteSpaceAtEnd The width before white space at end.
+         * @param  charsReadTooMany           The characters read too many.
+         */
         void addWord(uint16_t widthBeforeCurrChar, uint16_t widthBeforeWhiteSpaceAtEnd, uint16_t charsReadTooMany);
+
+        /**
+         * Gets string length for line.
+         *
+         * @param  useWideTextEllipsisFlag True to use wide text ellipsis flag.
+         */
         void getStringLengthForLine(bool useWideTextEllipsisFlag);
+
+        /**
+         * Query if 'ch' is space.
+         *
+         * @param  ch The ch.
+         *
+         * @return True if space, false if not.
+         */
         bool isSpace(Unicode::UnicodeChar ch)
         {
             return ch == ' ' || ch == 0x200B;
         }
+
+        /**
+         * Gets curr character.
+         *
+         * @return The curr character.
+         */
         Unicode::UnicodeChar getCurrChar() const
         {
             return currChar;
         }
+
+        /**
+         * Gets line width.
+         *
+         * @return The line width.
+         */
         uint16_t getLineWidth() const
         {
             return widthWithoutWhiteSpaceAtEnd;
         }
+
+        /**
+         * Gets characters read.
+         *
+         * @return The characters read.
+         */
         uint16_t getCharsRead() const
         {
             return charsRead;
         }
+
+        /**
+         * Gets use ellipsis.
+         *
+         * @return True if it succeeds, false if it fails.
+         */
         bool getUseEllipsis() const
         {
             return useEllipsis;
@@ -1080,30 +1001,25 @@ private:
 };
 
 /**
- * @class DebugPrinter LCD.hpp touchgfx/lcd/LCD.hpp
- *
- * @brief The class DebugPrinter defines the interface for printing debug messages on top of the framebuffer.
- *
- *        The class DebugPrinter defines the interface for printing debug messages on top of the framebuffer.
+ * The class DebugPrinter defines the interface for printing debug messages on top of the
+ * framebuffer.
  */
 class DebugPrinter
 {
 public:
+    /** Initializes a new instance of the DebugPrinter class. */
     DebugPrinter()
         : debugString(0), debugRegion(Rect(0, 0, 0, 0)), debugForegroundColor(colortype(0xffffffff)), debugScale(1)
     {
     }
 
+    /** Finalizes an instance of the DebugPrinter class. */
     virtual ~DebugPrinter()
     {
     }
 
     /**
-     * @fn void setString(const char* string);
-     *
-     * @brief Sets the debug string to be displayed on top of the framebuffer.
-     *
-     *        Sets the debug string to be displayed on top of the framebuffer.
+     * Sets the debug string to be displayed on top of the framebuffer.
      *
      * @param [in] string The string to be displayed.
      */
@@ -1113,11 +1029,7 @@ public:
     }
 
     /**
-     * @fn void setPosition(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
-     *
-     * @brief Sets the position of the debug string.
-     *
-     *        Sets the position onscreen where the debug string will be displayed.
+     * Sets the position onscreen where the debug string will be displayed.
      *
      * @param [in] x The coordinate of the region where the debug string is displayed.
      * @param [in] y The coordinate of the region where the debug string is displayed.
@@ -1130,11 +1042,7 @@ public:
     }
 
     /**
-     * @fn void setScale(uint8_t scale);
-     *
-     * @brief Sets the font scale of the debug string.
-     *
-     *        Sets the font scale of the debug string.
+     * Sets the font scale of the debug string.
      *
      * @param [in] scale The font scale of the debug string.
      */
@@ -1149,11 +1057,7 @@ public:
     }
 
     /**
-     * @fn void setColor(colortype fg);
-     *
-     * @brief Sets the foreground color of the debug string.
-     *
-     *        Sets the foreground color of the debug string.
+     * Sets the foreground color of the debug string.
      *
      * @param [in] fg The foreground color of the debug string.
      */
@@ -1163,22 +1067,14 @@ public:
     }
 
     /**
-     * @fn virtual void draw(const Rect& rect) const = 0;
-     *
-     * @brief Draws the debug string on top of the framebuffer content.
-     *
-     *        Draws the debug string on top of the framebuffer content.
+     * Draws the debug string on top of the framebuffer content.
      *
      * @param [in] rect The rect to draw inside.
      */
     virtual void draw(const Rect& rect) const = 0;
 
     /**
-     * @fn const Rect& getRegion();
-     *
-     * @brief Returns the region of the debug string.
-     *
-     *        Returns the region where the debug string is displayed.
+     * Returns the region where the debug string is displayed.
      *
      * @return Rect The debug string region.
      */
@@ -1189,14 +1085,10 @@ public:
 
 protected:
     /**
-     * @fn uint16_t DebugPrinter::getGlyph(uint8_t c) const
+     * Gets a glyph (15 bits) arranged with 3 bits wide, 5 bits high in a single uint16_t
+     * value.
      *
-     * @brief Gets a glyph
-     *
-     *        Gets a glyph (15 bits) arranged with 3 bits wide, 5 bits high in a single
-     *        uint16_t value
-     *
-     * @param c The character to get a glyph for.
+     * @param  c The character to get a glyph for.
      *
      * @return The glyph.
      */
@@ -1230,6 +1122,7 @@ protected:
     colortype debugForegroundColor; ///< Font color to use when displaying the debug string.
     uint8_t debugScale;             ///< Font scaling factor to use when displaying the debug string.
 };
+
 } // namespace touchgfx
 
 #endif // LCD_HPP

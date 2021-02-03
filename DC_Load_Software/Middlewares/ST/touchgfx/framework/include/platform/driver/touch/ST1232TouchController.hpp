@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,19 +13,18 @@
   ******************************************************************************
   */
 
+/**
+ * @file platform/driver/touch/ST1232TouchController.hpp
+ *
+ * Declares the touchgfx::ST1232TouchController class.
+ */
 #ifndef ST1232TOUCHCONTROLLER_HPP
 #define ST1232TOUCHCONTROLLER_HPP
 
-#include <platform/driver/touch/TouchController.hpp>
 #include <platform/driver/touch/I2CTouchController.hpp>
+#include <platform/driver/touch/TouchController.hpp>
 
-/**
- * @struct Finger ST1232TouchController.hpp platform/driver/touch/ST1232TouchController.hpp
- *
- * @brief Represents the coordinates of a finger on the display.
- *
- *        Represents the coordinates of a finger on the display.
- */
+/** Represents the coordinates of a finger on the display. */
 typedef struct
 {
     int16_t x; ///< x coordinate
@@ -33,11 +32,7 @@ typedef struct
     int16_t z; ///< z coordinate
 } Finger;
 
-/**
- * @typedef enum TransformationType
- *
- * @brief Defines the transformation types.
- */
+/** Defines the transformation types. */
 typedef enum
 {
     NO_TRANSFORM = 0, ///< No transformation
@@ -46,35 +41,35 @@ typedef enum
 } TransformationType;
 
 //General
-#define I2C_ADDR               0x55
-#define SIZE_BYTES             8
-#define MAX_FINGERS            2
-#define MASK_NR_OF_FINGERS     0x07
-#define MASK_MSB               0x80
+#define I2C_ADDR 0x55
+#define SIZE_BYTES 8
+#define MAX_FINGERS 2
+#define MASK_NR_OF_FINGERS 0x07
+#define MASK_MSB 0x80
 #define MASK_X0_COORD_LOW_BYTE 0x70
 #define MASK_Y0_COORD_LOW_BYTE 0x07
 
 // Register addresses
-#define REG_FIRMWARE_VERSION   0x00
-#define REG_STATUS             0x01
-#define REG_DEVICE_CONTROL     0x02
-#define REG_TIMEOUT_TO_IDLE    0x03
+#define REG_FIRMWARE_VERSION 0x00
+#define REG_STATUS 0x01
+#define REG_DEVICE_CONTROL 0x02
+#define REG_TIMEOUT_TO_IDLE 0x03
 #define REG_XY_RESOLUTION_HIGH 0x04
-#define REG_X_RESOLUTION_L     0x05
-#define REG_Y_RESOLUTION_L     0x06
-#define REG_KEYS               0x11
-#define REG_PAGE               0xFF
+#define REG_X_RESOLUTION_L 0x05
+#define REG_Y_RESOLUTION_L 0x06
+#define REG_KEYS 0x11
+#define REG_PAGE 0xFF
 
 //Touch
-#define REG_FINGERS_GESTURE     0x10
+#define REG_FINGERS_GESTURE 0x10
 #define REG_XY0_COORD_HIGH_BYTE 0x12
-#define REG_X0_COORD_LOW_BYTE   0x13
-#define REG_Y0_COORD_LOW_BYTE   0x14
+#define REG_X0_COORD_LOW_BYTE 0x13
+#define REG_Y0_COORD_LOW_BYTE 0x14
 #define REG_XY1_COORD_HIGH_BYTE 0x15
-#define REG_X1_COORD_LOW_BYTE   0x16
-#define REG_Y1_COORD_LOW_BYTE   0x17
-#define REG_Z0_COORD            0x18
-#define REG_Z1_COORD            0x19
+#define REG_X1_COORD_LOW_BYTE 0x16
+#define REG_Y1_COORD_LOW_BYTE 0x17
+#define REG_Z0_COORD 0x18
+#define REG_Z1_COORD 0x19
 
 //Gestures
 /*
@@ -93,82 +88,48 @@ typedef enum
 #define PINCH_OUT                0x0C
 */
 
-
 namespace touchgfx
 {
 /**
- * @class ST1232TouchController ST1232TouchController.hpp platform/driver/touch/ST1232TouchController.hpp
+ * ST1232 I2C Touch controller driver.
  *
- * @brief ST1232 I2C Touch controller driver.
- *
- *        ST1232 I2C Touch controller driver.
- *
- * @sa I2CTouchController
+ * @see I2CTouchController
  */
 class ST1232TouchController : public I2CTouchController
 {
-    /**
-     * @typedef void (*TransformFuncPtr)(int32_t&, int32_t&, Finger&)
-     *
-     * @brief Function definition for touch correction.
-     *
-     *        Function definition for touch correction.
-     */
+    /** Function definition for touch correction. */
     typedef void (*TransformFuncPtr)(int32_t&, int32_t&, Finger&);
 
 public:
     /**
-     * @fn ST1232TouchController::ST1232TouchController(I2C& i2c, int16_t displayWidth, int16_t displayHeight, TransformationType transType = NO_TRANSFORM)
+     * Initializes a new instance of the ST1232TouchController class.
      *
-     * @brief Constructor.
-     *
-     *        Constructor.
-     *
-     * @param [in,out] i2c  I2C driver handle.
-     * @param displayWidth  Width of the display.
-     * @param displayHeight Height of the display.
-     * @param transType     Type of transformation to perform on coordinate readout.
+     * @param [in] i2c           I2C driver handle.
+     * @param      displayWidth  Width of the display.
+     * @param      displayHeight Height of the display.
+     * @param      transType     (Optional) Type of transformation to perform on coordinate
+     *                           readout.
      */
-    ST1232TouchController(I2C& i2c, int16_t displayWidth, int16_t displayHeight, TransformationType transType = NO_TRANSFORM) :
-        I2CTouchController(i2c),
-        linearTransform(transType),
-        displayWidth(displayWidth),
-        displayHeight(displayHeight)
-    {}
+    ST1232TouchController(I2C& i2c, int16_t displayWidth, int16_t displayHeight, TransformationType transType = NO_TRANSFORM)
+        : I2CTouchController(i2c),
+          linearTransform(transType),
+          displayWidth(displayWidth),
+          displayHeight(displayHeight)
+    {
+    }
 
-    /**
-     * @fn virtual void ST1232TouchController::init();
-     *
-     * @brief Initializes touch controller.
-     *
-     *        Initializes touch controller.
-     */
     virtual void init();
 
-    /**
-     * @fn virtual bool ST1232TouchController::sampleTouch(int32_t& x, int32_t& y);
-     *
-     * @brief Checks whether the touch screen is being touched.
-     *
-     *        Checks whether the touch screen is being touched, and if so, what coordinates.
-     *
-     * @param [out] x The x position of the touch
-     * @param [out] y The y position of the touch
-     *
-     * @return True if a touch has been detected, otherwise false.
-     */
     virtual bool sampleTouch(int32_t& x, int32_t& y);
 
     /**
-     * @fn void ST1232TouchController::setTransformCallback(TransformFuncPtr ptr)
+     * Set pointer to user defined callback method that applies correction to touch
+     * coordinates.
      *
-     * @brief Set pointer to user defined callback method that applies correction to touch
-     *        coordinates.
+     * Set pointer to user defined callback method that applies correction to touch
+     * coordinates.
      *
-     *        Set pointer to user defined callback method that applies correction to touch
-     *        coordinates.
-     *
-     * @param ptr Function pointer.
+     * @param  ptr Function pointer.
      */
     void setTransformCallback(TransformFuncPtr ptr)
     {
@@ -177,32 +138,25 @@ public:
 
 private:
     /**
-     * @fn uint8_t ST1232TouchController::touchDetected();
-     *
-     * @brief Checks whether 1 or more fingers have been placed on the screen.
-     *
-     *        Checks whether 1 or more fingers have been placed on the screen.
+     * Checks whether 1 or more fingers have been placed on the screen.
      *
      * @return number of fingers.
      */
     uint8_t touchDetected();
 
     /**
-     * @fn bool ST1232TouchController::getSample (Finger *touchData);
+     * Get touchdata for one or more fingers. Currently, this method only tracks 1
+     * finger due to HALs notion of sampling touch returns a single coordinate. X and Y
+     * Low bytes are full 8 bits.
      *
-     * @brief Get touchdata for one or more fingers.
-     *
-     *        Get touchdata for one or more fingers. Currently, this method only tracks 1
-     *        finger due to HALs notion of sampling touch returns a single coordinate. X and Y
-     *        Low bytes are full 8 bits.
-     *
-     *        LE bitfield notation for XY_High_Byte for both fingers
-     *
-     *            Y_HIGH_BYTE     : 3
-     *            RESERVED        : 1
-     *            X_HIGH_BYTE     : 3
-     *            VALID           : 1
-     *            //XY0 valid.
+     * LE bitfield notation for XY_High_Byte for both fingers
+     * @code
+     *     Y_HIGH_BYTE     : 3
+     *     RESERVED        : 1
+     *     X_HIGH_BYTE     : 3
+     *     VALID           : 1
+     *     //XY0 valid.
+     * @endcode
      *
      * @param [out] touchData Touchdata.
      *
@@ -211,23 +165,18 @@ private:
     bool getSample(Finger* touchData);
 
     /**
-     * @fn void ST1232TouchController::transformTouchData(int32_t& x, int32_t& y);
+     * Transform touch data based on the linear transformation configuration and user
+     * defined transformation, if defined.
      *
-     * @brief Transform touch data based on the linear transformation configuration and user
-     *        defined transformation, if defined.
-     *
-     *        Transform touch data based on the linear transformation configuration and user
-     *        defined transformation, if defined.
-     *
-     * @param [out] x The x position of the touch
-     * @param [out] y The y position of the touch
+     * @param [out] x The x position of the touch.
+     * @param [out] y The y position of the touch.
      */
     void transformTouchData(int32_t& x, int32_t& y);
 
-    TransformFuncPtr   transformFunc;   ///< Store transform func pointer
+    TransformFuncPtr transformFunc;     ///< Store transform func pointer
     TransformationType linearTransform; ///< Store type of transformation to make on coordinates read from the touch controller.
-    int16_t            displayWidth;    ///< Store width of display
-    int16_t            displayHeight;   ///< Store height of display
+    int16_t displayWidth;               ///< Store width of display
+    int16_t displayHeight;              ///< Store height of display
 };
 
 } // namespace touchgfx

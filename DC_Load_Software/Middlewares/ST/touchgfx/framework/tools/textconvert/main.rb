@@ -1,7 +1,7 @@
 ##############################################################################
-# This file is part of the TouchGFX 4.13.0 distribution.
+# This file is part of the TouchGFX 4.15.0 distribution.
 #
-# <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+# <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
 # All rights reserved.</center></h2>
 #
 # This software component is licensed by ST under Ultimate Liberty license
@@ -28,12 +28,13 @@ class Main
     <<-BANNER
 Create binary and cpp text files from excel translations
 
-Usage: #{File.basename($0)} file.xlsx path/to/fontconvert.out path/to/fonts_output_dir path/to/localization_output_dir path/to/font/asset calling_path {remap|yes|no} {A4|A8} {binary_translations} {binary_fonts} {RGB565|RGB888|BW|GRAY2|GRAY4|ARGB2222|ABGR2222|RGBA2222|BGRA2222}
+Usage: #{File.basename($0)} file.xlsx path/to/fontconvert.out path/to/fonts_output_dir path/to/localization_output_dir path/to/font/asset calling_path {remap|yes|no} {A1|A2|A4|A8} {binary_translations} {binary_fonts} {RGB565|RGB888|BW|GRAY2|GRAY4|ARGB2222|ABGR2222|RGBA2222|BGRA2222}
 Where 'remap'/'yes' will map identical texts to the same memory area to save space
-      'A4'/'A8' is will generate fonts in the given format
+      'A1'/'A2'/'A4'/'A8' will generate fonts in the given format
       'binary_translations' will generate binary translations instead of cpp files
       'binary_fonts' will generate binary font files instead of cpp files
       last argument is the framebuffer format (used to limit the bit depth of the generated fonts)
+      Configuration specified in the application.config file take precedence over the commandline arguments
 BANNER
   end
 
@@ -61,11 +62,17 @@ BANNER
     end
 
     data_format = ""
+    if ARGV.include?("A1")
+      data_format += "A1"
+    end
+    if ARGV.include?("A2")
+      data_format += "A2"
+    end
     if ARGV.include?("A4")
-      data_format = "A4"
+      data_format += "A4"
     end
     if ARGV.include?("A8")
-      data_format = "A8"
+      data_format += "A8"
     end
 
     generate_binary_language_files = ""
@@ -93,17 +100,28 @@ BANNER
     require 'json'
     require 'lib/file_io'
 
-    if File.file?("application.config")
-      text_conf = JSON.parse(File.read("application.config"))["text_configuration"] || {}
+    generate_font_format = "0" # 0 = normal font format, 1 = unmapped_flash_font_format
+
+    application_config = File.join($calling_path, "application.config")
+    if File.file?(application_config)
+      text_conf = JSON.parse(File.read(application_config))["text_configuration"] || {}
 
       remap = text_conf["remap"]
       if !remap.nil?
         remap_identical_texts = remap == "yes" ? "yes" : "no"
       end
 
+      a1 = text_conf["a1"]
+      if !a1.nil?
+        data_format += a1 == "yes" ? "A1" : ""
+      end
+      a2 = text_conf["a2"]
+      if !a2.nil?
+        data_format += a2 == "yes" ? "A2" : ""
+      end
       a4 = text_conf["a4"]
       if !a4.nil?
-        data_format = a4 == "yes" ? "A4" : ""
+        data_format += a4 == "yes" ? "A4" : ""
       end
 
       binary_translations = text_conf["binary_translations"]
@@ -116,13 +134,23 @@ BANNER
       end
 
       binary_fonts = text_conf["binary_fonts"]
-       if !binary_fonts.nil?
+      if !binary_fonts.nil?
         generate_binary_font_files = binary_fonts== "yes" ? "yes" : "no"
       end
 
       bpp = text_conf["framebuffer_bpp"]
-       if !bpp.nil?
+      if !bpp.nil?
         framebuffer_bpp = "BPP" + bpp
+      end
+
+      font_format = text_conf["font_format"]
+      if !font_format.nil?
+        values = ["0", "1"]
+        if values.include? font_format
+          generate_font_format = font_format
+        else
+          puts "Font format #{font_format} not correct, using default: \"0\""
+        end
       end
     end
 
@@ -159,8 +187,8 @@ BANNER
       options = File.exists?(options_file) && File.read(options_file)
 
       new_options = ""
-      if File.file?("application.config")
-        new_options = JSON.parse(File.read("application.config"))["text_configuration"]
+      if File.file?(application_config)
+        new_options = JSON.parse(File.read(application_config))["text_configuration"]
       else
         new_options = ARGV.to_json
       end
@@ -194,7 +222,7 @@ BANNER
       require 'lib/generator'
       require 'lib/emitters/fonts_cpp'
       FontsCpp.font_convert = font_convert_path
-      Generator.new.run(file_name, @fonts_output_path, @localization_output_path, font_asset_path, data_format, remap_identical_texts, generate_binary_language_files, generate_binary_font_files, framebuffer_bpp)
+      Generator.new.run(file_name, @fonts_output_path, @localization_output_path, font_asset_path, data_format, remap_identical_texts, generate_binary_language_files, generate_binary_font_files, framebuffer_bpp, generate_font_format)
       #touch the cache compile time that we rely on in the makefile
       FileUtils.touch "#{@localization_output_path}/cache/compile_time.cache"
 

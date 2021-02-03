@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,43 +13,41 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/ButtonWithLabel.hpp
+ *
+ * Declares the touchgfx::ButtonWithLabel class.
+ */
 #ifndef BUTTONWITHLABEL_HPP
 #define BUTTONWITHLABEL_HPP
 
-#include <touchgfx/widgets/Button.hpp>
 #include <touchgfx/TypedText.hpp>
+#include <touchgfx/widgets/Button.hpp>
 
 namespace touchgfx
 {
 /**
- * @class ButtonWithLabel ButtonWithLabel.hpp touchgfx/widgets/ButtonWithLabel.hpp
+ * A Button that has a bitmap with a text on top of it. It is possible to have two different
+ * colors for the text depending on the current state of the button (released or
+ * pressed).
  *
- * @brief A Button specialization that also displays a text on top of the button bitmap.
- *
- *        A Button specialization that also displays a text on top of the button bitmap.
+ * Typical use case could be a red button with a normal and a pressed image. Those
+ * images can be reused across several buttons. The ButtonWithLabel will then allow a
+ * text to be superimposed on top of the red button.
  *
  * @see Button
  */
 class ButtonWithLabel : public Button
 {
 public:
-    /**
-     * @fn ButtonWithLabel::ButtonWithLabel();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
     ButtonWithLabel();
 
     /**
-     * @fn void ButtonWithLabel::setLabelText(TypedText t)
+     * Sets the text to display on the button. Texts with wildcards are not supported.
      *
-     * @brief Sets the text to display on the button.
+     * @param  t The text to display.
      *
-     *        Sets the text to display on the button. Texts with wildcards are not supported.
-     *
-     * @param t The text to display.
+     * @note The user code must call invalidate() in order to update the button on the display.
      */
     void setLabelText(TypedText t)
     {
@@ -58,11 +56,7 @@ public:
     }
 
     /**
-     * @fn TypedText ButtonWithLabel::getLabelText() const
-     *
-     * @brief Gets the text used for the label.
-     *
-     *        Gets the text used for the label.
+     * Gets the text used for the label.
      *
      * @return The text used for the label.
      */
@@ -72,17 +66,38 @@ public:
     }
 
     /**
-     * @fn void ButtonWithLabel::setLabelColor(colortype col, bool performInvalidate = false)
+     * Sets label color for the text when the button is in the normal, released state.
      *
-     * @brief Sets label color.
+     * @param  col               The color with which the text label should be drawn.
      *
-     *        Sets label color.
+     * @see setLabelColorPressed
      *
-     * @param col               The color with which the text label should be drawn.
-     * @param performInvalidate Optional parameter. If true, performs an instant invalidation of
-     *                          the button.
+     * @note If the button is currently in the normal, released state, the button should be forced
+     *       to redraw itself. This is done by calling invalidate() on the ButtonWithLabel.
+     * @note The user code must call invalidate() in order to update the button on the display.
      */
-    void setLabelColor(colortype col, bool performInvalidate = false)
+    void setLabelColor(colortype col)
+    {
+        color = col;
+    }
+
+    ///@cond
+    /**
+     * Sets label color for the text when the button is in the normal, released state.
+     *
+     * @param  col               The color with which the text label should be drawn.
+     * @param  performInvalidate If true, performs an instant invalidation of the button.
+     *
+     * @see setLabelColorPressed
+     *
+     * @note If the button is currently in the normal, released state, the button should be forced
+     *       to redraw itself. This is done by calling invalidate() on the ButtonWithLabel.
+     *
+     * @deprecated The use of performInvalidate is scheduled to be removed
+     */
+    TOUCHGFX_DEPRECATED(
+        "The use of performInvalidate is scheduled to be removed",
+        void setLabelColor(colortype col, bool performInvalidate))
     {
         color = col;
         if (performInvalidate)
@@ -90,20 +105,43 @@ public:
             invalidate();
         }
     }
+    ///@endcond
 
     /**
-     * @fn void ButtonWithLabel::setLabelColorPressed(colortype col, bool performInvalidate = false)
+     * Sets label color for the text when the button is in the pressed state.
      *
-     * @brief Sets label color when the button is pressed.
+     * @param  col               The color with which the text label should be drawn when the
+     *                           button is pressed.
      *
-     *        Sets label color when the button is pressed.
+     * @see setLabelColor
      *
-     * @param col               The color with which the text label should be drawn when the
-     *                          button is pressed.
-     * @param performInvalidate Optional parameter. If true, performs an instant invalidation of
-     *                          the button.
+     * @note If the button is currently in the pressed state, the button should be forced to
+     *       redraw itself. This is done by calling invalidate() on the ButtonWithLabel.
+     * @note The user code must call invalidate() in order to update the button on the display.
      */
-    void setLabelColorPressed(colortype col, bool performInvalidate = false)
+    void setLabelColorPressed(colortype col)
+    {
+        colorPressed = col;
+    }
+
+    ///@cond
+    /**
+     * Sets label color for the text when the button is in the pressed state.
+     *
+     * @param  col               The color with which the text label should be drawn when the
+     *                           button is pressed.
+     * @param  performInvalidate If true, performs an instant invalidation of the button.
+     *
+     * @see setLabelColor
+     *
+     * @note If the button is currently in the pressed state, the button should be forced to
+     *       redraw itself. This is done by calling invalidate() on the ButtonWithLabel.
+     *
+     * @deprecated The use of performInvalidate is scheduled to be removed
+     */
+    TOUCHGFX_DEPRECATED(
+        "The use of performInvalidate is scheduled to be removed",
+        void setLabelColorPressed(colortype col, bool performInvalidate))
     {
         colorPressed = col;
         if (performInvalidate)
@@ -111,16 +149,18 @@ public:
             invalidate();
         }
     }
+    ///@endcond
 
     /**
-     * @fn void ButtonWithLabel::setLabelRotation(TextRotation rotation)
+     * Sets the rotation of the text on the label. The text can be rotated in steps of 90
+     * degrees.
      *
-     * @brief Sets the rotation of the text on the label.
+     * @param  rotation The rotation of the text. Default is TEXT_ROTATE_0.
      *
-     *        Sets the rotation of the text on the label. Please note that this will not rotate
-     *        the bitmap of the label, only the text.
+     * @see TextArea::setRotation
      *
-     * @param rotation the rotation of the text. Default is TEXT_ROTATE_0.
+     * @note that this will not rotate the bitmap of the label, only the text.
+     * @note The user code must call invalidate() in order to update the button on the display.
      */
     void setLabelRotation(TextRotation rotation)
     {
@@ -128,11 +168,7 @@ public:
     }
 
     /**
-     * @fn TextRotation ButtonWithLabel::getLabelRotation()
-     *
-     * @brief Gets the current rotation of the text on the label.
-     *
-     *        Gets the current rotation of the text on the label.
+     * Gets the current rotation of the text on the label.
      *
      * @return The current rotation of the text.
      */
@@ -142,14 +178,11 @@ public:
     }
 
     /**
-     * @fn void ButtonWithLabel::updateTextPosition()
+     * Positions the label text horizontally centered. If the text changes due to a language
+     * change you may need to reposition the label text by calling this function to keep the
+     * text horizontally centered.
      *
-     * @brief Positions the label text as horizontally centered.
-     *
-     *        If the text changes due to a language change you may need to reposition the label
-     *        text to stay horizontally centered.
-     *
-     * @note The method does not invalidate the button. This must be done manually.
+     * @note The user code must call invalidate() in order to update the button on the display.
      */
     void updateTextPosition()
     {
@@ -173,12 +206,13 @@ public:
     virtual void draw(const Rect& area) const;
 
 protected:
-    TypedText    typedText;                  ///< The TypedText used for the button label.
-    colortype    color;                      ///< The color used for the label when not pressed.
-    colortype    colorPressed;               ///< The color used for the label when pressed.
-    TextRotation rotation;                   ///< The rotation used for the label.
-    uint8_t      textHeightIncludingSpacing; ///< Total height of the label (text height + spacing).
+    TypedText typedText;                ///< The TypedText used for the button label.
+    colortype color;                    ///< The color used for the label when the button is in the released, normal state.
+    colortype colorPressed;             ///< The color used for the label when the button is in the pressed state.
+    TextRotation rotation;              ///< The rotation used for the label.
+    uint8_t textHeightIncludingSpacing; ///< Total height of the label (text height + spacing).
 };
+
 } // namespace touchgfx
 
 #endif // BUTTONWITHLABEL_HPP

@@ -9,26 +9,16 @@
 namespace touchgfx
 {
 /**
- * @class GeneratedFont GeneratedFont.hpp touchgfx/GeneratedFont.hpp
- *
- * @brief An GeneratedFont has both glyph table and glyph data placed in a flash which supports
- *        random access read (i.e. not a NAND flash).
- *
- *        An GeneratedFont has both glyph table and glyph data placed in a flash which
- *        supports random access read (i.e. not a NAND flash)
+ * An GeneratedFont has both glyph table and glyph data placed in a flash which
+ * supports random access read (i.e. not a NAND flash)
  *
  * @see ConstFont
  */
 class GeneratedFont : public ConstFont
 {
 public:
-
     /**
-     * @fn GeneratedFont::GeneratedFont(const GlyphNode* list, uint16_t size, uint16_t height, uint8_t pixBelowBase, uint8_t bitsPerPixel, uint8_t maxLeft, uint8_t maxRight, const uint8_t* const* glyphDataInternalFlash, const KerningNode* kerningList, const Unicode::UnicodeChar fallbackChar, const Unicode::UnicodeChar ellipsisChar);
-     *
-     * @brief Constructor.
-     *
-     *        Construct the GeneratedFont.
+     * Construct the GeneratedFont.
      *
      * @param list                   The array of glyphs known to this font.
      * @param size                   The number of glyphs in list.
@@ -36,7 +26,7 @@ public:
      * @param pixBelowBase           The maximum number of pixels that can be drawn below the
      *                               baseline in this font.
      * @param bitsPerPixel           The number of bits per pixel in this font.
-     * @param dataFormatA4           Are glyphs encoded using A4 format
+     * @param byteAlignRow           Are glyphs encoded using A4 format
      * @param maxLeft                The maximum a character extends to the left.
      * @param maxRight               The maximum a character extends to the right.
      * @param glyphDataInternalFlash Pointer to the glyph data for the font, placed in internal
@@ -48,16 +38,12 @@ public:
      * @param ellipsisChar           The ellipsis character used for truncating long texts.
      * @param gsubTable              Pointer to GSUB table.
      */
-    GeneratedFont(const GlyphNode* list, uint16_t size, uint16_t height, uint8_t pixBelowBase, uint8_t bitsPerPixel, uint8_t dataFormatA4, uint8_t maxLeft, uint8_t maxRight, const uint8_t* const* glyphDataInternalFlash, const KerningNode* kerningList, const Unicode::UnicodeChar fallbackChar, const Unicode::UnicodeChar ellipsisChar, const uint16_t* const gsubData);
+    GeneratedFont(const GlyphNode* list, uint16_t size, uint16_t height, uint8_t pixBelowBase, uint8_t bitsPerPixel, uint8_t byteAlignRow, uint8_t maxLeft, uint8_t maxRight, const uint8_t* const* glyphDataInternalFlash, const KerningNode* kerningList, const Unicode::UnicodeChar fallbackChar, const Unicode::UnicodeChar ellipsisChar, const uint16_t* const gsubData);
 
     using ConstFont::getGlyph;
 
     /**
-     * @fn virtual const uint8_t* GeneratedFont::getPixelData(const GlyphNode* glyph) const;
-     *
-     * @brief Obtains a RAM-based pointer to the pixel data for the specified glyph.
-     *
-     *        Obtains a RAM-based pointer to the pixel data for the specified glyph.
+     * Obtains a RAM-based pointer to the pixel data for the specified glyph.
      *
      * @param glyph The glyph to get the pixels data of.
      *
@@ -66,11 +52,7 @@ public:
     virtual const uint8_t* getPixelData(const GlyphNode* glyph) const;
 
     /**
-     * @fn virtual int8_t GeneratedFont::getKerning(Unicode::UnicodeChar prevChar, const GlyphNode* glyph) const;
-     *
-     * @brief Gets the kerning distance between two characters.
-     *
-     *        Gets the kerning distance between two characters.
+     * Gets the kerning distance between two characters.
      *
      * @param prevChar The unicode value of the previous character.
      * @param glyph    the glyph object for the current character.
@@ -80,11 +62,7 @@ public:
     virtual int8_t getKerning(Unicode::UnicodeChar prevChar, const GlyphNode* glyph) const;
 
     /**
-     * @fn virtual uint16_t* getGSUBTable() const;
-     *
-     * @brief Gets GSUB table.
-     *
-     *        Gets GSUB table.
+     * Gets GSUB table.
      *
      * @return The GSUB table or null if font has GSUB no table
      */
@@ -112,7 +90,7 @@ struct BinaryFontData
     uint16_t height;                   // Font height from base
     uint8_t  pixBelowBase;             // Max pixels below base
     uint8_t  bitsPerPixel: 7;          // Bpp
-    uint8_t  dataFormatA4: 1;          // A4
+    uint8_t  byteAlignRow: 1;          // A4/A2/A1
     uint8_t  maxLeft;                  // The maximum a character extends to the left
     uint8_t  maxRight;                 // The maximum a character extends to the right
     Unicode::UnicodeChar fallbackChar; // Fallback Character for the font
@@ -128,7 +106,7 @@ public:
                         data->height,
                         data->pixBelowBase,
                         data->bitsPerPixel,
-                        data->dataFormatA4,
+                        data->byteAlignRow,
                         data->maxLeft,
                         data->maxRight,
                         0,

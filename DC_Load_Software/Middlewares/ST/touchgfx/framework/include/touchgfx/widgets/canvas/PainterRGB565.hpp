@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,99 +13,76 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/canvas/PainterRGB565.hpp
+ *
+ * Declares the touchgfx::PainterRGB565 class.
+ */
 #ifndef PAINTERRGB565_HPP
 #define PAINTERRGB565_HPP
 
 #include <stdint.h>
-#include <touchgfx/widgets/canvas/AbstractPainterRGB565.hpp>
 #include <touchgfx/hal/Types.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainterRGB565.hpp>
 
 namespace touchgfx
 {
 /**
- * @class PainterRGB565 PainterRGB565.hpp touchgfx/widgets/canvas/PainterRGB565.hpp
- *
- * @brief A Painter that will paint using a color and an alpha value.
- *
- *        The PainterRGB565 class allows a shape to be filled with a given color and alpha
- *        value. This allows transparent, anti-aliased elements to be drawn.
+ * The PainterRGB565 class allows a shape to be filled with a given color and alpha
+ * value. This allows transparent, anti-aliased elements to be drawn.
  *
  * @see AbstractPainter
  */
 class PainterRGB565 : public AbstractPainterRGB565
 {
 public:
-
     /**
-     * @fn PainterRGB565::PainterRGB565(colortype color = 0, uint8_t alpha = 255);
+     * Initializes a new instance of the PainterRGB565 class.
      *
-     * @brief Constructor.
-     *
-     *        Constructor.
-     *
-     * @param color the color.
-     * @param alpha the alpha.
+     * @param  color (Optional) the color, default is black.
+     * @param  alpha (Optional) the alpha, default is 255 i.e. solid.
      */
-    PainterRGB565(colortype color = 0, uint8_t alpha = 255);
+    PainterRGB565(colortype color = 0, uint8_t alpha = 255)
+        : AbstractPainterRGB565()
+    {
+        setColor(color);
+        setAlpha(alpha);
+    }
 
     /**
-     * @fn void PainterRGB565::setColor(colortype color, uint8_t alpha = 255);
+     * Sets color and alpha to use when drawing the CanvasWidget.
      *
-     * @brief Sets color and alpha to use when drawing the CanvasWidget.
-     *
-     *        Sets color and alpha to use when drawing the CanvasWidget.
-     *
-     * @param color The color.
-     * @param alpha The alpha.
+     * @param  color The color.
      */
-    void setColor(colortype color, uint8_t alpha = 255);
+    void setColor(colortype color)
+    {
+        painterColor = color;
+        painterRed = painterColor & RMASK;
+        painterGreen = painterColor & GMASK;
+        painterBlue = painterColor & BMASK;
+    }
 
     /**
-     * @fn colortype PainterRGB565::getColor() const;
-     *
-     * @brief Gets the current color.
-     *
-     *        Gets the current color.
+     * Gets the current color.
      *
      * @return The color.
      */
-    colortype getColor() const;
-
-    /**
-     * @fn void PainterRGB565::setAlpha(uint8_t alpha);
-     *
-     * @brief Sets an alpha value for the painter.
-     *
-     *        Sets an alpha value for the painter.
-     *
-     * @param alpha The alpha value to use.
-     */
-    void setAlpha(uint8_t alpha);
-
-    /**
-     * @fn uint8_t PainterRGB565::getAlpha() const;
-     *
-     * @brief Gets the current alpha value.
-     *
-     *        Gets the current alpha value.
-     *
-     * @return The current alpha value.
-     *
-     * @see setAlpha
-     */
-    uint8_t getAlpha() const;
+    colortype getColor() const
+    {
+        return painterColor;
+    }
 
     virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
 protected:
     virtual bool renderNext(uint8_t& red, uint8_t& green, uint8_t& blue, uint8_t& alpha);
 
-    uint16_t painterColor;   ///< The color
-    uint16_t painterRed;     ///< The red part of the color
-    uint16_t painterGreen;   ///< The green part of the color
-    uint16_t painterBlue;    ///< The blue part of the color
-    uint8_t  painterAlpha;   ///< The alpha value
-}; // class PainterRGB565
+    uint16_t painterColor; ///< The color
+    uint16_t painterRed;   ///< The red part of the color
+    uint16_t painterGreen; ///< The green part of the color
+    uint16_t painterBlue;  ///< The blue part of the color
+};
+
 } // namespace touchgfx
 
 #endif // PAINTERRGB565_HPP

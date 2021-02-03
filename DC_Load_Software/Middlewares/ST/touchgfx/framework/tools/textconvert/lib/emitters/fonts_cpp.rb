@@ -1,7 +1,7 @@
 ##############################################################################
-# This file is part of the TouchGFX 4.13.0 distribution.
+# This file is part of the TouchGFX 4.15.0 distribution.
 #
-# <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+# <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
 # All rights reserved.</center></h2>
 #
 # This software component is licensed by ST under Ultimate Liberty license
@@ -16,12 +16,13 @@ class FontsCpp
     @@font_convert = font_convert
   end
 
-  def initialize(text_entries, typographies, output_directory, font_asset_path, data_format, generate_binary_font_files)
+  def initialize(text_entries, typographies, output_directory, font_asset_path, data_format, generate_binary_font_files, generate_font_format)
     @typographies = typographies
     @output_directory = output_directory
     @font_asset_path = font_asset_path
     @data_format = data_format
     @generate_binary_font_files = generate_binary_font_files
+    @generate_font_format = generate_font_format
   end
   def run
     unique_typographies = @typographies.map{ |t| Typography.new("", t.font_file, t.font_size, t.bpp, t.fallback_character, t.ellipsis_character) }.uniq
@@ -70,6 +71,7 @@ class FontsCpp
       fallback_char ||= 0
       ellipsis_char = typography[:ellipsis_character]
       ellipsis_char ||= 0
+      byte_align = @data_format.match("A#{typography.bpp}") ? "-ba" : ""
       cmd = "\"#{@@font_convert}\" \
 -f \"#{font_file}\" \
 -i #{font_index} \
@@ -82,9 +84,11 @@ class FontsCpp
 -d #{fallback_char} \
 -e #{ellipsis_char} \
 -bf #{@generate_binary_font_files} \
--#{@data_format}"
-
+-ff #{@generate_font_format} \
+#{byte_align}"
+      #puts "Command: #{cmd}"
       output = `#{cmd}`
+      #puts "FontConverter: #{output}\n"
       if !$?.success?
         puts cmd
         puts output

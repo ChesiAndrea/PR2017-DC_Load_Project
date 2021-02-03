@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -14,39 +14,9 @@
   */
 
 #include <touchgfx/widgets/canvas/PainterARGB8888.hpp>
-#include <touchgfx/Color.hpp>
 
 namespace touchgfx
 {
-PainterARGB8888::PainterARGB8888(colortype color, uint8_t alpha) :
-    AbstractPainterARGB8888()
-{
-    setColor(color, alpha);
-}
-
-void PainterARGB8888::setColor(colortype color, uint8_t alpha)
-{
-    painterRed = Color::getRedColor(color);
-    painterGreen = Color::getGreenColor(color);
-    painterBlue = Color::getBlueColor(color);
-    setAlpha(alpha);
-}
-
-touchgfx::colortype PainterARGB8888::getColor() const
-{
-    return Color::getColorFrom24BitRGB(painterRed, painterGreen, painterBlue);
-}
-
-void PainterARGB8888::setAlpha(uint8_t alpha)
-{
-    painterAlpha = alpha;
-}
-
-uint8_t PainterARGB8888::getAlpha() const
-{
-    return painterAlpha;
-}
-
 void PainterARGB8888::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsigned count, const uint8_t* covers)
 {
     uint8_t* p = reinterpret_cast<uint8_t*>(ptr) + ((x + xAdjust) * 4);
@@ -76,8 +46,7 @@ void PainterARGB8888::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsign
                 pByte = *p;
                 *p++ = pByte + alpha - LCD::div255(pByte * alpha);
             }
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
     else if (totalAlpha != 0)
     {
@@ -93,8 +62,7 @@ void PainterARGB8888::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsign
             *p++ = LCD::div255(painterRed * alpha + pByte * ialpha);
             pByte = *p;
             *p++ = pByte + alpha - LCD::div255(pByte * alpha);
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
 }
 

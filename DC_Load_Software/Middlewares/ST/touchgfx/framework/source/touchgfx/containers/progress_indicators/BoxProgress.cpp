@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -23,10 +23,6 @@ BoxProgress::BoxProgress()
     progressIndicatorContainer.add(box);
 }
 
-BoxProgress::~BoxProgress()
-{
-}
-
 void BoxProgress::setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height)
 {
     box.setPosition(0, 0, width, height);
@@ -44,9 +40,9 @@ touchgfx::colortype BoxProgress::getColor() const
     return box.getColor();
 }
 
-void BoxProgress::setAlpha(uint8_t alpha)
+void BoxProgress::setAlpha(uint8_t newAlpha)
 {
-    box.setAlpha(alpha);
+    box.setAlpha(newAlpha);
 }
 
 uint8_t BoxProgress::getAlpha() const
@@ -57,7 +53,6 @@ uint8_t BoxProgress::getAlpha() const
 void BoxProgress::setValue(int value)
 {
     AbstractProgressIndicator::setValue(value);
-    box.invalidate();
     int16_t progress = 0;
     switch (progressDirection)
     {
@@ -73,18 +68,41 @@ void BoxProgress::setValue(int value)
     switch (progressDirection)
     {
     case AbstractDirectionProgress::RIGHT:
-        box.setPosition(0, 0, progress, progressIndicatorContainer.getHeight());
-        break;
+        {
+            int16_t oldWidth = box.getWidth();
+            box.setPosition(0, 0, progress, progressIndicatorContainer.getHeight());
+            int16_t newWidth = box.getWidth();
+            Rect rect(MIN(oldWidth, newWidth), 0, abs(oldWidth - newWidth), box.getHeight());
+            progressIndicatorContainer.invalidateRect(rect);
+            break;
+        }
     case AbstractDirectionProgress::LEFT:
-        box.setPosition(getWidth() - progress, 0, progress, progressIndicatorContainer.getHeight());
-        break;
+        {
+            int16_t oldX = box.getX();
+            box.setPosition(getWidth() - progress, 0, progress, progressIndicatorContainer.getHeight());
+            int16_t newX = box.getX();
+            Rect rect(MIN(oldX, newX), 0, abs(oldX - newX), box.getHeight());
+            progressIndicatorContainer.invalidateRect(rect);
+            break;
+        }
     case AbstractDirectionProgress::DOWN:
-        box.setPosition(0, 0, progressIndicatorContainer.getWidth(), progress);
-        break;
+        {
+            int16_t oldHeight = box.getHeight();
+            box.setPosition(0, 0, progressIndicatorContainer.getWidth(), progress);
+            int16_t newHeight = box.getHeight();
+            Rect rect(0, MIN(oldHeight, newHeight), box.getWidth(), abs(oldHeight - newHeight));
+            progressIndicatorContainer.invalidateRect(rect);
+            break;
+        }
     case AbstractDirectionProgress::UP:
-        box.setPosition(0, progressIndicatorContainer.getHeight() - progress, progressIndicatorContainer.getWidth(), progress);
-        break;
+        {
+            int16_t oldY = box.getY();
+            box.setPosition(0, progressIndicatorContainer.getHeight() - progress, progressIndicatorContainer.getWidth(), progress);
+            int16_t newY = box.getY();
+            Rect rect(0, MIN(oldY, newY), box.getWidth(), abs(oldY - newY));
+            progressIndicatorContainer.invalidateRect(rect);
+            break;
+        }
     }
-    box.invalidate();
 }
-}
+} // namespace touchgfx

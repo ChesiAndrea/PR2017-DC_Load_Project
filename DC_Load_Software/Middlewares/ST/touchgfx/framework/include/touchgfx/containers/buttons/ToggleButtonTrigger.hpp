@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/buttons/ToggleButtonTrigger.hpp
+ *
+ * Declares the touchgfx::ToggleButtonTrigger class.
+ */
 #ifndef TOGGLEBUTTONTRIGGER_HPP
 #define TOGGLEBUTTONTRIGGER_HPP
 
@@ -21,48 +26,30 @@
 namespace touchgfx
 {
 /**
- * @class ToggleButtonTrigger ToggleButtonTrigger.hpp touchgfx/containers/buttons/ToggleButtonTrigger.hpp
+ * A toggle button trigger. This trigger will create a button that reacts on clicks. This means
+ * it will call the set action when it gets a touch released event, just like a
+ * ClickButtonTrigger. The difference being that a ToggleButtonTrigger will stay in
+ * pressed state until it is clicked again.
  *
- * @brief A toggle button trigger.
- *
- *        A toggle button trigger. This trigger will create a button
- *        that reacts on clicks. This means it will call the action
- *        when it gets a touch released event.
- *
- *        The ToggleButtonTrigger will stay in pressed state until it
- *        is clicked again.
- *
- *        The ToggleButtonTrigger can be combined with one or more of
- *        the ButtonStyle classes to create a functional button.
- *
+ * The ToggleButtonTrigger can be combined with one or more of the ButtonStyle classes
+ * to create a fully functional button.
  */
 class ToggleButtonTrigger : public AbstractButtonContainer
 {
 public:
-    /**
-     * @fn ToggleButtonTrigger::ToggleButtonTrigger()
-     *
-     * @brief Default constructor.
-     */
-    ToggleButtonTrigger() :
-        AbstractButtonContainer(), toggleCanceled(false) { }
+    ToggleButtonTrigger()
+        : AbstractButtonContainer(), toggleCanceled(false)
+    {
+    }
 
     /**
-     * @fn virtual ToggleButtonTrigger::~ToggleButtonTrigger()
+     * Allows the button to be forced into either the pressed state, or the normal state. In
+     * the pressed state, the button will always be shown as pressed down (and shown as
+     * released when the user presses it). In the normal state, the button will be show as
+     * released or pressed depending on its actual state.
      *
-     * @brief Destructor.
-     */
-    virtual ~ToggleButtonTrigger() { }
-
-    /**
-     * @fn void ToggleButtonTrigger::forceState(bool activeState);
-     *
-     * @brief Force the button into a specific state.
-     *
-     *        Use this function to force the button in one of the two possible states. If
-     *        button is forced to the active state, then AbstractButtonContainer will be in a pressed state.
-     *
-     * @param activeState If true, the AbstractButtonContainer will appear pressed.
+     * @param  activeState If true, swap the images for released and pressed. If false display
+     *                     the button normally.
      */
     void forceState(bool activeState)
     {
@@ -70,11 +57,9 @@ public:
     }
 
     /**
-     * @fn void ToggleButtonTrigger::setToggleCanceled(bool isToggleCanceled)
+     * Sets toggle canceled.
      *
-     * @brief Sets toggle canceled.
-     *
-     * @param isToggleCanceled True if is toggle canceled, false if not.
+     * @param  isToggleCanceled True if is toggle canceled, false if not.
      */
     void setToggleCanceled(bool isToggleCanceled)
     {
@@ -82,9 +67,7 @@ public:
     }
 
     /**
-     * @fn bool ToggleButtonTrigger::getToggleCanceled()
-     *
-     * @brief Gets toggle canceled.
+     * Gets toggle canceled.
      *
      * @return True if it succeeds, false if it fails.
      */
@@ -93,13 +76,6 @@ public:
         return toggleCanceled;
     }
 
-    /**
-     * @fn virtual void ToggleButtonTrigger::handleClickEvent(const ClickEvent& event)
-     *
-     * @brief Handles the click event described by event.
-     *
-     * @param event The event.
-     */
     virtual void handleClickEvent(const ClickEvent& event)
     {
         bool wasPressed = getPressed();
@@ -121,9 +97,11 @@ public:
             }
         }
     }
+
 protected:
     bool toggleCanceled; ///< True if toggle canceled
 };
+
 } // namespace touchgfx
 
 #endif // TOGGLEBUTTONTRIGGER_HPP

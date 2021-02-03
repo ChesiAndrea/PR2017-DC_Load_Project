@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -23,10 +23,6 @@ CircleProgress::CircleProgress()
     progressIndicatorContainer.add(circle);
     circle.setPosition(0, 0, getWidth(), getHeight());
     CircleProgress::setStartEndAngle(0, 360);
-}
-
-CircleProgress::~CircleProgress()
-{
 }
 
 void CircleProgress::setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height)

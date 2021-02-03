@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/mixins/FadeAnimator.hpp
+ *
+ * Declares the touchgfx::FadeAnimator class.
+ */
 #ifndef FADEANIMATOR_HPP
 #define FADEANIMATOR_HPP
 
@@ -23,76 +28,45 @@
 namespace touchgfx
 {
 /**
- * @class FadeAnimator FadeAnimator.hpp touchgfx/mixins/FadeAnimator.hpp
+ * A FadeAnimator makes the template class T able to animate the alpha value from its current
+ * value to a specified end value. It is possible to use a fade in effect as well as
+ * fade out effect using FadeAnimator. The alpha progression can be described by
+ * supplying an EasingEquation. The FadeAnimator performs a callback when the animation
+ * has finished.
  *
- * @brief A FadeAnimator makes the template class T able to animate an alpha fade.
+ * This mixin can be used on any Drawable that has a 'void setAlpha(uint8_t)' and a
+ * 'uint8_t getAlpha()' method.
  *
- *        A FadeAnimator makes the template class T able to animate an alpha fade from its
- *        current alpha value to a specified end alpha value. The alpha development can be
- *        described by supplying an EasingEquation. The FadeAnimator performs a callback when
- *        the animation has finished.
- *
- *        This mixin can be used on any Drawable that has a 'void setAlpha(uint8_t)' and a
- *        'uint8_t getAlpha()' method.
- *
- * @tparam T Specifies the type should have the fade animation capability.
+ * @tparam T specifies the type to extend with the FadeAnimator behavior.
  */
-template<class T>
+template <class T>
 class FadeAnimator : public T
 {
 public:
-
-    /**
-     * @fn FadeAnimator::FadeAnimator()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor. Creates and initialize the FadeAnimator.
-     */
-    FadeAnimator() :
-        T(),
-        fadeAnimationRunning(false),
-        fadeAnimationCounter(0),
-        fadeAnimationDelay(0),
-        fadeAnimationEndedCallback(0)
+    FadeAnimator()
+        : T(),
+          fadeAnimationRunning(false),
+          fadeAnimationCounter(0),
+          fadeAnimationDelay(0),
+          fadeAnimationEndedCallback(0)
     {
     }
 
     /**
-     * @fn virtual FadeAnimator::~FadeAnimator()
+     * Associates an action to be performed when the animation ends.
      *
-     * @brief Destructor.
-     *
-     *        Destructor. Destroys the FadeAnimator.
+     * @param  callback The callback to be executed. The callback will be given a reference
+     *                  to the FadeAnimator.
      */
-    virtual ~FadeAnimator()
-    {
-    }
-
-    /**
-     * @fn void FadeAnimator::setFadeAnimationEndedAction(GenericCallback<const FadeAnimator<T>& >& callback)
-     *
-     * @brief Associates an action to be performed when the animation ends.
-     *
-     *        Associates an action to be performed when the animation ends.
-     *
-     * @param callback The callback to be executed. The callback will be given a reference to
-     *                 the FadeAnimator.
-     *
-     * @see GenericCallback
-     */
-    void setFadeAnimationEndedAction(GenericCallback<const FadeAnimator<T>& >& callback)
+    void setFadeAnimationEndedAction(GenericCallback<const FadeAnimator<T>&>& callback)
     {
         fadeAnimationEndedCallback = &callback;
     }
 
     /**
-     * @fn void FadeAnimator::clearFadeAnimationEndedAction()
+     * Clears the fade animation ended action previously set by setFadeAnimationEndedAction.
      *
-     * @brief Clears the fade animation ended action previously set by setFadeAnimationEndedAction.
-     *
-     *        Clears the fade animation ended action previously set by
-     *        setFadeAnimationEndedAction.
+     * Clears the fade animation ended action previously set by setFadeAnimationEndedAction.
      *
      * @see setFadeAnimationEndedAction
      */
@@ -102,13 +76,12 @@ public:
     }
 
     /**
-     * @fn virtual void FadeAnimator::setFadeAnimationDelay(uint16_t delay)
+     * Sets a delay before the actual animation starts for the animation done by the
+     * FadeAnimator.
      *
-     * @brief Sets a delay on animations done by the FadeAnimator.
+     * @param  delay The delay in ticks.
      *
-     *        Sets a delay on animations done by the FadeAnimator.
-     *
-     * @param delay The delay in ticks.
+     * @see getFadeAnimationDelay
      */
     virtual void setFadeAnimationDelay(uint16_t delay)
     {
@@ -116,62 +89,53 @@ public:
     }
 
     /**
-     * @fn virtual uint16_t FadeAnimator::getFadeAnimationDelay() const
-     *
-     * @brief Gets the current animation delay.
-     *
-     *        Gets the current animation delay.
+     * Gets the current animation delay.
      *
      * @return The current animation delay.
+     *
+     * @see setFadeAnimationDelay
      */
     virtual uint16_t getFadeAnimationDelay() const
     {
         return fadeAnimationDelay;
     }
 
+    ///@cond
     /**
-     * @fn virtual bool FadeAnimator::isRunning() const
-     *
-     * @brief Gets whether or not the fade animation is running.
-     *
-     *        Gets whether or not the fade animation is running.
+     * Gets whether or not the fade animation is running.
      *
      * @return true if the fade animation is running.
-     * @deprecated use isFadeAnimationRunning()
+     *
+     * @deprecated Use FadeAnimator::isFadeAnimationRunning().
      */
-    virtual bool isRunning() const
+    TOUCHGFX_DEPRECATED(
+        "Use FadeAnimator::isFadeAnimationRunning().",
+        bool isRunning())
     {
         return isFadeAnimationRunning();
     }
+    ///@endcond
 
     /**
-     * @fn virtual bool FadeAnimator::isFadeAnimationRunning() const
-     *
-     * @brief Gets whether or not the fade animation is running.
-     *
-     *        Gets whether or not the fade animation is running.
+     * Gets whether or not the fade animation is running.
      *
      * @return true if the fade animation is running.
      */
-    virtual bool isFadeAnimationRunning() const
+    bool isFadeAnimationRunning() const
     {
         return fadeAnimationRunning;
     }
 
     /**
-     * @fn void FadeAnimator::startFadeAnimation(uint8_t endAlpha, uint16_t duration, EasingEquation alphaProgressionEquation = &EasingEquations::linearEaseNone)
+     * Starts the fade animation from the current alpha value to the specified end alpha
+     * value. The progression of the alpha value during the animation is described by the
+     * supplied EasingEquation.
      *
-     * @brief Starts the fade animation.
-     *
-     *        Starts the fade animation from the current alpha value to the specified end alpha
-     *        value. The development of the alpha value during the animation is described by
-     *        the supplied EasingEquation.
-     *
-     * @param endAlpha                 The alpha value of T at animation end.
-     * @param duration                 The duration of the animation measured in ticks.
-     * @param alphaProgressionEquation The equation that describes the development of the alpha
-     *                                 value during the animation. Default =
-     *                                 EasingEquations::linearEaseNone.
+     * @param  endAlpha                 The alpha value of T at animation end.
+     * @param  duration                 The duration of the animation measured in ticks.
+     * @param  alphaProgressionEquation (Optional) The equation that describes the
+     *                                  development of the alpha value during the animation.
+     *                                  Default is EasingEquations::linearEaseNone.
      */
     void startFadeAnimation(uint8_t endAlpha, uint16_t duration, EasingEquation alphaProgressionEquation = &EasingEquations::linearEaseNone)
     {
@@ -195,9 +159,8 @@ public:
     }
 
     /**
-     * @fn void FadeAnimator::cancelFadeAnimation()
-     *
-     * @brief Cancel fade animation.
+     * Cancel fade animation. The animation is stopped and the alpha value is left where it
+     * currently is.
      */
     void cancelFadeAnimation()
     {
@@ -209,28 +172,14 @@ public:
     }
 
 protected:
-
-    /**
-     * @fn virtual void FadeAnimator::handleTickEvent()
-     *
-     * @brief The tick handler that handles the actual animation steps.
-     *
-     *        The tick handler that handles the actual animation steps.
-     */
+    /** @copydoc Drawable::handleTickEvent */
     virtual void handleTickEvent()
     {
         T::handleTickEvent();
-
         nextFadeAnimationStep();
     }
 
-    /**
-     * @fn void FadeAnimator::nextFadeAnimationStep()
-     *
-     * @brief Execute next step in fade animation.
-     *
-     *        Execute next step in fade animation and stop the timer if necessary.
-     */
+    /** Execute next step in fade animation and stop the timer if necessary. */
     void nextFadeAnimationStep()
     {
         if (fadeAnimationRunning)
@@ -271,15 +220,16 @@ protected:
     }
 
 protected:
-    bool           fadeAnimationRunning;       ///< Boolean that is true if the animation is running.
-    uint16_t       fadeAnimationCounter;       ///< Counter that is equal to the current step in the animation
-    uint16_t       fadeAnimationDelay;         ///< A delay that is applied before animation start. Expressed in ticks.
-    uint16_t       fadeAnimationDuration;      ///< The complete duration of the animation. Expressed in ticks.
-    int16_t        fadeAnimationStartAlpha;    ///< The alpha value at the beginning of the animation.
-    int16_t        fadeAnimationEndAlpha;      ///< The alpha value at the end of the animation.
-    EasingEquation fadeAnimationAlphaEquation; ///< EasingEquation expressing the development of the alpha value during the animation.
+    bool fadeAnimationRunning;                 ///< True if the animation is running.
+    uint16_t fadeAnimationCounter;             ///< To the current step in the animation
+    uint16_t fadeAnimationDelay;               ///< A delay that is applied before animation start. Expressed in ticks.
+    uint16_t fadeAnimationDuration;            ///< The complete duration of the animation. Expressed in ticks.
+    int16_t fadeAnimationStartAlpha;           ///< The alpha value at the beginning of the animation.
+    int16_t fadeAnimationEndAlpha;             ///< The alpha value at the end of the animation.
+    EasingEquation fadeAnimationAlphaEquation; ///< EasingEquation expressing the progression of the alpha value during the animation.
 
-    GenericCallback<const FadeAnimator<T>& >* fadeAnimationEndedCallback; ///< Animation ended Callback.
+    GenericCallback<const FadeAnimator<T>&>* fadeAnimationEndedCallback; ///< Animation ended Callback.
 };
 } //namespace touchgfx
+
 #endif // FADEANIMATOR_HPP

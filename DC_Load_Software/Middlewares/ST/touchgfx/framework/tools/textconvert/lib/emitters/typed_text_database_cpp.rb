@@ -1,7 +1,7 @@
 ##############################################################################
-# This file is part of the TouchGFX 4.13.0 distribution.
+# This file is part of the TouchGFX 4.15.0 distribution.
 #
-# <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+# <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
 # All rights reserved.</center></h2>
 #
 # This software component is licensed by ST under Ultimate Liberty license
@@ -14,9 +14,10 @@
 class TypedTextDatabaseCpp < Template
   TypedTextPresenter = Struct.new(:alignment, :direction, :typography)
 
-  def initialize(text_entries, typographies, output_directory, generate_binary_language_files)
+  def initialize(text_entries, typographies, output_directory, generate_binary_language_files, generate_font_format)
     super(text_entries, typographies, output_directory)
     @generate_binary_language_files = generate_binary_language_files
+    @generate_font_format = generate_font_format
     @cache = {}
   end
 
@@ -45,6 +46,7 @@ class TypedTextDatabaseCpp < Template
     @cache["databases"] = databases
     @cache["database_list"]=language_db_list
     @cache["fonts"] = fontmap
+    @cache["generate_font_format"] = @generate_font_format
 
     new_cache_file = false
     if not File::exists?(cache_file)
@@ -116,6 +118,10 @@ class TypedTextDatabaseCpp < Template
         end
         fontmap
       end
+  end
+
+  def font_class_name
+    @generate_font_format == "1" ? "UnmappedDataFont" : "GeneratedFont"
   end
 
   def input_path

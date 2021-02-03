@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/transforms/DisplayTransformation.hpp
+ *
+ * Declares the touchgfx::DisplayTransformation class.
+ */
 #ifndef DISPLAYTRANSFORMATION_HPP
 #define DISPLAYTRANSFORMATION_HPP
 
@@ -21,23 +26,15 @@
 namespace touchgfx
 {
 /**
- * @class DisplayTransformation DisplayTransformation.hpp touchgfx/transforms/DisplayTransformation.hpp
- *
- * @brief Defines transformations from display space to frame buffer space.
- *
- *        Defines transformations from display space to frame buffer space. The display might
- *        be (considered) in portrait mode from 0,0 to 272,480, while the actual frame buffer
- *        is from 0,0 to 480,272. This class handles the transformations.
+ * Defines transformations from display space to framebuffer space. The display might be
+ * (considered) in portrait mode from 0,0 to 272,480, while the actual framebuffer is
+ * from 0,0 to 480,272. This class handles the transformations.
  */
 class DisplayTransformation
 {
 public:
     /**
-     * @fn static void DisplayTransformation::transformDisplayToFrameBuffer(int16_t& x, int16_t& y);
-     *
-     * @brief Transform x,y from display to frame buffer coordinates.
-     *
-     *        Transform x,y from display to frame buffer coordinates.
+     * Transform x,y from display to framebuffer coordinates.
      *
      * @param [in,out] x the x part to translate.
      * @param [in,out] y the y part to translate.
@@ -45,11 +42,7 @@ public:
     static void transformDisplayToFrameBuffer(int16_t& x, int16_t& y);
 
     /**
-     * @fn static void DisplayTransformation::transformDisplayToFrameBuffer(float& x, float& y);
-     *
-     * @brief Transform x,y from display to frame buffer coordinates.
-     *
-     *        Transform x,y from display to frame buffer coordinates.
+     * Transform x,y from display to framebuffer coordinates.
      *
      * @param [in,out] x the x part to translate.
      * @param [in,out] y the y part to translate.
@@ -57,11 +50,7 @@ public:
     static void transformDisplayToFrameBuffer(float& x, float& y);
 
     /**
-     * @fn static void DisplayTransformation::transformFrameBufferToDisplay(int16_t& x, int16_t& y);
-     *
-     * @brief Transform x,y from frame buffer to display coordinates.
-     *
-     *        Transform x,y from frame buffer to display coordinates.
+     * Transform x,y from framebuffer to display coordinates.
      *
      * @param [in,out] x the x part to translate.
      * @param [in,out] y the y part to translate.
@@ -69,69 +58,54 @@ public:
     static void transformFrameBufferToDisplay(int16_t& x, int16_t& y);
 
     /**
-     * @fn static void DisplayTransformation::transformDisplayToFrameBuffer(int16_t& x, int16_t& y, const Rect& in);
+     * Transform x,y from coordinates relative to the in rect to framebuffer coordinates.
      *
-     * @brief Transform x,y from coordinates relative to the in rect to frame buffer coordinates.
+     * Transform x,y from coordinates relative to the in rect to framebuffer coordinates.
      *
-     *        Transform x,y from coordinates relative to the in rect to frame buffer
-     *        coordinates.
-     *
-     * @param [in,out] x the x part to translate.
-     * @param [in,out] y the y part to translate.
-     * @param in         the rectangle defining the coordinate space.
+     * @param [in,out] x  the x part to translate.
+     * @param [in,out] y  the y part to translate.
+     * @param          in the rectangle defining the coordinate space.
      */
     static void transformDisplayToFrameBuffer(int16_t& x, int16_t& y, const Rect& in);
 
     /**
-     * @fn static void DisplayTransformation::transformDisplayToFrameBuffer(float& x, float& y, const Rect& in);
+     * Transform x,y from coordinates relative to the in rect to framebuffer coordinates.
      *
-     * @brief Transform x,y from coordinates relative to the in rect to frame buffer coordinates.
+     * Transform x,y from coordinates relative to the in rect to framebuffer coordinates.
      *
-     *        Transform x,y from coordinates relative to the in rect to frame buffer
-     *        coordinates.
-     *
-     * @param [in,out] x the x part to translate.
-     * @param [in,out] y the y part to translate.
-     * @param in         the rectangle defining the coordinate space.
+     * @param [in,out] x  the x part to translate.
+     * @param [in,out] y  the y part to translate.
+     * @param          in the rectangle defining the coordinate space.
      */
     static void transformDisplayToFrameBuffer(float& x, float& y, const Rect& in);
 
     /**
-     * @fn static void DisplayTransformation::transformDisplayToFrameBuffer(Rect& r);
-     *
-     * @brief Transform rectangle from display to frame buffer coordinates.
-     *
-     *        Transform rectangle from display to frame buffer coordinates.
+     * Transform rectangle from display to framebuffer coordinates.
      *
      * @param [in,out] r the rectangle to translate.
      */
     static void transformDisplayToFrameBuffer(Rect& r);
 
     /**
-     * @fn static void DisplayTransformation::transformFrameBufferToDisplay(Rect& r);
-     *
-     * @brief Transform rectangle from frame buffer to display coordinates.
-     *
-     *        Transform rectangle from frame buffer to display coordinates.
+     * Transform rectangle from framebuffer to display coordinates.
      *
      * @param [in,out] r the rectangle to translate.
      */
     static void transformFrameBufferToDisplay(Rect& r);
 
     /**
-     * @fn static void DisplayTransformation::transformDisplayToFrameBuffer(Rect& r, const Rect& in);
+     * Transform rectangle r from coordinates relative to the in rect to framebuffer
+     * coordinates.
      *
-     * @brief Transform rectangle r from coordinates relative to the in rect to frame buffer
-     *        coordinates.
+     * Transform rectangle r from coordinates relative to the in rect to framebuffer
+     * coordinates.
      *
-     *        Transform rectangle r from coordinates relative to the in rect to frame buffer
-     *        coordinates.
-     *
-     * @param [in,out] r the rectangle to translate.
-     * @param in         the rectangle defining the coordinate space.
+     * @param [in,out] r  the rectangle to translate.
+     * @param          in the rectangle defining the coordinate space.
      */
     static void transformDisplayToFrameBuffer(Rect& r, const Rect& in);
 };
+
 } // namespace touchgfx
 
 #endif // DISPLAYTRANSFORMATION_HPP

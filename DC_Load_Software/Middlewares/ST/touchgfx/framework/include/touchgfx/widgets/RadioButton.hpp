@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,130 +13,77 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/RadioButton.hpp
+ *
+ * Declares the touchgfx::RadioButton class.
+ */
 #ifndef RADIOBUTTON_HPP
 #define RADIOBUTTON_HPP
 
-#include <touchgfx/widgets/AbstractButton.hpp>
 #include <touchgfx/Bitmap.hpp>
+#include <touchgfx/widgets/AbstractButton.hpp>
 
 namespace touchgfx
 {
 /**
- * @class RadioButton RadioButton.hpp touchgfx/widgets/RadioButton.hpp
+ * Radio button with two states. A RadioButton is a button that changes appearance (state) when
+ * it has been pushed. Pushing the RadioButton again will return the to original state.
  *
- * @brief Radio button with two states.
+ * To make managing radio buttons much easier, they can be added to a RadioButtonGroup
+ * which then automates deselecting radio buttons when a new radio button is pressed.
  *
- *        A radio button consists of four images, one for its not selected and one for
- *        selected. Each of these have an image for a pressed state. RadioButtons can be added
- *        to a RadioButtonGroup which handles the de-selection of radio buttons when a new
- *        selection is made.
- *
- * @see AbstractButton
+ * @see RadioButtonGroup
  */
 class RadioButton : public AbstractButton
 {
 public:
-    /**
-     * @fn RadioButton::RadioButton()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
-    RadioButton() : AbstractButton(), bitmapUnselected(), bitmapUnselectedPressed(), bitmapSelected(), bitmapSelectedPressed(), alpha(255), selected(false), deselectionEnabled(false), deselectedAction(0)
-    { }
+    RadioButton()
+        : AbstractButton(), bitmapUnselected(), bitmapUnselectedPressed(), bitmapSelected(), bitmapSelectedPressed(), alpha(255), selected(false), deselectionEnabled(false), deselectedAction(0)
+    {
+    }
 
-    /**
-     * @fn virtual RadioButton::~RadioButton()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~RadioButton() { }
-
-    /**
-     * @fn virtual void RadioButton::draw(const Rect& invalidatedArea) const;
-     *
-     * @brief Draws the given invalidated area.
-     *
-     *        Draws the given invalidated area.
-     *
-     * @param invalidatedArea The rectangle to draw, with coordinates relative to this drawable.
-     *
-     * @see Drawable::draw()
-     */
     virtual void draw(const Rect& invalidatedArea) const;
 
-    /**
-     * @fn virtual void RadioButton::handleClickEvent(const ClickEvent& event);
-     *
-     * @brief Updates the current state of the radio button.
-     *
-     *        Updates the current state of the radio button - pressed or released, selected or
-     *        not selected - and invalidates it.
-     *
-     *        If a transition from the not selected to selected was made, the associated action
-     *        is executed and then the Widget is invalidated.
-     *
-     * @param event Information about the click.
-     *
-     * @see Drawable::handleClickEvent()
-     */
     virtual void handleClickEvent(const ClickEvent& event);
 
     /**
-     * @fn virtual void RadioButton::setBitmaps(const Bitmap& bmpUnselected, const Bitmap& bmpUnselectedPressed, const Bitmap& bmpSelected, const Bitmap& bmpSelectedPressed);
+     * Sets the four bitmaps used by this button. The first two bitmaps must show the
+     * unselected Button when it is released and pressed. The last two bitmaps must show the
+     * selected Button when it is released and pressed.
      *
-     * @brief Sets the bitmaps used by this button.
+     * @param  bmpUnselected        Bitmap to use when button is unselected and released.
+     * @param  bmpUnselectedPressed Bitmap to use when button is unselected and pressed.
+     * @param  bmpSelected          Bitmap to use when button is selected and released.
+     * @param  bmpSelectedPressed   Bitmap to use when button is selected and pressed.
      *
-     *        Sets the bitmaps used by this button. If no special pressed states are needed
-     *        just specify the same bitmap for both pressed and non-pressed bitmaps.
-     *
-     * @param bmpUnselected        Bitmap to use when button is unselected.
-     * @param bmpUnselectedPressed Bitmap to use when button is unselected and pressed.
-     * @param bmpSelected          Bitmap to use when button is selected.
-     * @param bmpSelectedPressed   Bitmap to use when button is selected and pressed.
+     * @note It is not uncommon to have the same bitmap for released (normal) and pressed state.
      */
     virtual void setBitmaps(const Bitmap& bmpUnselected, const Bitmap& bmpUnselectedPressed, const Bitmap& bmpSelected, const Bitmap& bmpSelectedPressed);
 
     /**
-     * @fn void RadioButton::setDeselectedAction(GenericCallback< const AbstractButton& >& callback)
+     * Associates an action to be performed when the RadioButton is deselected.
      *
-     * @brief Associates an action to be performed when the AbstractButton is deselected.
+     * @param  callback The callback to be executed. The callback will be given a reference
+     *                  to the AbstractButton.
      *
-     *        Associates an action to be performed when the AbstractButton is deselected.
-     *
-     * @param callback The callback to be executed. The callback will be given a reference to
-     *                 the AbstractButton.
-     *
-     * @see GenericCallback
+     * @note The action performed when the RadioButton is selected, is set using
+     *       setAction().
      */
-    void setDeselectedAction(GenericCallback< const AbstractButton& >& callback)
+    void setDeselectedAction(GenericCallback<const AbstractButton&>& callback)
     {
         deselectedAction = &callback;
     }
 
-    /**
-     * @fn virtual Rect RadioButton::getSolidRect() const;
-     *
-     * @brief Gets solid rectangle.
-     *
-     *        Gets solid rectangle.
-     *
-     * @return largest possible solid rect. Delegated to the largest solid rect of the radio
-     *         button bitmap(s).
-     */
     virtual Rect getSolidRect() const;
 
     /**
-     * @fn void RadioButton::setAlpha(uint8_t alpha)
+     * Sets the alpha channel for the RadioButton, i.e. all the images used. The default
+     * alpha value on a RadioButton is 255.
      *
-     * @brief Sets the alpha channel for the image.
+     * @param  alpha The alpha value ranging from 255=solid to 0=invisible.
      *
-     *        Sets the alpha channel for the image.
-     *
-     * @param alpha The alpha value. 255 = completely solid.
+     * @see getAlpha
      */
     void setAlpha(uint8_t alpha)
     {
@@ -144,13 +91,12 @@ public:
     }
 
     /**
-     * @fn uint8_t RadioButton::getAlpha() const
+     * Gets the current alpha value, as previously set using setAlpha. The default alpha
+     * value (if the alpha value has not been changed using setAlpha) is 255=solid.
      *
-     * @brief Gets the current alpha value.
+     * @return The current alpha value ranging from 255=solid to 0=invisible.
      *
-     *        Gets the current alpha value.
-     *
-     * @return The current alpha value.
+     * @see setAlpha
      */
     uint8_t getAlpha() const
     {
@@ -158,13 +104,17 @@ public:
     }
 
     /**
-     * @fn void RadioButton::setDeselectionEnabled(bool state)
+     * Sets whether or not it is possible to deselect the RadioButton by clicking it. By
+     * default it is not possible to deselect a RadioButton. The meaning of this is most
+     * clear when the RadioButton is used in a RadioButtonGroup where exactly one
+     * RadioButton should always be selected. Pressing the currently selected RadioButton
+     * should not deselect it, but rather select it again. This makes the button "sticky",
+     * i.e. a button can only be deselected by selecting another RadioButton in the same
+     * RadioButtonGroup.
      *
-     * @brief States whether or not it is possible to de-select the RadioButton by clicking it.
+     * @param  state true if it should be possible to deselect by click. Default is false.
      *
-     *        States whether or not it is possible to de-select the RadioButton by clicking it.
-     *
-     * @param state true if it should be possible to de-select by click.
+     * @see getDeselectionEnabled
      */
     void setDeselectionEnabled(bool state)
     {
@@ -172,13 +122,11 @@ public:
     }
 
     /**
-     * @fn bool RadioButton::getDeselectionEnabled() const
-     *
-     * @brief Gets the current deselectionEnabled state.
-     *
-     *        Gets the current deselectionEnabled state.
+     * Gets the current deselectionEnabled state.
      *
      * @return The current deselectionEnabled state.
+     *
+     * @see setDeselectionEnabled
      */
     bool getDeselectionEnabled() const
     {
@@ -186,22 +134,20 @@ public:
     }
 
     /**
-     * @fn void RadioButton::setSelected(bool newSelected);
+     * Sets the radio buttons selected state. Note that the associated action is also
+     * performed.
      *
-     * @brief Sets the radio buttons selected state.
+     * @param  newSelected The new selected state.
      *
-     *        Sets the radio buttons selected state.
+     * @see setAction, setDeselectedAction, RadioButtonGroup
      *
-     * @param newSelected the new selected state.
+     * @note If the RadioButton is part of a RadioButtonGroup, setting the selected state of
+     *       individual RadioButtons is not recommended.
      */
     void setSelected(bool newSelected);
 
     /**
-     * @fn bool RadioButton::getSelected() const
-     *
-     * @brief Gets the current selected state.
-     *
-     *        Gets the current selected state.
+     * Gets the current selected state.
      *
      * @return The current selected state.
      */
@@ -211,12 +157,9 @@ public:
     }
 
     /**
-     * @fn Bitmap RadioButton::getCurrentlyDisplayedBitmap() const
-     *
-     * @brief Gets currently displayed bitmap.
-     *
-     *        Function to obtain the currently displayed bitmap, which depends on the radio
-     *        button's pressed and selected state.
+     * Gets currently displayed bitmap. This depends on whether the RadioButton is currently
+     * selected or not and whether it is being pressed or not, i.e. it depends on the radio
+     * button's pressed and selected state.
      *
      * @return The bitmap currently displayed.
      */
@@ -226,16 +169,17 @@ public:
     }
 
 protected:
-    Bitmap  bitmapUnselected;        ///< The image to display when radio button unselected.
-    Bitmap  bitmapUnselectedPressed; ///< The image to display when radio button unselected and pressed.
-    Bitmap  bitmapSelected;          ///< The image to display when radio button selected.
-    Bitmap  bitmapSelectedPressed;   ///< The image to display when radio button selected and pressed.
-    uint8_t alpha;                   ///< The current alpha value. 255 denotes solid, 0 denotes completely transparent.
-    bool    selected;                ///< The current selected state.
-    bool    deselectionEnabled;      ///< Is de-selecting a selected radio button by clicking it enabled.
+    Bitmap bitmapUnselected;        ///< The image to display when radio button unselected and released.
+    Bitmap bitmapUnselectedPressed; ///< The image to display when radio button unselected and pressed.
+    Bitmap bitmapSelected;          ///< The image to display when radio button selected and released.
+    Bitmap bitmapSelectedPressed;   ///< The image to display when radio button selected and pressed.
+    uint8_t alpha;                  ///< The current alpha value. 255=solid, 0=invisible.
+    bool selected;                  ///< The current selected state.
+    bool deselectionEnabled;        ///< Is it possible to deselect by pressing a selected RadioButton.
 
-    GenericCallback< const AbstractButton& >* deselectedAction; ///< The callback to be executed when this AbstractButton is unselected.
+    GenericCallback<const AbstractButton&>* deselectedAction; ///< The callback to be executed when this AbstractButton is deselected.
 };
+
 } // namespace touchgfx
 
 #endif // RADIOBUTTON_HPP

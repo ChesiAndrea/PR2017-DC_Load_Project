@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -254,10 +254,10 @@ void Line::updateCachedShape()
             yMax = yCorner[i];
         }
     }
-    int16_t minX = xMin.to<int16_t>();
-    int16_t minY = yMin.to<int16_t>();
-    int16_t maxX = xMax.to<int16_t>();
-    int16_t maxY = yMax.to<int16_t>();
+    int16_t minX = xMin.to<int>();
+    int16_t minY = yMin.to<int>();
+    int16_t maxX = xMax.to<int>();
+    int16_t maxY = yMax.to<int>();
     minimalRect = Rect(minX, minY, maxX - minX + 1, maxY - minY + 1);
 
     if (lineEnding == ROUND_CAP_ENDING)

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,39 +13,12 @@
   ******************************************************************************
   */
 
-#include <touchgfx/widgets/canvas/PainterGRAY2.hpp>
-#include <touchgfx/Color.hpp>
 #include <platform/driver/lcd/LCD2bpp.hpp>
+#include <touchgfx/Color.hpp>
+#include <touchgfx/widgets/canvas/PainterGRAY2.hpp>
 
 namespace touchgfx
 {
-PainterGRAY2::PainterGRAY2(colortype color, uint8_t alpha) :
-    AbstractPainterGRAY2()
-{
-    setColor(color, alpha);
-}
-
-void PainterGRAY2::setColor(colortype color, uint8_t alpha)
-{
-    painterGray = (uint8_t)color & 0x03;
-    setAlpha(alpha);
-}
-
-touchgfx::colortype PainterGRAY2::getColor() const
-{
-    return static_cast<colortype>(painterGray);
-}
-
-void PainterGRAY2::setAlpha(uint8_t alpha)
-{
-    painterAlpha = alpha;
-}
-
-uint8_t PainterGRAY2::getAlpha() const
-{
-    return painterAlpha;
-}
-
 void PainterGRAY2::render(uint8_t* ptr,
                           int x,
                           int xAdjust,
@@ -77,8 +50,7 @@ void PainterGRAY2::render(uint8_t* ptr,
             }
             currentX++;
             x++;
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
     else if (totalAlpha != 0)
     {
@@ -92,8 +64,7 @@ void PainterGRAY2::render(uint8_t* ptr,
             LCD2setPixel(ptr, x, LCD::div255((painterGray * alpha + p_gray * ialpha) * 0x55) >> 6);
             currentX++;
             x++;
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
 }
 

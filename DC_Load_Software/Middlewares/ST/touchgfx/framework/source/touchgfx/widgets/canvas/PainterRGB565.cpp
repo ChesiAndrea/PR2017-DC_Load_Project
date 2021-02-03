@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,41 +13,11 @@
   ******************************************************************************
   */
 
-#include <touchgfx/widgets/canvas/PainterRGB565.hpp>
 #include <touchgfx/Color.hpp>
+#include <touchgfx/widgets/canvas/PainterRGB565.hpp>
 
 namespace touchgfx
 {
-PainterRGB565::PainterRGB565(colortype color, uint8_t alpha) :
-    AbstractPainterRGB565()
-{
-    setColor(color, alpha);
-}
-
-void PainterRGB565::setColor(colortype color, uint8_t alpha)
-{
-    painterColor = (uint16_t)color;
-    painterRed = painterColor & RMASK;
-    painterGreen = painterColor & GMASK;
-    painterBlue = painterColor & BMASK;
-    setAlpha(alpha);
-}
-
-touchgfx::colortype PainterRGB565::getColor() const
-{
-    return painterColor;
-}
-
-void PainterRGB565::setAlpha(uint8_t alpha)
-{
-    painterAlpha = alpha;
-}
-
-uint8_t PainterRGB565::getAlpha() const
-{
-    return painterAlpha;
-}
-
 void PainterRGB565::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsigned count, const uint8_t* covers)
 {
     uint16_t* p = reinterpret_cast<uint16_t*>(ptr) + (x + xAdjust);
@@ -67,8 +37,7 @@ void PainterRGB565::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsigned
                 *p = mixColors(painterRed, painterGreen, painterBlue, *p, alpha);
             }
             p++;
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
     else
     {
@@ -85,8 +54,7 @@ void PainterRGB565::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsigned
                 *p = mixColors(painterRed, painterGreen, painterBlue, *p, alpha);
             }
             p++;
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
 }
 

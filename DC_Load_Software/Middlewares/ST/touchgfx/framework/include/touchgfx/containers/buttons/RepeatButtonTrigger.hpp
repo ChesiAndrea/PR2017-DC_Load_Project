@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/buttons/RepeatButtonTrigger.hpp
+ *
+ * Declares the touchgfx::RepeatButtonTrigger class.
+ */
 #ifndef REPEATBUTTONTRIGGER_HPP
 #define REPEATBUTTONTRIGGER_HPP
 
@@ -21,41 +26,26 @@
 namespace touchgfx
 {
 /**
- * @class RepeatButtonTrigger RepeatButtonTrigger.hpp touchgfx/containers/buttons/RepeatButtonTrigger.hpp
- *
- * @brief A repeat button trigger.
- *
- *        A repeat button trigger. This trigger will create a button
- *        that reacts to a consistent touch. This means it will call the action repeatedly
- *        as long as it is touched.
- *
- *        The RepeatButtonTrigger can be combined with one or more of
- *        the ButtonStyle classes to create a functional button.
+ * A repeat button trigger. This trigger will create a button that reacts to a consistent touch.
+ * This means it will call the set action repeatedly as long as it is touched. The
+ * RepeatButtonTrigger can be combined with one or more of the ButtonStyle classes to
+ * create a fully functional button.
  */
 class RepeatButtonTrigger : public AbstractButtonContainer
 {
 public:
-    /**
-     * @fn RepeatButtonTrigger::RepeatButtonTrigger()
-     *
-     * @brief Default constructor.
-     */
-    RepeatButtonTrigger() :
-        AbstractButtonContainer(), ticksDelay(30), ticksInterval(15), ticks(0), ticksBeforeContinuous(0) { }
+    RepeatButtonTrigger()
+        : AbstractButtonContainer(), ticksDelay(30), ticksInterval(15), ticks(0), ticksBeforeContinuous(0)
+    {
+    }
 
     /**
-     * @fn virtual RepeatButtonTrigger::~RepeatButtonTrigger()
+     * Sets the delay (in number of ticks) from the first button activation until the next
+     * time it will be automatically activated.
      *
-     * @brief Destructor.
-     */
-    virtual ~RepeatButtonTrigger() { }
-
-    /**
-     * @fn void RepeatButtonTrigger::setDelay(int delay)
+     * @param  delay The delay, measured in ticks, between first activation and second activation.
      *
-     * @brief Sets a delay.
-     *
-     * @param delay The delay.
+     * @see setInterval, getDelay
      */
     void setDelay(int delay)
     {
@@ -63,11 +53,11 @@ public:
     }
 
     /**
-     * @fn int RepeatButtonTrigger::getDelay()
+     * Gets the delay in ticks from first button activation until next activation.
      *
-     * @brief Gets the delay.
+     * @return The delay, measured in ticks, between first activation and second activation.
      *
-     * @return The delay.
+     * @see setDelay
      */
     int getDelay()
     {
@@ -75,11 +65,12 @@ public:
     }
 
     /**
-     * @fn void RepeatButtonTrigger::setInterval(int interval)
+     * Sets the interval in number of ticks between each each activation of the pressed
+     * button after the second activation.
      *
-     * @brief Sets an interval.
+     * @param  interval The interval between repeated activations, measured in ticks.
      *
-     * @param interval The interval.
+     * @see setDelay, getInterval
      */
     void setInterval(int interval)
     {
@@ -87,25 +78,19 @@ public:
     }
 
     /**
-     * @fn int RepeatButtonTrigger::getInterval()
+     * The interval between repeated activations, measured in ticks. This is the number of
+     * ticks between the an activation beyond the first and the following activation.
      *
-     * @brief Gets the interval.
+     * @return The interval between repeated activations, measured in ticks.
      *
-     * @return The interval.
+     * @see setInterval
      */
     int getInterval()
     {
         return ticksInterval;
     }
 
-    /**
-     * @fn void RepeatButtonTrigger::handleClickEvent(const touchgfx::ClickEvent& event)
-     *
-     * @brief Handles the click event described by event.
-     *
-     * @param event The event.
-     */
-    void handleClickEvent(const touchgfx::ClickEvent& event)
+    void handleClickEvent(const ClickEvent& event)
     {
         bool wasPressed = getPressed();
         bool newPressedValue = (event.getType() == ClickEvent::PRESSED);
@@ -115,7 +100,7 @@ public:
             invalidate();
         }
 
-        if (event.getType() == touchgfx::ClickEvent::PRESSED)
+        if (event.getType() == ClickEvent::PRESSED)
         {
             if (action && action->isValid())
             {
@@ -123,19 +108,14 @@ public:
             }
             ticks = 0;
             ticksBeforeContinuous = ticksDelay;
-            touchgfx::Application::getInstance()->registerTimerWidget(this);
+            Application::getInstance()->registerTimerWidget(this);
         }
         else
         {
-            touchgfx::Application::getInstance()->unregisterTimerWidget(this);
+            Application::getInstance()->unregisterTimerWidget(this);
         }
     }
 
-    /**
-     * @fn void RepeatButtonTrigger::handleTickEvent()
-     *
-     * @brief Handles the tick event.
-     */
     void handleTickEvent()
     {
         AbstractButtonContainer::handleTickEvent();
@@ -166,6 +146,7 @@ private:
     int16_t ticks;
     int16_t ticksBeforeContinuous;
 };
+
 } // namespace touchgfx
 
 #endif // REPEATBUTTONTRIGGER_HPP

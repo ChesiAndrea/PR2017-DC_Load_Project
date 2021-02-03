@@ -18,7 +18,7 @@ public:
                         data->height,
                         data->pixBelowBase,
                         data->bitsPerPixel,
-                        data->dataFormatA4,
+                        data->byteAlignRow,
                         data->maxLeft,
                         data->maxRight,
                         0, //glyphDataPointer

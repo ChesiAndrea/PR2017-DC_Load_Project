@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,8 +13,8 @@
   ******************************************************************************
   */
 
-#include <touchgfx/widgets/canvas/AbstractPainterRGB888.hpp>
 #include <touchgfx/Color.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainterRGB888.hpp>
 
 namespace touchgfx
 {
@@ -58,8 +58,7 @@ void AbstractPainterRGB888::render(uint8_t* ptr,
             }
             p += 3;
             currentX++;
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
 }
 

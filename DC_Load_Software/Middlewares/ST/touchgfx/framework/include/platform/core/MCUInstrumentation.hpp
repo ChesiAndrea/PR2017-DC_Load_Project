@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file platform/core/MCUInstrumentation.hpp
+ *
+ * Declares the touchgfx::MCUInstrumentation interface class.
+ */
 #ifndef MCUINSTRUMENTATION_HPP
 #define MCUINSTRUMENTATION_HPP
 
@@ -20,82 +25,47 @@
 
 namespace touchgfx
 {
-/**
- * @class MCUInstrumentation MCUInstrumentation.hpp platform/core/MCUInstrumentation.hpp
- *
- * @brief Interface for instrumenting processors to measure MCU load via measured CPU cycles.
- *
- *        Interface for instrumenting processors to measure MCU load via measured CPU
- *        cycles.
- */
+/** Interface for instrumenting processors to measure MCU load via measured CPU cycles. */
 class MCUInstrumentation
 {
 public:
-    /**
-     * @fn MCUInstrumentation::MCUInstrumentation()
-     *
-     * @brief Constructor.
-     *
-     *        Constructor. Initializes members.
-     */
-    MCUInstrumentation():
-        cc_consumed(0),
-        cc_in(0)
+    /** Initializes a new instance of the MCUInstrumentation class. */
+    MCUInstrumentation()
+        : cc_consumed(0),
+          cc_in(0)
+    {
+    }
+
+    /** Initialize. */
+    virtual void init() = 0;
+
+    /** Finalizes an instance of the MCUInstrumentation class. */
+    virtual ~MCUInstrumentation()
     {
     }
 
     /**
-     * @fn virtual void MCUInstrumentation::init() = 0;
+     * Gets elapsed microseconds based on clock frequency.
      *
-     * @brief Initialize.
-     *
-     *        Initialize.
-     */
-    virtual void init() = 0;
-
-    /**
-     * @fn virtual MCUInstrumentation::~MCUInstrumentation()
-     *
-     * @brief Virtual destructor.
-     *
-     *        Virtual destructor.
-     */
-    virtual ~MCUInstrumentation() {}
-
-    /**
-     * @fn virtual unsigned int MCUInstrumentation::getElapsedUS(unsigned int start, unsigned int now, unsigned int clockfrequency) = 0;
-     *
-     * @brief Gets elapsed microseconds based on clock frequency.
-     *
-     *        Gets elapsed microseconds based on clock frequency.
-     *
-     * @param start          Start time.
-     * @param now            Current time.
-     * @param clockfrequency Clock frequency of the system expressed in MHz.
+     * @param  start          Start time.
+     * @param  now            Current time.
+     * @param  clockfrequency Clock frequency of the system expressed in MHz.
      *
      * @return Elapsed microseconds start and now.
      */
     virtual unsigned int getElapsedUS(unsigned int start, unsigned int now, unsigned int clockfrequency) = 0;
 
     /**
-     * @fn virtual unsigned int MCUInstrumentation::getCPUCycles(void) = 0;
-     *
-     * @brief Gets CPU cycles from register.
-     *
-     *        Gets CPU cycles from register.
+     * Gets CPU cycles from register.
      *
      * @return CPU cycles.
      */
     virtual unsigned int getCPUCycles(void) = 0;
 
     /**
-     * @fn virtual void MCUInstrumentation::setMCUActive(bool active)
+     * Sets MCU activity high.
      *
-     * @brief Sets MCU activity high.
-     *
-     *        Sets MCU activity high.
-     *
-     * @param active if True, inactive otherwise.
+     * @param  active if True, inactive otherwise.
      */
     virtual void setMCUActive(bool active)
     {
@@ -111,11 +81,7 @@ public:
     }
 
     /**
-     * @fn virtual uint32_t MCUInstrumentation::getCCConsumed()
-     *
-     * @brief Gets number of consumed clock cycles.
-     *
-     *        Gets number of consumed clock cycles.
+     * Gets number of consumed clock cycles.
      *
      * @return clock cycles.
      */
@@ -125,13 +91,9 @@ public:
     }
 
     /**
-     * @fn virtual void MCUInstrumentation::setCCConsumed(uint32_t val)
+     * Sets number of consumed clock cycles.
      *
-     * @brief Sets number of consumed clock cycles.
-     *
-     *        Sets number of consumed clock cycles.
-     *
-     * @param val number of clock cycles.
+     * @param  val number of clock cycles.
      */
     virtual void setCCConsumed(uint32_t val)
     {

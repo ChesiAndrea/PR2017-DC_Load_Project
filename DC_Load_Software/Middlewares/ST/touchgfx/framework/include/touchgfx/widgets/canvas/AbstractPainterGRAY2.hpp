@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,23 +13,24 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/canvas/AbstractPainterGRAY2.hpp
+ *
+ * Declares the touchgfx::AbstractPainterGRAY2 class.
+ */
 #ifndef ABSTRACTPAINTERGRAY2_HPP
 #define ABSTRACTPAINTERGRAY2_HPP
 
 #include <assert.h>
-#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
 #include <touchgfx/hal/HAL.hpp>
 #include <touchgfx/lcd/LCD.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainter.hpp>
 
 namespace touchgfx
 {
 /**
- * @class AbstractPainterGRAY2 AbstractPainterGRAY2.hpp touchgfx/widgets/canvas/AbstractPainterGRAY2.hpp
- *
- * @brief A Painter that will paint using a color and an alpha value.
- *
- *        The AbstractPainterGRAY2 class allows a shape to be filled with a given color and
- *        alpha value. This allows transparent, anti-aliased elements to be drawn.
+ * The AbstractPainterGRAY2 class is an abstract class for creating a painter to draw on a
+ * GRAY2 display using CanvasWidgetRenderer.
  *
  * @see AbstractPainter
  */
@@ -37,24 +38,16 @@ class AbstractPainterGRAY2 : public AbstractPainter
 {
 public:
     AbstractPainterGRAY2()
+        : AbstractPainter(), currentX(0), currentY(0)
     {
         assert(compatibleFramebuffer(Bitmap::GRAY2) && "The chosen painter only works with GRAY2 displays");
     }
 
-    virtual ~AbstractPainterGRAY2() {}
-
     virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
 protected:
-
     /**
-     * @fn virtual bool AbstractPainterGRAY2::renderInit()
-     *
-     * @brief Initialize rendering of a single scan line of pixels for the render.
-     *
-     *        Initialize rendering of a single scan line of pixels for the render.
-     *
-     * @return true if it succeeds, false if it fails.
+     * @copydoc AbstractPainterRGB565::renderInit()
      */
     virtual bool renderInit()
     {
@@ -62,13 +55,9 @@ protected:
     }
 
     /**
-     * @fn virtual bool AbstractPainterGRAY2::renderNext(uint8_t& gray, uint8_t& alpha) = 0;
+     * Get the color of the next pixel in the scan line to blend into the framebuffer.
      *
-     * @brief Get the color of the next pixel in the scan line.
-     *
-     *        Get the color of the next pixel in the scan line.
-     *
-     * @param [out] gray  The gray (0-15).
+     * @param [out] gray  The gray color (0-3).
      * @param [out] alpha The alpha.
      *
      * @return true if the pixel should be painted, false otherwise.
@@ -76,23 +65,18 @@ protected:
     virtual bool renderNext(uint8_t& gray, uint8_t& alpha) = 0;
 
     /**
-     * @fn virtual void AbstractPainterGRAY2::renderPixel(uint8_t* p, uint16_t offset, uint8_t gray);
+     * Renders (writes) the specified color into the framebuffer.
      *
-     * @brief Renders the pixel.
-     *
-     *        Renders the pixel into the frame buffer.
-     *
-     * @param [in] p pointer into the frame buffer line where the given pixel should be written.
-     * @param offset The offset to the pixel from the given pointer.
-     * @param gray   The green color.
-     *
-     * ### param blue The blue color.
+     * @param [in] p      pointer into the framebuffer where the given color should be written.
+     * @param      offset The offset to the pixel from the given pointer.
+     * @param      gray   The gray color.
      */
     virtual void renderPixel(uint8_t* p, uint16_t offset, uint8_t gray);
 
     int currentX; ///< Current x coordinate relative to the widget
     int currentY; ///< Current y coordinate relative to the widget
-}; // class AbstractPainterGRAY2
+};
+
 } // namespace touchgfx
 
 #endif // ABSTRACTPAINTERGRAY2_HPP

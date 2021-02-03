@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file platform/driver/i2c/I2C.hpp
+ *
+ * Declares the touchfgx::I2C interface class.
+ */
 #ifndef I2C_HPP
 #define I2C_HPP
 
@@ -20,83 +25,54 @@
 
 namespace touchgfx
 {
-/**
- * @class I2C I2C.hpp platform/driver/i2c/I2C.hpp
- *
- * @brief Platform independent interface for I2C drivers.
- *
- *        Platform independent interface for I2C drivers.
- */
+/** Platform independent interface for I2C drivers. */
 class I2C
 {
 public:
     /**
-     * @fn I2C::I2C(uint8_t ch)
+     * Initializes a new instance of the I2C class. Stores the channel of the I2C bus to be
+     * configured.
      *
-     * @brief Stores the channel of the I2C bus to be configured.
-     *
-     *        Stores the channel of the I2C bus to be configured.
-     *
-     * @param ch I2C channel.
+     * @param  ch I2C channel.
      */
-    I2C(uint8_t ch):
-        channel(ch)
+    I2C(uint8_t ch)
+        : channel(ch)
     {
     }
 
-    /**
-     * @fn virtual I2C::~I2C()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
+    /** Finalizes an instance of the I2C class. */
     virtual ~I2C()
     {
     }
 
-    /**
-     * @fn virtual void I2C::init() = 0;
-     *
-     * @brief Initializes the I2C driver.
-     *
-     *        Initializes the I2C driver.
-     */
+    /** Initializes the I2C driver. */
     virtual void init() = 0;
 
     /**
-     * @fn virtual bool I2C::readRegister(uint8_t addr, uint8_t reg, uint8_t* data, uint32_t cnt) = 0;
+     * Reads the specified register on the device with the specified address.
      *
-     * @brief Reads the specified register on the device with the specified address.
-     *
-     *        Reads the specified register on the device with the specified address.
-     *
-     * @param addr       The I2C device address.
-     * @param reg        The register.
+     * @param       addr The I2C device address.
+     * @param       reg  The register.
      * @param [out] data Pointer to buffer in which to place the result.
-     * @param cnt        Size of buffer in bytes.
+     * @param       cnt  Size of buffer in bytes.
      *
      * @return true on success, false otherwise.
      */
     virtual bool readRegister(uint8_t addr, uint8_t reg, uint8_t* data, uint32_t cnt) = 0;
 
     /**
-     * @fn virtual bool I2C::writeRegister(uint8_t addr, uint8_t reg, uint8_t val) = 0;
+     * Writes the specified value in a register.
      *
-     * @brief Writes the specified value in a register.
-     *
-     *        Writes the specified value in a register.
-     *
-     * @param addr The I2C device address.
-     * @param reg  The register.
-     * @param val  The new value.
+     * @param  addr The I2C device address.
+     * @param  reg  The register.
+     * @param  val  The new value.
      *
      * @return true on success, false otherwise.
      */
     virtual bool writeRegister(uint8_t addr, uint8_t reg, uint8_t val) = 0;
 
 protected:
-    uint8_t channel;    ///< I2c channel is stored in order to initialize and recover a specific I2C channel
+    uint8_t channel; ///< I2c channel is stored in order to initialize and recover a specific I2C channel
 };
 
 } // namespace touchgfx

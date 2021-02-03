@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -19,36 +19,6 @@
 
 namespace touchgfx
 {
-PainterABGR2222::PainterABGR2222(colortype color, uint8_t alpha) :
-    AbstractPainterABGR2222()
-{
-    setColor(color, alpha);
-}
-
-void PainterABGR2222::setColor(colortype color, uint8_t alpha)
-{
-    painterColor = (uint8_t)color;
-    painterRed = LCD8bpp_ABGR2222::getRedFromColor(color);
-    painterGreen = LCD8bpp_ABGR2222::getGreenFromColor(color);
-    painterBlue = LCD8bpp_ABGR2222::getBlueFromColor(color);
-    setAlpha(alpha);
-}
-
-touchgfx::colortype PainterABGR2222::getColor() const
-{
-    return painterColor;
-}
-
-void PainterABGR2222::setAlpha(uint8_t alpha)
-{
-    painterAlpha = alpha;
-}
-
-uint8_t PainterABGR2222::getAlpha() const
-{
-    return painterAlpha;
-}
-
 void PainterABGR2222::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsigned count, const uint8_t* covers)
 {
     uint8_t* p = ptr + (x + xAdjust);
@@ -68,8 +38,7 @@ void PainterABGR2222::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsign
                 *p = mixColors(painterRed, painterGreen, painterBlue, *p, alpha);
             }
             p++;
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
     else
     {
@@ -86,8 +55,7 @@ void PainterABGR2222::render(uint8_t* ptr, int x, int xAdjust, int /*y*/, unsign
                 *p = mixColors(painterRed, painterGreen, painterBlue, *p, alpha);
             }
             p++;
-        }
-        while (--count != 0);
+        } while (--count != 0);
     }
 }
 

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -51,9 +51,6 @@ ZoomAnimationImage::ZoomAnimationImage() :
     Container::add(scalableImage);
 }
 
-ZoomAnimationImage::~ZoomAnimationImage()
-{
-}
 
 void ZoomAnimationImage::startZoomAnimation(int16_t endWidth, int16_t endHeight, uint16_t duration, ZoomMode zoomMode, EasingEquation widthProgressionEquation, EasingEquation heightProgressionEquation)
 {
@@ -196,7 +193,7 @@ uint16_t ZoomAnimationImage::getAnimationDelay() const
     return zoomAnimationDelay;
 }
 
-bool ZoomAnimationImage::isRunning() const
+bool ZoomAnimationImage::isRunning()
 {
     return isZoomAnimationRunning();
 }

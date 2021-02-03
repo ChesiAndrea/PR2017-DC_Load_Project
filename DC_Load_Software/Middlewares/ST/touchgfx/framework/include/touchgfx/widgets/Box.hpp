@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,78 +13,59 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/Box.hpp
+ *
+ * Declares the touchgfx::Box class.
+ */
 #ifndef BOX_HPP
 #define BOX_HPP
 
-#include <touchgfx/hal/Types.hpp>
-#include <touchgfx/widgets/Widget.hpp>
 #include <touchgfx/Bitmap.hpp>
+#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/lcd/LCD.hpp>
+#include <touchgfx/widgets/Widget.hpp>
+
+#include <touchgfx/widgets/Button.hpp>
 
 namespace touchgfx
 {
 /**
- * @class Box Box.hpp touchgfx/widgets/Box.hpp
- *
- * @brief Simple widget capable of showing a rectangle of a specific color and an optional alpha.
- *
- *        Simple widget capable of showing a rectangle of a specific color and an optional
- *        alpha.
- *
- * @see Widget
+ * Simple widget capable of showing a rectangle of a specific color and an optional alpha.
  */
 class Box : public Widget
 {
 public:
-    /**
-     * @fn Box::Box()
-     *
-     * @brief Constructor.
-     *
-     *        Constructs a new Box with a default alpha value of 255 (solid)
-     */
-    Box() : Widget(), alpha(255), color(0), reportAsSolid(false)
+    /** Construct a new Box with a default alpha value of 255 (solid) */
+    Box()
+        : Widget(), alpha(255), color(0), reportAsSolid(false)
     {
     }
 
     /**
-     * @fn Box::Box(uint16_t width, uint16_t height, colortype color, uint8_t alpha = 255)
+     * Construct a Box with the given size and color (and optionally alpha).
      *
-     * @brief Constructor.
-     *
-     *        Construct a Box.
-     *
-     * @param width  The width of the box.
-     * @param height The height of the box.
-     * @param color  The color of the box.
-     * @param alpha  The alpha of the box. Default is 255 (solid).
+     * @param  width  The width of the box.
+     * @param  height The height of the box.
+     * @param  color  The color of the box.
+     * @param  alpha  (Optional) The alpha of the box. Default is 255 (solid).
      */
-    Box(uint16_t width, uint16_t height, colortype color, uint8_t alpha = 255) : Widget(),
-        alpha(alpha), color(color), reportAsSolid(false)
+    Box(uint16_t width, uint16_t height, colortype color, uint8_t alpha = 255)
+        : Widget(),
+          alpha(alpha), color(color), reportAsSolid(false)
     {
         rect.width = width;
         rect.height = height;
     }
 
-    /**
-     * @fn virtual Box::~Box()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~Box() {}
-
     virtual Rect getSolidRect() const;
 
     /**
-     * @fn void Box::setColor(colortype color)
+     * Sets the color of the Box.
      *
-     * @brief Sets the color of the rectangle.
+     * @param  color The color of the box.
      *
-     *        Sets the color of the rectangle.
-     *
-     * @param color The color of the box.
+     * @see getColor, Color::getColorFrom24BitRGB
      */
     void setColor(colortype color)
     {
@@ -92,27 +73,24 @@ public:
     }
 
     /**
-     * @fn inline colortype Box::getColor() const
+     * Gets the current color of the Box.
      *
-     * @brief Gets the current color of the Box.
+     * @return The current color of the box.
      *
-     *        Gets the current color of the Box.
-     *
-     * @return The current color.
+     * @see setColor, Color::getRedColor, Color::getGreenColor, Color::getRedColor
      */
-    inline colortype getColor() const
+    FORCE_INLINE_FUNCTION colortype getColor() const
     {
         return color;
     }
 
     /**
-     * @fn void Box::setAlpha(uint8_t alpha)
+     * Sets the alpha value for the Box. The value can be from 255 (completely solid) to 0
+     * (completely transparent).
      *
-     * @brief Sets the alpha value for this Box.
+     * @param  alpha The alpha value.
      *
-     *        Sets the alpha value for this Box.
-     *
-     * @param alpha The alpha value. 255 = completely solid.
+     * @see getAlpha
      */
     void setAlpha(uint8_t alpha)
     {
@@ -120,50 +98,57 @@ public:
     }
 
     /**
-     * @fn inline uint8_t Box::getAlpha() const
-     *
-     * @brief Returns the current alpha value.
+     * Returns the current alpha value.
      *
      * @return Gets the current alpha value of the Box.
+     *
+     * @see setAlpha
      */
-    inline uint8_t getAlpha() const
+    FORCE_INLINE_FUNCTION uint8_t getAlpha() const
     {
         return alpha;
     }
 
-    /**
-     * @fn virtual void Box::draw(const Rect& area) const;
-     *
-     * @brief Draws the box.
-     *
-     *        Draws the Box.
-     *
-     * @param area The rectangle to draw, with coordinates relative to the containing layer.
-     */
     virtual void draw(const Rect& area) const;
 
+    ///@cond
     /**
-     * @fn void Box::forceReportAsSolid(bool solid)
+     * Override solid area for the Box.
      *
-     * @brief Override solid area for the Box.
+     * If this is set, getSolidRect() will report the widget as completely solid even if is
+     * (semi-)transparent. The use of forceReportAsSolid is deprecated and the same
+     * functionality can be achieved using the following SolidBox instead:
+     * @code
+     *      template <class T>
+     *      class Solid : public T
+     *      {
+     *      public:
+     *        virtual Rect getSolidRect() const
+     *        {
+     *           return Rect(0, 0, getWidth(), getHeight());
+     *        }
+     *      };
+     * @endcode
+     * This will allow the use of Solid<Box>, but this is still not recommended..
      *
-     *        If this is set, getSolidRect() will report the widget as completely solid even if
-     *        is (semi-)transparent.
+     * @param  solid true if this Box should report as solid, even when not.
      *
-     * @note Very rarely used in practice.
-     *
-     * @param solid true if this Box should report as solid, even when not.
+     * @deprecated Breaks the invariant set in Drawable::getSolidRect().
      */
-    void forceReportAsSolid(bool solid)
+    TOUCHGFX_DEPRECATED(
+        "Breaks the invariant set in Drawable::getSolidRect().",
+        void forceReportAsSolid(bool solid))
     {
         reportAsSolid = solid;
     }
+    ///@endcond
 
 protected:
-    uint8_t  alpha;         ///< The alpha value used for this Box.
-    colortype color;        ///< The fill color for this Box
-    bool     reportAsSolid; ///< @see forceReportAsSolid.
+    uint8_t alpha;      ///< The alpha value used for this Box.
+    colortype color;    ///< The fill color for this Box
+    bool reportAsSolid; ///< @deprecated Used by forceReportAsSolid() which breaks TouchGFX invariant.
 };
+
 } // namespace touchgfx
 
 #endif // BOX_HPP

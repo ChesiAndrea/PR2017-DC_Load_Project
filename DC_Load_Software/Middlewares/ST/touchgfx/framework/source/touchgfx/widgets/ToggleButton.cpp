@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -17,16 +17,12 @@
 
 namespace touchgfx
 {
-ToggleButton::ToggleButton() : Button(), originalPressed(BITMAP_INVALID)
-{
-}
-
 void ToggleButton::forceState(bool activeState)
 {
     if (activeState)
     {
         // up should equal originalPressed
-        if (up != originalPressed)
+        if (up.getId() != originalPressed.getId())
         {
             down = up;
             up = originalPressed;
@@ -35,7 +31,7 @@ void ToggleButton::forceState(bool activeState)
     else
     {
         // down should equal originalPressed
-        if (down != originalPressed)
+        if (down.getId() != originalPressed.getId())
         {
             up = down;
             down = originalPressed;

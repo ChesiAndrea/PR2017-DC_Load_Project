@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -93,6 +93,28 @@ void SlideMenu::setup(ExpandDirection newExpandDirection, const Bitmap& backgrou
     }
 
     setup(newExpandDirection, backgroundBMP, stateChangeButtonBMP, stateChangeButtonPressedBMP, backgroundX, backgroundY, buttonX, buttonY);
+}
+
+void SlideMenu::setup(ExpandDirection newExpandDirection, const Bitmap& backgroundBMP, int16_t backgroundX, int16_t backgroundY)
+{
+    setExpandDirection(newExpandDirection);
+
+    background.setBitmap(backgroundBMP);
+    background.setXY(backgroundX, backgroundY);
+
+    Rect boundingRect = background.getRect();
+    // boundingRect.expandToFit(background.getRect());
+
+    menuContainer.setWidth(boundingRect.right());
+    menuContainer.setHeight(boundingRect.bottom());
+
+    setWidth(menuContainer.getWidth());
+    setHeight(menuContainer.getHeight());
+
+    setExpandDirection(expandDirection);
+    setState(currentState);
+
+    invalidate();
 }
 
 void SlideMenu::setup(ExpandDirection newExpandDirection, const Bitmap& backgroundBMP, const Bitmap& stateChangeButtonBMP, const Bitmap& stateChangeButtonPressedBMP, int16_t backgroundX, int16_t backgroundY, int16_t stateChangeButtonX, int16_t stateChangeButtonY)
@@ -271,7 +293,7 @@ void SlideMenu::setStateChangedAnimationEndedCallback(GenericCallback< const Sli
 
 void SlideMenu::handleTickEvent()
 {
-    if ((expandedStateTimeout != 0) && (currentState == EXPANDED) && !menuContainer.isRunning())
+    if ((expandedStateTimeout != 0) && (currentState == EXPANDED) && !menuContainer.isMoveAnimationRunning())
     {
         expandedStateTimer++;
 
@@ -379,4 +401,4 @@ int16_t SlideMenu::getExpandedYCoordinate()
         return 0;
     }
 }
-}
+} // namespace touchgfx

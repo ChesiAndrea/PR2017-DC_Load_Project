@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,34 +13,17 @@
   ******************************************************************************
   */
 
-#include <touchgfx/widgets/canvas/PainterGRAY4Bitmap.hpp>
 #include <platform/driver/lcd/LCD4bpp.hpp>
+#include <touchgfx/widgets/canvas/PainterGRAY4Bitmap.hpp>
 
 namespace touchgfx
 {
-PainterGRAY4Bitmap::PainterGRAY4Bitmap(const Bitmap& bmp, uint8_t alpha) :
-    AbstractPainterGRAY4(), bitmapGRAY4Pointer(0), bitmapAlphaPointer(0)
-{
-    setBitmap(bmp);
-    setAlpha(alpha);
-}
-
 void PainterGRAY4Bitmap::setBitmap(const Bitmap& bmp)
 {
     bitmap = bmp;
     assert((bitmap.getId() == BITMAP_INVALID || bitmap.getFormat() == Bitmap::GRAY4) && "The chosen painter only works with GRAY4 bitmaps");
     bitmapRectToFrameBuffer = bitmap.getRect();
     DisplayTransformation::transformDisplayToFrameBuffer(bitmapRectToFrameBuffer);
-}
-
-void PainterGRAY4Bitmap::setAlpha(uint8_t alpha)
-{
-    painterAlpha = alpha;
-}
-
-uint8_t PainterGRAY4Bitmap::getAlpha() const
-{
-    return painterAlpha;
 }
 
 void PainterGRAY4Bitmap::render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers)
@@ -84,8 +67,7 @@ void PainterGRAY4Bitmap::render(uint8_t* ptr, int x, int xAdjust, int y, unsigne
                 }
                 currentX++;
                 x++;
-            }
-            while (--count != 0);
+            } while (--count != 0);
         }
         else
         {
@@ -100,8 +82,7 @@ void PainterGRAY4Bitmap::render(uint8_t* ptr, int x, int xAdjust, int y, unsigne
                 LCD4setPixel(ptr, x, LCD::div255((gray * alpha + p_gray * ialpha) * 0x11) >> 4);
                 currentX++;
                 x++;
-            }
-            while (--count != 0);
+            } while (--count != 0);
         }
     }
     else
@@ -127,8 +108,7 @@ void PainterGRAY4Bitmap::render(uint8_t* ptr, int x, int xAdjust, int y, unsigne
                 }
                 currentX++;
                 x++;
-            }
-            while (--count != 0);
+            } while (--count != 0);
         }
         else
         {
@@ -143,8 +123,7 @@ void PainterGRAY4Bitmap::render(uint8_t* ptr, int x, int xAdjust, int y, unsigne
                 LCD4setPixel(ptr, x, LCD::div255((gray * alpha + p_gray * ialpha) * 0x11) >> 4);
                 currentX++;
                 x++;
-            }
-            while (--count != 0);
+            } while (--count != 0);
         }
     }
 }
@@ -159,8 +138,7 @@ bool PainterGRAY4Bitmap::renderInit()
         return false;
     }
 
-    if ((currentX >= bitmapRectToFrameBuffer.width) ||
-            (currentY >= bitmapRectToFrameBuffer.height))
+    if ((currentX >= bitmapRectToFrameBuffer.width) || (currentY >= bitmapRectToFrameBuffer.height))
     {
         // Outside bitmap area, do not draw anything
         return false;

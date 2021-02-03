@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,29 +13,21 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/Event.hpp
+ *
+ * Declares the touchgfx::Event class.
+ */
 #ifndef EVENT_HPP
 #define EVENT_HPP
 
 namespace touchgfx
 {
-/**
- * @class Event Event.hpp touchgfx/Event.hpp
- *
- * @brief Simple base class for events.
- *
- *        Simple base class for events.
- */
+/** Simple base class for events. */
 class Event
 {
 public:
-
-    /**
-     * @typedef enum EventType
-     *
-     * @brief The events types.
-     *
-     *        The events types.
-     */
+    /** The event types. */
     typedef enum
     {
         EVENT_CLICK,  ///< A click
@@ -43,28 +35,19 @@ public:
         EVENT_GESTURE ///< A gesture
     } EventType;
 
-    Event() { }
-
     /**
-     * @fn virtual EventType Event::getEventType() = 0;
-     *
-     * @brief Gets event type.
-     *
-     *        Gets event type.
+     * Gets event type.
      *
      * @return The type of this event.
      */
     virtual EventType getEventType() = 0;
 
-    /**
-     * @fn virtual Event::~Event()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~Event() { }
+    /** Finalizes an instance of the Event class. */
+    virtual ~Event()
+    {
+    }
 };
+
 } // namespace touchgfx
 
 #endif // EVENT_HPP

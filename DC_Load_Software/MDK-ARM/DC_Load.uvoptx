@@ -10,7 +10,7 @@
     <aExt>*.s*; *.src; *.a*</aExt>
     <oExt>*.obj; *.o</oExt>
     <lExt>*.lib</lExt>
-    <tExt>*.txt; *.h; *.inc</tExt>
+    <tExt>*.txt; *.h; *.inc; *.md</tExt>
     <pExt>*.plm</pExt>
     <CppX>*.cpp</CppX>
     <nMigrate>0</nMigrate>
@@ -103,7 +103,7 @@
         <bEvRecOn>1</bEvRecOn>
         <bSchkAxf>0</bSchkAxf>
         <bTchkAxf>0</bTchkAxf>
-        <nTsel>3</nTsel>
+        <nTsel>4</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -140,7 +140,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>JL2CM3</Key>
-          <Name>-U261003080 -O2158 -S8 -ZTIFSpeedSel50000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(5BA02477) -L00(0) -TO19 -TC200000000 -TP21 -TDS8006 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO31 -FD20010000 -FC1000 -FN2 -FF0STM32F7x_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F746BGTx$CMSIS\Flash\STM32F7x_1024.FLM) -FF1STM32F7xTCM_1024.FLM -FS1200000 -FL1100000 -FP1($$Device:STM32F746BGTx$CMSIS\Flash\STM32F7xTCM_1024.FLM)</Name>
+          <Name>-U260114730 -O2158 -S8 -ZTIFSpeedSel50000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(5BA02477) -L00(0) -TO19 -TC200000000 -TP21 -TDS8006 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO31 -FD20010000 -FC1000 -FN2 -FF0STM32F7x_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F746BGTx$CMSIS\Flash\STM32F7x_1024.FLM) -FF1STM32F7xTCM_1024.FLM -FS1200000 -FL1100000 -FP1($$Device:STM32F746BGTx$CMSIS\Flash\STM32F7xTCM_1024.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -153,7 +153,24 @@
           <Name>-U-O142 -O2254 -S0 -C0 -N00("ARM CoreSight SW-DP") -D00(5BA02477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC1000 -FN1 -FF0STM32F7x_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F746BGTx$CMSIS\Flash\STM32F7x_1024.FLM) -FF1STM32F7x_TCM -FS1200000 -FL1100000 -FP1($$Device:STM32F746BG$Flash\STM32F7x_TCM.FLM)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>8</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>../touchgfx/gui/src/main_screen_screen/main_screenview.cpp</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+      </Breakpoint>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -208,7 +225,7 @@
 
   <Group>
     <GroupName>Application/MDK-ARM</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -228,7 +245,7 @@
 
   <Group>
     <GroupName>Application/User/Core</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -452,7 +469,7 @@
 
   <Group>
     <GroupName>Application/User/FATFS/Target</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -496,7 +513,7 @@
 
   <Group>
     <GroupName>Application/User/FATFS/App</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1196,7 +1213,7 @@
 
   <Group>
     <GroupName>Middlewares/FatFs</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1264,7 +1281,7 @@
 
   <Group>
     <GroupName>Middlewares/FreeRTOS</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1392,7 +1409,7 @@
 
   <Group>
     <GroupName>Middlewares/USB_Device_Library</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1471,8 +1488,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/gui/src/model/model.cpp</PathWithFileName>
-      <FilenameWithoutPath>Model.cpp</FilenameWithoutPath>
+      <PathWithFileName>../touchgfx/gui/src/init_screen_screen/init_screenpresenter.cpp</PathWithFileName>
+      <FilenameWithoutPath>Init_ScreenPresenter.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1483,8 +1500,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/gui/src/screen1_screen/screen1presenter.cpp</PathWithFileName>
-      <FilenameWithoutPath>Screen1Presenter.cpp</FilenameWithoutPath>
+      <PathWithFileName>../touchgfx/gui/src/init_screen_screen/init_screenview.cpp</PathWithFileName>
+      <FilenameWithoutPath>Init_ScreenView.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1495,8 +1512,32 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/gui/src/screen1_screen/screen1view.cpp</PathWithFileName>
-      <FilenameWithoutPath>Screen1View.cpp</FilenameWithoutPath>
+      <PathWithFileName>../touchgfx/gui/src/main_screen_screen/main_screenpresenter.cpp</PathWithFileName>
+      <FilenameWithoutPath>Main_ScreenPresenter.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>15</GroupNumber>
+      <FileNumber>99</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/gui/src/main_screen_screen/main_screenview.cpp</PathWithFileName>
+      <FilenameWithoutPath>Main_ScreenView.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>15</GroupNumber>
+      <FileNumber>100</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/gui/src/model/model.cpp</PathWithFileName>
+      <FilenameWithoutPath>Model.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1510,7 +1551,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>99</FileNumber>
+      <FileNumber>101</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1522,19 +1563,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>100</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/images/src/background.cpp</PathWithFileName>
-      <FilenameWithoutPath>BACKGROUND.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>16</GroupNumber>
-      <FileNumber>101</FileNumber>
+      <FileNumber>102</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1546,7 +1575,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>102</FileNumber>
+      <FileNumber>103</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1558,31 +1587,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>103</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/images/src/config_small_button_pressed.cpp</PathWithFileName>
-      <FilenameWithoutPath>CONFIG_SMALL_BUTTON_PRESSED.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>16</GroupNumber>
       <FileNumber>104</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/images/src/current.cpp</PathWithFileName>
-      <FilenameWithoutPath>Current.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>16</GroupNumber>
-      <FileNumber>105</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1594,7 +1599,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>106</FileNumber>
+      <FileNumber>105</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1606,7 +1611,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>107</FileNumber>
+      <FileNumber>106</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1618,7 +1623,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>108</FileNumber>
+      <FileNumber>107</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1630,7 +1635,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>109</FileNumber>
+      <FileNumber>108</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1642,7 +1647,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>110</FileNumber>
+      <FileNumber>109</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1654,7 +1659,79 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
+      <FileNumber>110</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/generated/images/src/image_background.cpp</PathWithFileName>
+      <FilenameWithoutPath>image_BACKGROUND.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
       <FileNumber>111</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/generated/images/src/image_config_small_button_pressed.cpp</PathWithFileName>
+      <FilenameWithoutPath>image_CONFIG_SMALL_BUTTON_PRESSED.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>112</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/generated/images/src/image_power.cpp</PathWithFileName>
+      <FilenameWithoutPath>image_POWER.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>113</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/generated/images/src/image_settings.cpp</PathWithFileName>
+      <FilenameWithoutPath>image_SETTINGS.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>114</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/generated/images/src/image_settings_pressed.cpp</PathWithFileName>
+      <FilenameWithoutPath>image_SETTINGS_PRESSED.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>115</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/generated/gui_generated/src/init_screen_screen/init_screenviewbase.cpp</PathWithFileName>
+      <FilenameWithoutPath>Init_ScreenViewBase.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>116</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1666,7 +1743,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>112</FileNumber>
+      <FileNumber>117</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1678,7 +1755,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>113</FileNumber>
+      <FileNumber>118</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1690,7 +1767,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>114</FileNumber>
+      <FileNumber>119</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1702,67 +1779,19 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>115</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/images/src/power.cpp</PathWithFileName>
-      <FilenameWithoutPath>POWER.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>16</GroupNumber>
-      <FileNumber>116</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/images/src/resistance.cpp</PathWithFileName>
-      <FilenameWithoutPath>Resistance.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>16</GroupNumber>
-      <FileNumber>117</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/gui_generated/src/screen1_screen/screen1viewbase.cpp</PathWithFileName>
-      <FilenameWithoutPath>Screen1ViewBase.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>16</GroupNumber>
-      <FileNumber>118</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/images/src/settings.cpp</PathWithFileName>
-      <FilenameWithoutPath>SETTINGS.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>16</GroupNumber>
-      <FileNumber>119</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/images/src/settings_pressed.cpp</PathWithFileName>
-      <FilenameWithoutPath>SETTINGS_PRESSED.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>16</GroupNumber>
       <FileNumber>120</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>../touchgfx/generated/gui_generated/src/main_screen_screen/main_screenviewbase.cpp</PathWithFileName>
+      <FilenameWithoutPath>Main_ScreenViewBase.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>16</GroupNumber>
+      <FileNumber>121</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1774,7 +1803,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>121</FileNumber>
+      <FileNumber>122</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1786,7 +1815,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>122</FileNumber>
+      <FileNumber>123</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1798,7 +1827,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>123</FileNumber>
+      <FileNumber>124</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1810,7 +1839,7 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>124</FileNumber>
+      <FileNumber>125</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1822,33 +1851,13 @@
     </File>
     <File>
       <GroupNumber>16</GroupNumber>
-      <FileNumber>125</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>../touchgfx/generated/images/src/voltage.cpp</PathWithFileName>
-      <FilenameWithoutPath>Voltage.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-  </Group>
-
-  <Group>
-    <GroupName>BSP</GroupName>
-    <tvExp>1</tvExp>
-    <tvExpOptDlg>0</tvExpOptDlg>
-    <cbSel>0</cbSel>
-    <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>17</GroupNumber>
       <FileNumber>126</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Middlewares\BSP\stm32746g_bsp.cpp</PathWithFileName>
-      <FilenameWithoutPath>stm32746g_bsp.cpp</FilenameWithoutPath>
+      <PathWithFileName>../touchgfx/generated/fonts/src/unmappeddatafont.cpp</PathWithFileName>
+      <FilenameWithoutPath>UnmappedDataFont.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1861,7 +1870,7 @@
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>18</GroupNumber>
+      <GroupNumber>17</GroupNumber>
       <FileNumber>127</FileNumber>
       <FileType>4</FileType>
       <tvExp>0</tvExp>
@@ -1869,6 +1878,94 @@
       <bDave2>0</bDave2>
       <PathWithFileName>../middlewares/st/touchgfx/lib/core/cortex_m7/Keil/touchgfx_core.lib</PathWithFileName>
       <FilenameWithoutPath>touchgfx_core.lib</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>Drivers/Components</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>18</GroupNumber>
+      <FileNumber>128</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Drivers\Components\tsc2013\tsc2013.c</PathWithFileName>
+      <FilenameWithoutPath>tsc2013.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>18</GroupNumber>
+      <FileNumber>129</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Drivers\Components\stmpe811\stmpe811.c</PathWithFileName>
+      <FilenameWithoutPath>stmpe811.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>Drivers/BSP</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>19</GroupNumber>
+      <FileNumber>130</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Drivers\BSP\Src\stm32746g_bsp.cpp</PathWithFileName>
+      <FilenameWithoutPath>stm32746g_bsp.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>19</GroupNumber>
+      <FileNumber>131</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Drivers\BSP\Src\stm32746g_bsp_adc.c</PathWithFileName>
+      <FilenameWithoutPath>stm32746g_bsp_adc.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>19</GroupNumber>
+      <FileNumber>132</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Drivers\BSP\Src\stm32746g_bsp_beeper.c</PathWithFileName>
+      <FilenameWithoutPath>stm32746g_bsp_beeper.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>19</GroupNumber>
+      <FileNumber>133</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Drivers\BSP\Src\stm32746g_bsp_ts.cpp</PathWithFileName>
+      <FilenameWithoutPath>stm32746g_bsp_ts.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/TextProvider.hpp
+ *
+ * Declares the touchgfx::TextProvider class.
+ */
 #ifndef TEXTPROVIDER_HPP
 #define TEXTPROVIDER_HPP
 
@@ -23,15 +28,13 @@
 namespace touchgfx
 {
 /**
- * @class TextProvider TextProvider.hpp touchgfx/TextProvider.hpp
+ * The TextProvider is used in drawing basic strings and strings with one or two wildcards. The
+ * TextProvider enables wildcard expansion of the string at the time it is written to
+ * the LCD.
  *
- * @brief The TextProvider is used in drawing basic and wildcard strings.
- *
- *        The TextProvider is used in drawing basic and wildcard strings. The TextProvider
- *        enables wildcard expansion of the string at the time it is written to the LCD.
- *
- *        It provides printf formatted text strings one character at the time, without the need
- *        for a user provided buffer to store the text string.
+ * Wildcards specified as &lt;placeholder&gt; are converted to Unicode value 2 by the
+ * text converter tool, and the placeholders are automatically expanded with the
+ * specified wildcard buffers at runtime.
  */
 class TextProvider
 {
@@ -39,96 +42,79 @@ public:
     static const uint32_t MAX_32BIT_INTEGER_DIGITS = 33U; ///< Max number of digits used for the text representation of a 32 bit integer.
 
     /**
-     * @fn TextProvider::TextProvider();
+     * Initializes a new instance of the TextProvider class.
      *
-     * @brief Default constructor.
-     *
-     *        Empty constructor. The user must call initialize() before characters can be
-     *        provided.
+     * @note The user must call initialize() before characters can be provided.
      */
     TextProvider();
 
     /**
-     * @fn void TextProvider::initialize(const Unicode::UnicodeChar* stringFormat, va_list pArg, const uint16_t* gsubTable = 0);
+     * Initializes the TextProvider. Each '\2' character in the format is replaced by one
+     * UnicodeChar* argument from pArg.
      *
-     * @brief Initializes the TextProvider.
-     *
-     *        Initializes the TextProvider. Each '\2' character in the format is replaced by
-     *        one UnicodeChar* argument from pArg.
-     *
-     * @param stringFormat The string to format.
-     * @param pArg         Format arguments in the form of a va_list.
-     * @param gsubTable    (Optional) Pointer to GSUB table with unicode substitution rules.
+     * @param  stringFormat The string to format.
+     * @param  pArg         Format arguments in the form of a va_list.
+     * @param  gsubTable    (Optional) Pointer to GSUB table with Unicode substitution rules.
      */
     void initialize(const Unicode::UnicodeChar* stringFormat, va_list pArg, const uint16_t* gsubTable = 0);
 
     /**
-     * @fn void TextProvider::initialize(const Unicode::UnicodeChar* stringFormat, const uint16_t* gsubTable = 0, ...);
+     * Initializes the TextProvider. Each '\2' character in the format is replaced by one
+     * UnicodeChar* argument from pArg.
      *
-     * @brief Initializes the TextProvider.
-     *
-     *        Initializes the TextProvider. Each '\2' character in the format is replaced by
-     *        one UnicodeChar* argument from pArg.
-     *
-     * @param stringFormat The string to format.
-     * @param gsubTable    (Optional) Pointer to GSUB table with unicode substitution rules.
-     * @param ...          Variable arguments providing additional information.
+     * @param  stringFormat The string to format.
+     * @param  gsubTable    (Optional) Pointer to GSUB table with Unicode substitution rules.
+     * @param  ...          Variable arguments providing additional information.
      */
     void initialize(const Unicode::UnicodeChar* stringFormat, const uint16_t* gsubTable = 0, ...);
 
     /**
-     * @fn Unicode::UnicodeChar TextProvider::getNextChar(TextDirection direction = TEXT_DIRECTION_LTR);
-     *
-     * @brief Gets the next character.
-     *
-     *        Gets the next character. For Arabic and Thai, it is important to use the getNextLigature instead.
+     * Gets the next character. For Arabic and Thai, it is important to use the
+     * getNextLigature instead.
      *
      * @return The next character of the expanded string or 0 if end of string is reached.
      *
-     * @see TextProvider::getNextLigature()
+     * @see TextProvider::getNextLigature
      */
     Unicode::UnicodeChar getNextChar();
 
     /**
-     * @fn Unicode::UnicodeChar TextProvider::getNextLigature(TextDirection direction);
+     * Tells if the end of the string has been reached.
      *
-     * @brief Gets the next ligature.
+     * @return True if the end of the string has been reached, false if not.
      *
-     *        Gets the next ligature. For most languages this is the same as getNextChar() but eg.
-     *        Arabic has different ligatures for each character. Thai character placement might
-     *        also depend on previous characters. It is recommended to use getNextLigature with
-     *        font and glyph parameters to ensure coming glyphs in a text are placed correctly.
+     * @see TextProvider::getNextLigature()
+     */
+    bool endOfString();
+
+    /**
+     * Gets the next ligature. For most languages this is simply the next Unicode character
+     * from the buffer, but e.g. Arabic has different ligatures for each character. Thai
+     * character placement might also depend on previous characters. It is recommended to
+     * use getNextLigature with font and glyph parameters to ensure coming glyphs in a text
+     * are placed correctly.
      *
-     * @note Functions getNextLigature() and getNextChar() will advance through the same buffer and
-     *       mixing the use of those functions is not recommended and may cause undesired results.
-     *       Instead create two TextProviders and user getNextChar() on one and getNextLigature() on
-     *       the other.
-     *
-     * @param direction The direction.
+     * @param  direction The direction.
      *
      * @return The next character of the expanded string or 0 if end of string is reached.
      *
-     * @see TextProvider::getNextChar()
+     * @see TextProvider::getNextChar
+     *
+     * @note Functions getNextLigature() and getNextChar() will advance through the same buffer
+     *       and mixing the use of those functions is not recommended and may cause
+     *       undesired results. Instead create two TextProviders and user getNextChar() on
+     *       one and getNextLigature() on the other.
      */
     Unicode::UnicodeChar getNextLigature(TextDirection direction);
 
     /**
-     * @fn Unicode::UnicodeChar TextProvider::getNextLigature(TextDirection direction, const Font* font, const GlyphNode*& glyph);
+     * Gets the next ligature. For most languages this is simply the next Unicode character
+     * from the buffer, but e.g. Arabic has different ligatures for each character.
      *
-     * @brief Gets the next ligature.
-     *
-     *        Gets the next ligature. For most languages this is the same as getNextChar() but eg.
-     *        Arabic has different ligatures for each character.
-     *
-     *        Also gets a glyph for the ligature in a font. For non-Thai unicodes, this is
-     *        identical to using Font::getGlyph(), but for Thai characters where diacritics glyphs
-     *        are not always placed at the same relative position, an adjusted GlyphNode will be
-     *        generated with correct relative X/Y coordinates.
-     *
-     * @note Functions getNextLigature() and getNextChar() will advance through the same buffer and
-     *       mixing the use of those functions is not recommended and may cause undesired results.
-     *       Instead create two TextProviders and user getNextChar() on one and getNextLigature() on
-     *       the other.
+     * Also gets a glyph for the ligature in a font. For non-Thai Unicodes, this is
+     * identical to using Font::getGlyph(), but for Thai characters where diacritics glyphs
+     * are not always placed at the same relative position, an adjusted GlyphNode will be
+     * generated with correct relative X/Y coordinates.
      *
      * @param       direction The direction.
      * @param       font      The font.
@@ -136,31 +122,26 @@ public:
      *
      * @return The next character of the expanded string or 0 if end of string i reached.
      *
-     * @see TextProvider::getNextChar()
-     * @see Font::getGlyph
+     * @see TextProvider::getNextChar, Font::getGlyph
+     *
+     * @note Functions getNextLigature() and getNextChar() will advance through the same buffer
+     *       and mixing the use of those functions is not recommended and may cause
+     *       undesired results. Instead create two TextProviders and user getNextChar() on
+     *       one and getNextLigature() on the other.
      */
     Unicode::UnicodeChar getNextLigature(TextDirection direction, const Font* font, const GlyphNode*& glyph);
 
     /**
-     * @fn Unicode::UnicodeChar TextProvider::getNextLigature(TextDirection direction, const Font* font, const GlyphNode*& glyph, const uint8_t*& pixelData, uint8_t& bitsPerPixel);
+     * Gets the next ligature. For most languages this is simply the next Unicode character
+     * from the buffer, but e.g. Arabic has different ligatures for each character.
      *
-     * @brief Gets the next ligature.
+     * Also gets a glyph for the ligature in a font. For non-Thai Unicodes, this is
+     * identical to using Font::getGlyph(), but for Thai characters where diacritics glyphs
+     * are not always placed at the same relative position, an adjusted GlyphNode will be
+     * generated with correct relative X/Y coordinates.
      *
-     *        Gets the next ligature. For most languages this is the same as getNextChar() but eg.
-     *        Arabic has different ligatures for each character.
-     *
-     *        Also gets a glyph for the ligature in a font. For non-Thai unicodes, this is
-     *        identical to using Font::getGlyph(), but for Thai characters where diacritics glyphs
-     *        are not always placed at the same relative position, an adjusted GlyphNode will be
-     *        generated with correct relative X/Y coordinates.
-     *
-     *        Furthermore a pointer to the glyph data and the bit depth of the font are returned in
-     *        parameters.
-     *
-     * @note Functions getNextLigature() and getNextChar() will advance through the same buffer and
-     *       mixing the use of those functions is not recommended and may cause undesired results.
-     *       Instead create two TextProviders and user getNextChar() on one and getNextLigature() on
-     *       the other.
+     * Furthermore a pointer to the glyph data and the bit depth of the font are returned in
+     * parameters.
      *
      * @param       direction    The direction.
      * @param       font         The font.
@@ -170,8 +151,12 @@ public:
      *
      * @return The next character of the expanded string or 0 if end of string is reached.
      *
-     * @see TextProvider::getNextChar()
-     * @see Font::getGlyph
+     * @see TextProvider::getNextChar, Font::getGlyph
+     *
+     * @note Functions getNextLigature() and getNextChar() will advance through the same buffer
+     *       and mixing the use of those functions is not recommended and may cause
+     *       undesired results. Instead create two TextProviders and user getNextChar() on
+     *       one and getNextLigature() on the other.
      */
     Unicode::UnicodeChar getNextLigature(TextDirection direction, const Font* font, const GlyphNode*& glyph, const uint8_t*& pixelData, uint8_t& bitsPerPixel);
 
@@ -190,68 +175,106 @@ private:
             : pos(0), used(0)
         {
         }
-        void flush()
+        FORCE_INLINE_FUNCTION void flush()
         {
             used = 0;
         }
-        bool getSize() const
-        {
-            return size;
-        }
-        bool isEmpty() const
+        FORCE_INLINE_FUNCTION bool isEmpty() const
         {
             return used == 0;
         }
-        bool isFull() const
+        FORCE_INLINE_FUNCTION bool isFull() const
         {
             return used == size;
         }
-        Unicode::UnicodeChar peekChar(uint16_t offset = 0)
+        FORCE_INLINE_FUNCTION Unicode::UnicodeChar peekChar()
+        {
+            assert(used > 0);
+            return buffer[pos];
+        }
+        FORCE_INLINE_FUNCTION Unicode::UnicodeChar peekChar(uint16_t offset)
         {
             assert(offset < used);
-            return buffer[(pos + offset) % size];
+            const uint16_t index = pos + offset;
+            return buffer[index < size ? index : index - size];
         }
-        void dropFront(uint16_t num = 1)
+        FORCE_INLINE_FUNCTION void dropFront(uint16_t num = 1)
         {
             assert(used >= num);
-            pos = (pos + num) % size;
             used -= num;
+            pos += num;
+            if (pos >= size)
+            {
+                pos -= size;
+            }
         }
         Unicode::UnicodeChar popFront()
         {
             assert(used > 0);
             const Unicode::UnicodeChar ch = buffer[pos];
-            pos = (pos + 1) % size;
             used--;
+            pos++;
+            if (pos >= size)
+            {
+                pos -= size;
+            }
             return ch;
         }
         Unicode::UnicodeChar popBack()
         {
             assert(used > 0);
-            used--;
-            return buffer[(pos + used) % size];
+            return peekChar(used-- - 1);
         }
         void allocateFront(uint16_t num)
         {
             assert(used + num <= size);
-            pos = ((pos + size) - num) % size;
             used += num;
+            if (pos < num)
+            {
+                pos += size;
+            }
+            pos -= num;
+        }
+        void pushFrontForce(Unicode::UnicodeChar newChar)
+        {
+            // "use" one more entry, if already full overwrite back entry ("used" is unchanged)
+            if (used < size)
+            {
+                used++;
+            }
+            // Move "pos" one back with overflow check
+            if (pos == 0)
+            {
+                pos += size;
+            }
+            pos--;
+            replaceAt0(newChar);
         }
         void pushFront(Unicode::UnicodeChar newChar)
         {
             allocateFront(1);
-            replaceAt(0, newChar);
+            replaceAt0(newChar);
         }
-        void pushBack(Unicode::UnicodeChar newChar)
+        FORCE_INLINE_FUNCTION void pushBack(Unicode::UnicodeChar newChar)
         {
             assert(used < size);
-            buffer[(pos + used) % size] = newChar;
-            used++;
+            replaceAt(++used - 1, newChar);
         }
-        void replaceAt(uint16_t offset, Unicode::UnicodeChar newChar)
+        FORCE_INLINE_FUNCTION void replaceAt0(Unicode::UnicodeChar newChar)
         {
-            assert(offset < used);
-            buffer[(pos + offset) % size] = newChar;
+            buffer[pos] = newChar;
+        }
+        FORCE_INLINE_FUNCTION void replaceAt1(Unicode::UnicodeChar newChar)
+        {
+            assert(used > 1);
+            const uint16_t index = pos + 1;
+            buffer[index < size ? index : 0] = newChar;
+        }
+        FORCE_INLINE_FUNCTION void replaceAt(uint16_t offset, Unicode::UnicodeChar newChar)
+        {
+            assert(used > offset);
+            const uint16_t index = pos + offset;
+            buffer[index < size ? index : index - size] = newChar;
         }
 
     private:
@@ -273,25 +296,22 @@ private:
     bool applyGsubRules(const uint16_t* nextTableEntry, const Unicode::UnicodeChar key);
     bool gsubRuleMatch(const uint16_t* tableEntry, uint16_t backtrack, uint16_t input, uint16_t lookahead);
 
-    typedef void (TextProvider::*UnicodeConverterInitFunctionPointer)();
-    typedef Unicode::UnicodeChar(TextProvider::*UnicodeConverterFunctionPointer)(const TextDirection direction);
-    static UnicodeConverterInitFunctionPointer unicodeConverterInitFunction;
-    static UnicodeConverterFunctionPointer unicodeConverterFunction;
-
     void initializeInternal();
     void unicodeConverterInit();
     Unicode::UnicodeChar unicodeConverter(const TextDirection direction);
 
     const Unicode::UnicodeChar* binarySearch(uint16_t key, const Unicode::UnicodeChar contextualFormTable[][5], int maxIndex) const;
-    const Unicode::UnicodeChar* contextualFormForChar(const Unicode::UnicodeChar currChar) const;
+    FORCE_INLINE_FUNCTION const Unicode::UnicodeChar* contextualFormForChar(const Unicode::UnicodeChar currChar) const;
 
+    FORCE_INLINE_FUNCTION void adjustGlyph(Unicode::UnicodeChar originalCharacter, Unicode::UnicodeChar currentCharacter, const GlyphNode*& glyph, const Font* font);
     const GlyphNode* adjustHindiGlyph(const GlyphNode* glyph);
     const GlyphNode* thaiLookupGlyph(const GlyphNode* glyph, const Font* font, Unicode::UnicodeChar unicode) const;
     const GlyphNode* adjustThaiGlyph(const Font* font, const GlyphNode* glyph);
+    const GlyphNode* adjustArabicGlyph(const Font* font, const GlyphNode* glyph, Unicode::UnicodeChar originalUnicode);
     GlyphNode modifiedGlyph;
-    int16_t thaiGlyphTop;
-    int16_t thaiGlyphBottom;
-    int16_t thaiGlyphLeft;
+    int16_t glyphPosTop;
+    int16_t glyphPosBottom;
+    int16_t glyphPosLeft;
 
     bool isContextualBeginning;
     bool lastGlyphIsAccent;
@@ -302,6 +322,7 @@ private:
     static const Unicode::UnicodeChar contextualForms0641_064a[][4];
     static const Unicode::UnicodeChar contextualForms06XX[][5];
 };
+
 } // namespace touchgfx
 
 #endif // TEXTPROVIDER_HPP

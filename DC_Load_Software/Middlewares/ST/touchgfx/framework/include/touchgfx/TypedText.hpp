@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,187 +13,145 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/TypedText.hpp
+ *
+ * Declares the touchgfx::TypedText class.
+ */
 #ifndef TYPEDTEXT_HPP
 #define TYPEDTEXT_HPP
 
 #include <cassert>
-#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/Font.hpp>
 #include <touchgfx/Texts.hpp>
+#include <touchgfx/hal/Types.hpp>
 
 namespace touchgfx
 {
-/**
- * This type shall be used by the application to define unique IDs for all
- * typed texts in the system. The application shall define typed text IDs in
- * the range [0,number of typed texts - 1].
- */
-
 const TypedTextId TYPED_TEXT_INVALID = 0xFFFFU; ///< The ID of an invalid text
 
-#ifdef __ARMCC_VERSION
-// Keil compiler issues irrelevant warning relating to missing ctor initialization for TypedTextData.
+#if defined(__ARMCC_VERSION) && (__ARMCC_VERSION < 6000000)
+// Keil5 compiler issues irrelevant warning relating to missing ctor initialization for TypedTextData.
 #pragma diag_suppress 368
 #endif
 
 /**
- * @class TypedText TypedText.hpp touchgfx/TypedText.hpp
- *
- * @brief TypedText represents text (as in characters) and typography (as in font and alignment).
- *
- *        TypedText represents text (as in characters) and typography (as in font and
- *        alignment). TypedText provides methods for interacting with the text, font and
- *        alignment.
- *
- *        Example text_example shows how to use TypedText.
+ * TypedText represents text (for characters) and typography (for font and alignment).
+ * TypedText provides methods for adjusting the text, font and alignment.
  *
  * @see TextArea
  */
 class TypedText
 {
 public:
-
     /**
-     * @struct TypedTextData TypedText.hpp touchgfx/TypedText.hpp
-     *
-     * @brief The data structure for typed texts.
-     *
-     The data structure for typed texts.
+     * The data structure for typed texts.
      */
     struct TypedTextData
     {
-        const unsigned char fontIdx;       ///< The font associated with the typed text
-        const Alignment     alignment : 2; ///< The alignment of the typed text
+        const unsigned char fontIdx;       ///< The ID of the font associated with the typed text
+        const Alignment alignment : 2;     ///< The alignment of the typed text (LEFT,CENTER,RIGHT)
         const TextDirection direction : 2; ///< The text direction (LTR,RTL,...) of the typed text
     };
 
     /**
-     * @fn explicit TypedText::TypedText(const TypedTextId id = TYPED_TEXT_INVALID)
+     * Initializes a new instance of the TypedText class.
      *
-     * @brief Construct a typed text.
-     *
-     *        Construct a typed text.
-     *
-     * @param id The id of the TypedText.
+     * @param  id (Optional) The identifier.
      */
-    explicit TypedText(const TypedTextId id = TYPED_TEXT_INVALID) : typedTextId(id)
+    explicit TypedText(const TypedTextId id = TYPED_TEXT_INVALID)
+        : typedTextId(id)
+    {
+    }
+
+    /** Finalizes an instance of the TypedText class. */
+    virtual ~TypedText()
     {
     }
 
     /**
-     * @fn TypedTextId TypedText::getId() const
-     *
-     * @brief Gets the id of the typed text.
-     *
-     *        Gets the id of the typed text.
+     * Gets the id of the typed text.
      *
      * @return The id.
      */
-    TypedTextId getId() const
+    FORCE_INLINE_FUNCTION TypedTextId getId() const
     {
         return typedTextId;
     }
 
     /**
-     * @fn bool TypedText::hasValidId() const
-     *
-     * @brief Has the TypedText been set to a proper value.
-     *
-     *        Has the TypedText been set to a proper value.
+     * Has the TypedText been set to a proper value?
      *
      * @return Is the id valid.
      */
-    bool hasValidId() const
+    FORCE_INLINE_FUNCTION bool hasValidId() const
     {
         return typedTextId != TYPED_TEXT_INVALID;
     }
 
     /**
-     * @fn const Unicode::UnicodeChar* TypedText::getText() const
-     *
-     * @brief Gets the text associated with this TypedText.
-     *
-     *        Gets the text associated with this TypedText.
+     * Gets the text associated with this TypedText.
      *
      * @return The text.
      */
-    const Unicode::UnicodeChar* getText() const
+    FORCE_INLINE_FUNCTION const Unicode::UnicodeChar* getText() const
     {
         assertValid();
         return texts->getText(typedTextId);
     }
 
     /**
-     * @fn const Font* TypedText::getFont() const
-     *
-     * @brief Gets the font associated with this TypedText.
-     *
-     *        Gets the font associated with this TypedText.
+     * Gets the font associated with this TypedText.
      *
      * @return The font.
      */
-    const Font* getFont() const
+    FORCE_INLINE_FUNCTION const Font* getFont() const
     {
         assertValid();
         return fonts[typedTexts[typedTextId].fontIdx];
     }
 
     /**
-     * @fn FontId TypedText::getFontId() const
-     *
-     * @brief Gets the font ID associated with this TypedText.
-     *
-     *        Gets the font ID associated with this TypedText.
+     * Gets the font ID associated with this TypedText.
      *
      * @return The font.
      */
-    FontId getFontId() const
+    FORCE_INLINE_FUNCTION FontId getFontId() const
     {
         assertValid();
         return typedTexts[typedTextId].fontIdx;
     }
 
     /**
-     * @fn Alignment TypedText::getAlignment() const
-     *
-     * @brief Gets the alignment associated with this TypedText.
-     *
-     *        Gets the alignment associated with this TypedText.
+     * Gets the alignment associated with this TypedText.
      *
      * @return The alignment.
      */
-    Alignment getAlignment() const
+    FORCE_INLINE_FUNCTION Alignment getAlignment() const
     {
         assertValid();
         return typedTexts[typedTextId].alignment;
     }
 
     /**
-     * @fn TextDirection TypedText::getTextDirection() const
-     *
-     * @brief Gets the text direction associated with this TypedText.
-     *
-     *        Gets the text direction associated with this TypedText.
+     * Gets the text direction associated with this TypedText.
      *
      * @return The alignment.
      */
-    TextDirection getTextDirection() const
+    FORCE_INLINE_FUNCTION TextDirection getTextDirection() const
     {
         assertValid();
         return typedTexts[typedTextId].direction;
     }
 
     /**
-     * @fn static void TypedText::registerTypedTextDatabase(const TypedTextData* data, const Font* const* f, const uint16_t n)
+     * Registers an array of typed texts. All typed text instances are bound to this
+     * database. This function is called automatically when setting a new language. Use
+     * Texts::setLanguage() instead of calling this function directly.
      *
-     * @brief Registers an array of typed texts.
-     *
-     *        Registers an array of typed texts. All typed text instances are bound to this
-     *        database.
-     *
-     * @param data A reference to the TypedTextData storage array.
-     * @param f    The fonts associated with the array.
-     * @param n    The number of typed texts in the array.
+     * @param  data A reference to the TypedTextData storage array.
+     * @param  f    The fonts associated with the array.
+     * @param  n    The number of typed texts in the array.
      */
     static void registerTypedTextDatabase(const TypedTextData* data, const Font* const* f, const uint16_t n)
     {
@@ -203,13 +161,10 @@ public:
     }
 
     /**
-     * @fn static void TypedText::registerTexts(const Texts* t)
+     * Registers an array of texts. This function is called automatically from
+     * touchgfx_generic_init(). Should not be called under normal circumstances.
      *
-     * @brief Registers an array of texts.
-     *
-     *        Registers an array of texts.
-     *
-     * @param t The array of texts.
+     * @param  t The array of texts.
      */
     static void registerTexts(const Texts* t)
     {
@@ -217,7 +172,7 @@ public:
     }
 
 private:
-    void assertValid() const
+    FORCE_INLINE_FUNCTION void assertValid() const
     {
         assert(typedTexts != 0 && "TypedText database has not been initialized.");
         assert(typedTextId < numberOfTypedTexts && "typedTextId larger than numberOfTypedTexts.");
@@ -230,6 +185,7 @@ private:
     static const Font* const* fonts;
     static uint16_t numberOfTypedTexts;
 };
+
 } // namespace touchgfx
 
 #endif // TYPEDTEXT_HPP

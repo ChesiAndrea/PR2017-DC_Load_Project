@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/ToggleButton.hpp
+ *
+ * Declares the touchgfx::ToggleButton class.
+ */
 #ifndef TOGGLEBUTTON_HPP
 #define TOGGLEBUTTON_HPP
 
@@ -21,43 +26,15 @@
 namespace touchgfx
 {
 /**
- * @class ToggleButton ToggleButton.hpp touchgfx/widgets/ToggleButton.hpp
- *
- * @brief A ToggleButton is a Button specialization that swaps the two bitmaps when clicked.
- *
- *        A ToggleButton is a Button specialization that swaps the two bitmaps when clicked,
- *        such that the previous "pressed" bitmap, now becomes the one displayed when button is
- *        not pressed.
- *
- * @see Button
+ * A ToggleButton is a Button specialization that swaps the two bitmaps when clicked, such that
+ * the previous "pressed" bitmap, now becomes the one displayed when button is not
+ * pressed. This can by used to give the effect of a button that can be pressed in and
+ * when it is subsequently pressed, it will pop back out.
  */
 class ToggleButton : public Button
 {
 public:
-    /**
-     * @fn ToggleButton::ToggleButton();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
-    ToggleButton();
 
-    /**
-     * @fn virtual void ToggleButton::setBitmaps(const Bitmap& bmpReleased, const Bitmap& bmpPressed)
-     *
-     * @brief Sets the bitmaps.
-     *
-     *        Sets the bitmaps.
-     *
-     * @note This specific implementation remembers what bitmap was used as pressed, in order to
-     *       support the ability to force the state.
-     *
-     * @param bmpReleased The bitmap to show in the "normal" state, ie when button is not pressed.
-     * @param bmpPressed  The bitmap to show when the button is pressed.
-     *
-     * @see Button::setBitmaps
-     */
     virtual void setBitmaps(const Bitmap& bmpReleased, const Bitmap& bmpPressed)
     {
         originalPressed = bmpPressed;
@@ -65,47 +42,33 @@ public:
     }
 
     /**
-     * @fn void ToggleButton::forceState(bool activeState);
+     * Allows the ToggleButton to be forced into either the pressed state, or the normal
+     * state. In the pressed state, the Button will always be shown as pressed down (and
+     * shown as released when the user presses it). In the normal state, the Button will be
+     * show as released or pressed depending on its actual state.
      *
-     * @brief Force the button into a specific state.
-     *
-     *        Use this function to force the button in one of the two possible states. If
-     *        button is forced to the active state, then the pressed bitmap from the last call
-     *        to setBitmaps becomes the one displayed when button is not pressed.
-     *
-     * @param activeState If true, display the bmpPressed bitmap when not pressed. If false display
-     *                    the bmpReleased bitmap.
+     * @param  activeState If true, swap the images for released and pressed. If false display
+     *                     the Button normally.
      */
     void forceState(bool activeState);
 
     /**
-     * @fn bool ToggleButton::getState() const
+     * Gets the state of the ToggleButton as set with forceState.
      *
-     * @brief Gets the state.
-     *
-     *        Gets the state.
-     *
-     * @return true if state is currently active.
+     * @return True if the button has been toggled, i.e. the pressed state is shown when the
+     *         button is not pressed.
      */
     bool getState() const
     {
-        return up == originalPressed;
+        return up.getId() == originalPressed.getId();
     }
 
-    /**
-     * @fn virtual void ToggleButton::handleClickEvent(const ClickEvent& event);
-     *
-     * @brief Overrides handleClickEvent.
-     *
-     *        Overrides handleClickEvent in order to swap the bitmaps after being clicked.
-     *
-     * @param event The event to handle.
-     */
     virtual void handleClickEvent(const ClickEvent& event);
 
 protected:
     Bitmap originalPressed; ///< Contains the bitmap that was originally being displayed when button is pressed.
 };
+
 } // namespace touchgfx
 
 #endif // TOGGLEBUTTON_HPP

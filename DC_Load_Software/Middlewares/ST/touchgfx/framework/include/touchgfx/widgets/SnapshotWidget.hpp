@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/SnapshotWidget.hpp
+ *
+ * Declares the touchgfx::SnapshotWidget class.
+ */
 #ifndef SNAPSHOTWIDGET_HPP
 #define SNAPSHOTWIDGET_HPP
 
@@ -21,110 +26,49 @@
 namespace touchgfx
 {
 /**
- * @class SnapshotWidget SnapshotWidget.hpp touchgfx/widgets/SnapshotWidget.hpp
- *
- * @brief A widget that is able to make a snapshot of the area the SnapshotWidget covers.
- *
- *        A widget that is able to make a snapshot of the area the SnapshotWidget covers. The
- *        SnapshotWidget will show the snapshot captured when it is drawn.
- *        Note: The snapshot must be taken from a byte aligned position.
- *        On BPP=4, this means on even positions, x=0, 2, 4, 8,...
- *        On BPP=2, this means on positions, x= 0, 4, 8, 12,...
- *        On BPP=1, this means on positions, x= 0, 8, 16,...
- *
- * @see Widget
+ * A widget that is able to make a snapshot of the area the SnapshotWidget covers into either a
+ * Bitmap or into animation storage (if this available). Once the snapshot has been
+ * taken using SnapshowWidget::makeSnapshot(), the SnapshotWidget will show the captured
+ * snapshot when it is subsequently drawn.
  */
 class SnapshotWidget : public Widget
 {
 public:
-    /**
-     * @fn SnapshotWidget::SnapshotWidget();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
     SnapshotWidget();
 
-    /**
-     * @fn virtual SnapshotWidget::~SnapshotWidget();
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~SnapshotWidget();
-
-    /**
-     * @fn virtual void SnapshotWidget::draw(const Rect& invalidatedArea) const;
-     *
-     * @brief Draws the SnapshotWidget.
-     *
-     *        Draws the SnapshotWidget. It supports partial drawing, so it only redraws the
-     *        area described by invalidatedArea.
-     *
-     * @param invalidatedArea The rectangle to draw, with coordinates relative to this drawable.
-     */
     virtual void draw(const Rect& invalidatedArea) const;
 
-    /**
-     * @fn virtual Rect SnapshotWidget::getSolidRect() const;
-     *
-     * @brief Gets solid rectangle.
-     *
-     *        Gets solid rectangle.
-     *
-     * @return The solid rectangle.
-     */
     virtual Rect getSolidRect() const;
 
     /**
-     * @fn virtual void SnapshotWidget::makeSnapshot();
+     * Makes a snapshot of the area the SnapshotWidget currently covers. This area is
+     * defined by setting the dimensions and the position of the SnapshotWidget. The
+     * snapshot is stored in Animation Storage.
      *
-     * @brief Makes a snapshot of the area the SnapshotWidget currently covers.
-     *
-     *        Makes a snapshot of the area the SnapshotWidget currently covers. This area is
-     *        defined by setting the dimensions and the position of the SnapshotWidget.
-     *        The snapshot is stored in Animation Storage.
+     * @see setPosition
      */
     virtual void makeSnapshot();
 
     /**
-     * @fn virtual void SnapshotWidget::makeSnapshot(const BitmapId bmp);
+     * Makes a snapshot of the area the SnapshotWidget currently covers. This area is
+     * defined by setting the dimensions and the position of the SnapshotWidget. The
+     * snapshot is stored in the provided dynamic bitmap. The format of the Bitmap must
+     * match the format of the display.
      *
-     * @brief Makes a snapshot of the area the SnapshotWidget currently to a bitmap.
-     *
-     *        Makes a snapshot of the area the SnapshotWidget
-     *        currently covers. This area is defined by setting the
-     *        dimensions and the position of the SnapshotWidget. The
-     *        snapshot is stored in the provided dynamic bitmap.
-     *
-     * @param bmp The target dynamic bitmap.
+     * @param  bmp The target dynamic bitmap.
      */
     virtual void makeSnapshot(const BitmapId bmp);
 
     /**
-     * @fn void SnapshotWidget::setAlpha(const uint8_t a)
-     *
-     * @brief Sets the alpha value.
-     *
-     *        Sets the alpha value.
-     *
-     * @param a The alpha value.
+     * @copydoc Image::setAlpha
      */
-    void setAlpha(const uint8_t a)
+    void setAlpha(const uint8_t newAlpha)
     {
-        alpha = a;
+        alpha = newAlpha;
     }
 
     /**
-     * @fn uint8_t SnapshotWidget::getAlpha() const
-     *
-     * @brief Gets the current alpha value.
-     *
-     *        Gets the current alpha value.
-     *
-     * @return The alpha value.
+     * @copydoc Image::getAlpha
      */
     uint8_t getAlpha() const
     {
@@ -133,8 +77,9 @@ public:
 
 protected:
     BitmapId bitmapId; ///< BitmapId where copy is stored s copied to.
-    uint8_t  alpha;    ///< The alpha with which to draw this snapshot.
+    uint8_t alpha;     ///< The alpha with which to draw this snapshot.
 };
+
 } // namespace touchgfx
 
 #endif // SNAPSHOTWIDGET_HPP

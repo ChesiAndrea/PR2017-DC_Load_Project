@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,90 +13,78 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/Image.hpp
+ *
+ * Declares the touchgfx::Image class.
+ */
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
-#include <touchgfx/hal/Types.hpp>
-#include <touchgfx/widgets/Widget.hpp>
 #include <touchgfx/Bitmap.hpp>
+#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/lcd/LCD.hpp>
+#include <touchgfx/widgets/Widget.hpp>
 
 namespace touchgfx
 {
 /**
- * @class Image Image.hpp touchgfx/widgets/Image.hpp
+ * Simple widget capable of showing a bitmap on the display. The bitmap can be alpha-blended
+ * with the background (or whichever other Drawable might be "underneath" the Image).
+ * The bitmap can and have areas of varying opacity.
  *
- * @brief Simple widget capable of showing a bitmap.
+ * The conversion from image.bmp or image.png to a bitmap that can be used in TouchGFX
+ * is handled by the Image Converter as part of compiling the project. Each image is
+ * assigned a unique BITMAP identifier which.
  *
- *        Simple widget capable of showing a bitmap. The bitmap can be alpha-blended with the
- *        background and have areas of transparency.
- *
- * @see Widget
+ * @see Bitmap
  */
 class Image : public Widget
 {
 public:
     /**
-     * @fn Image::Image(const Bitmap& bmp = Bitmap())
+     * Constructs a new Image with a default alpha value of 255 (solid) and a default Bitmap
+     * (undefined) if none is specified. If a Bitmap is passed to the constructor, the width
+     * and height of this widget is set to those of the bitmap.
      *
-     * @brief Default Constructor.
+     * @param  bmp (Optional) The bitmap to display.
      *
-     *        Constructs a new Image with a default alpha value of 255 (solid) and a default
-     *        Bitmap if none is specified.
-     *
-     * @param bmp The bitmap to display.
+     * @see setBitmap
      */
-    Image(const Bitmap& bmp = Bitmap()) : Widget(), alpha(255)
+    Image(const Bitmap& bmp = Bitmap())
+        : Widget(), alpha(255)
     {
         setBitmap(bmp);
     }
 
     /**
-     * @fn virtual void Image::setBitmap(const Bitmap& bmp);
+     * Sets the bitmap for this Image and updates the width and height of this widget to
+     * match those of the Bitmap.
      *
-     * @brief Sets the bitmap ID for this Image.
-     *
-     *        Sets the bitmap ID for this Image. Updates the width and height of this widget to
-     *        match that of the bitmap.
-     *
-     * @param bmp The bitmap instance.
-     *
-     * @see Bitmap
+     * @param  bmp The bitmap instance.
+     * @note The user code must call invalidate() in order to update the image on the display.
      */
     virtual void setBitmap(const Bitmap& bmp);
 
     /**
-     * @fn void Image::setAlpha(uint8_t alpha)
+     * Sets the opacity (alpha value). This can be used to fade it away by gradually
+     * decreasing the alpha value from 255 (solid) to 0 (invisible).
      *
-     * @brief Sets the alpha channel for the image.
+     * @param  newAlpha The new alpha value. 255=solid, 0=invisible.
      *
-     *        Sets the alpha channel for the image.
+     * @see getAlpha
      *
-     * @param alpha The alpha value. 255 = completely solid.
+     * @note The user code must call invalidate() in order to update the display.
      */
-    void setAlpha(uint8_t alpha)
+    void setAlpha(uint8_t newAlpha)
     {
-        this->alpha = alpha;
+        alpha = newAlpha;
     }
 
-    /**
-     * @fn virtual void Image::draw(const Rect& invalidatedArea) const;
-     *
-     * @brief Draws the image.
-     *
-     *        Draws the image. This class supports partial drawing, so only the area described
-     *        by the rectangle will be drawn.
-     *
-     * @param invalidatedArea The rectangle to draw, with coordinates relative to this drawable.
-     */
     virtual void draw(const Rect& invalidatedArea) const;
 
     /**
-     * @fn BitmapId Image::getBitmap() const
-     *
-     * @brief Gets the BitmapId currently contained by the widget.
-     *
-     *        Gets the BitmapId currently contained by the widget.
+     * Gets the BitmapId currently assigned to the Image widget.
      *
      * @return The current BitmapId of the widget.
      */
@@ -106,36 +94,25 @@ public:
     }
 
     /**
-     * @fn uint8_t Image::getAlpha() const
-     *
-     * @brief Gets the current alpha value.
-     *
-     *        Gets the current alpha value.
+     * Gets the current alpha value of the widget. The alpha value is in range 255
+     * (solid) to 0 (invisible).
      *
      * @return The current alpha value.
+     *
+     * @see setAlpha
      */
     uint8_t getAlpha() const
     {
         return alpha;
     }
 
-    /**
-     * @fn virtual Rect Image::getSolidRect() const;
-     *
-     * @brief Gets the largest solid (non-transparent) rectangle.
-     *
-     *        Gets the largest solid (non-transparent) rectangle. This value is pre-calculated
-     *        by the imageconverter tool.
-     *
-     * @return The largest solid (non-transparent) rectangle.
-     */
     virtual Rect getSolidRect() const;
 
 protected:
-    Bitmap  bitmap;               ///< The Bitmap to display.
-    uint8_t alpha;                ///< The Alpha for this image.
-    bool    hasTransparentPixels; ///< true if this object has transparent pixels
+    Bitmap bitmap;             ///< The Bitmap to display.
+    uint8_t alpha;             ///< The Alpha for this image.
 };
+
 } // namespace touchgfx
 
 #endif // IMAGE_HPP

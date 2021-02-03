@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -32,7 +32,7 @@ Slider::Slider() :
     setTouchable(true);
 
     // The backgroundSelectedViewPort is a container into which the bitmap for the "filled" background
-    // is placed. Containers are viewports, so the dimension of this container controls how
+    // is placed. Containers are viewports, so the dimensions of this container controls how
     // much of the filled background is visible.
     backgroundSelectedViewPort.add(backgroundSelected);
 
@@ -42,10 +42,6 @@ Slider::Slider() :
 
     // Default value range
     Slider::setValueRange(0, 100);
-}
-
-Slider::~Slider()
-{
 }
 
 void Slider::setBitmaps(const Bitmap& sliderBackground, const Bitmap& sliderBackgroundSelected, const Bitmap& indicatorBitmap)

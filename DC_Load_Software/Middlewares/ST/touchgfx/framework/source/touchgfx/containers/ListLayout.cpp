@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -210,7 +210,7 @@ void ListLayout::removeAll()
     }
 }
 
-void ListLayout::insert(Drawable* previousElement, Drawable& d)
+void ListLayout::insert(Drawable* previous, Drawable& d)
 {
     if (!firstChild)
     {
@@ -218,7 +218,7 @@ void ListLayout::insert(Drawable* previousElement, Drawable& d)
         add(d);
         return;
     }
-    Container::insert(previousElement, d);
+    Container::insert(previous, d);
     AdjustElements tmp(&d, direction);
     Callback<AdjustElements, Drawable&> function(&tmp, &AdjustElements::handleInsert);
     forEachChild(&function);

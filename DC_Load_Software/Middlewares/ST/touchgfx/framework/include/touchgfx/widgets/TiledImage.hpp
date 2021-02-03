@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,169 +13,119 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/TiledImage.hpp
+ *
+ * Declares the touchgfx::TiledImage class.
+ */
 #ifndef TILEDIMAGE_HPP
 #define TILEDIMAGE_HPP
 
-#include <touchgfx/hal/Types.hpp>
-#include <touchgfx/widgets/Widget.hpp>
 #include <touchgfx/Bitmap.hpp>
+#include <touchgfx/hal/Types.hpp>
 #include <touchgfx/lcd/LCD.hpp>
 #include <touchgfx/widgets/Image.hpp>
+#include <touchgfx/widgets/Widget.hpp>
 
 namespace touchgfx
 {
 /**
-* @class TiledImage TiledImage.hpp touchgfx/widgets/TiledImage.hpp
- *
- * @brief Simple widget capable of showing a tiled bitmap.
- *
- *        Simple widget capable of showing a tiled bitmap. This means that when TiledImage is
- *        larger than the provided Bitmap, the Bitmap is repeated over and over horizontally
- *        and vertically. The bitmap can be alpha-blended with the background and have areas
- *        of transparency.
- *
- * @see Image
+ * Simple widget capable of showing a bitmap tiled indefinitely horizontally and vertically.
+ * This means that when the TiledImage Widget is larger than the provided Bitmap, the
+ * Bitmap is repeated over and over horizontally and vertically. The bitmap can be alpha-
+ * blended with the background and have areas of transparency.
  */
 class TiledImage : public Image
 {
 public:
     /**
-     * @fn TiledImage::TiledImage(const Bitmap& bmp = Bitmap())
+     * Constructs a new TiledImage with a default alpha value of 255 (solid) and a default
+     * Bitmap (undefined) if none is specified. If a Bitmap is passed to the constructor,
+     * the width and height of this widget is set to those of the bitmap.
      *
-     * @brief Default Constructor.
+     * @param  bmp (Optional) The bitmap to display.
      *
-     *        Constructs a new Image with a default alpha value of 255 (solid) and a default
-     *        Bitmap if none is specified.
-     *
-     * @param bmp The bitmap to display.
+     * @see setBitmap
      */
-    TiledImage(const Bitmap& bmp = Bitmap()) : Image(bmp), xOffset(0), yOffset(0)
+    TiledImage(const Bitmap& bmp = Bitmap())
+        : Image(bmp), xOffset(0), yOffset(0)
     {
     }
 
-    /**
-     * @fn void TiledImage::setBitmap(const Bitmap& bmp);
-     *
-     * @brief Sets the bitmap ID for this TiledImage.
-     *
-     *        Sets the bitmap ID for this TiledImage. Updates the width and height of this widget to
-     *        match that of the bitmap.
-     *
-     * @param bmp The bitmap instance.
-     *
-     * @see Bitmap
-     */
     virtual void setBitmap(const Bitmap& bmp);
 
     /**
-     * @fn virtual void TiledImage::setOffset(int16_t x, int16_t y);
+     * Sets an offset into the bitmap where the tile drawing should start. By default the
+     * first image is aligned along the top and left, i.e. offset at (0, 0).
      *
-     * @brief Sets an offset into the bitmap where the tile drawing should start.
+     * @param  x The x coordinate offset.
+     * @param  y The y coordinate offset.
      *
-     *        Sets an offset into the bitmap where the tile drawing should start.
-     *
-     * @param x The x coordinate offset.
-     * @param y The y coordinate offset.
-     *
-     * @see setXOffset
-     * @see setYOffset
+     * @see setXOffset, setYOffset
      */
     virtual void setOffset(int16_t x, int16_t y);
 
     /**
-     * @fn virtual void TiledImage::setXOffset(int16_t x);
+     * Sets x offset into the bitmap where the tile drawing should start. Setting the x
+     * offset to 1 will push all images one pixel to the left.
      *
-     * @brief Sets x offset into the bitmap where the tile drawing should start.
+     * @param  x The x offset.
      *
-     *        Sets x offset into the bitmap where the tile drawing should start.
-     *
-     * @param x The x coordinate offset.
-     *
-     * @see setYOffset
-     * @see setOffset
+     * @see setYOffset, setOffset
      */
     virtual void setXOffset(int16_t x);
 
     /**
-     * @fn virtual void TiledImage::setYOffset(int16_t y);
+     * Sets y offset into the bitmap where the tile drawing should start. Setting the y
+     * offset to 1 will push all images one pixel up.
      *
-     * @brief Sets y offset into the bitmap where the tile drawing should start.
+     * @param  y The y offset.
      *
-     *        Sets y offset into the bitmap where the tile drawing should start.
-     *
-     * @param y The y coordinate offset.
-     *
-     * @see setXOffset
-     * @see setOffset
+     * @see setXOffset, setOffset
      */
     virtual void setYOffset(int16_t y);
 
     /**
-     * @fn virtual void TiledImage::getOffset(int16_t& x, int16_t& y);
+     * Gets the offset into the bitmap where the tile drawing should start. Please note that
+     * the offsets set using setOffset have been normalized so that x is in the range 0 to
+     * bitmap width - 1, and y is in the range 0 to bitmap height - 1.
      *
-     * @brief Gets the offset into the bitmap where the tile drawing should start.
+     * @param [out] x The x offset.
+     * @param [out] y The y offset.
      *
-     *        Gets the offset into the bitmap where the tile drawing should start. Please note
-     *        that the offsets set using setOffset have been normalized.
-     *
-     * @param [out] x The x coordinate offset.
-     * @param [out] y The y coordinate offset.
-     *
-     * @see getXOffset
-     * @see getYOffset
+     * @see getXOffset, getYOffset
      */
     virtual void getOffset(int16_t& x, int16_t& y);
 
     /**
-     * @fn virtual int16_t TiledImage::getXOffset();
+     * Get x offset. This is the value set using setXOffset() (or setOffset()) normalized to be
+     * in the range 0 to bitmap width - 1.
      *
-     * @brief Get x coordinate offset.
+     * @return The x offset.
      *
-     * @return The x coordinate offset.
-     * @see getYOffset
-     * @see getOffset
+     * @see getYOffset, getOffset
      */
     virtual int16_t getXOffset();
 
     /**
-     * @fn virtual int16_t TiledImage::getYOffset();
+     * Get y coordinate offset. This is the value set using setYOffset() (or setOffset())
+     * normalized to be in the range 0 to bitmap height - 1.
      *
-     * @brief Get y coordinate offset.
+     * @return The y offset.
      *
-     * @return The y coordinate offset.
-     * @see getXOffset
-     * @see getOffset
+     * @see getXOffset, getOffset
      */
     virtual int16_t getYOffset();
 
-    /**
-     * @fn virtual void TiledImage::draw(const Rect& invalidatedArea) const;
-     *
-     * @brief Draws the image.
-     *
-     *        Draws the image. This class supports partial drawing, so only the area described
-     *        by the rectangle will be drawn.
-     *
-     * @param invalidatedArea The rectangle to draw, with coordinates relative to this drawable.
-     */
     virtual void draw(const Rect& invalidatedArea) const;
 
-    /**
-     * @fn virtual Rect TiledImage::getSolidRect() const;
-     *
-     * @brief Gets the largest solid (non-transparent) rectangle.
-     *
-     *        Gets the largest solid (non-transparent) rectangle. This value is pre-calculated
-     *        by the image converter tool.
-     *
-     * @return The largest solid (non-transparent) rectangle.
-     */
     virtual Rect getSolidRect() const;
 
 protected:
-    int16_t xOffset; ///< The X offset into the bitmap to start drawing
-    int16_t yOffset; ///< The Y offset into the bitmap to start drawing
+    int16_t xOffset; ///< The X offset into the bitmap to start drawing in range 0..bitmap.width-1
+    int16_t yOffset; ///< The Y offset into the bitmap to start drawing in range 0..bitmap.height-1
 };
+
 } // namespace touchgfx
 
 #endif // TILEDIMAGE_HPP

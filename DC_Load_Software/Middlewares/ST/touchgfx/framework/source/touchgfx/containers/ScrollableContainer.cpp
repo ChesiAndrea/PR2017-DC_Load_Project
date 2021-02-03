@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -48,7 +48,9 @@ ScrollableContainer::ScrollableContainer()
       animate(false),
       fingerAdjustmentX(0),
       fingerAdjustmentY(0),
-      hasIssuedCancelEvent(false)
+      hasIssuedCancelEvent(false),
+      scrollDurationSpeedup(7),
+      scrollDurationSlowdown(1)
 {
     xSlider.setVisible(false);
     ySlider.setVisible(false);
@@ -331,8 +333,9 @@ void ScrollableContainer::handleGestureEvent(const GestureEvent& evt)
         velocityAbsolute = MAX(MIN(velocityAbsolute, maxVelocity), SCROLLBAR_MIN_VELOCITY);
 
         // Try to set some reasonable values for how long the resulting scroll should be, and how many ticks is should take
-        scrollDuration = 7 * velocityAbsolute;
+        scrollDuration = velocityAbsolute * scrollDurationSpeedup / scrollDurationSlowdown;
         targetValue = ((evt.getVelocity() > 0) ? 1 : -1) * (velocityAbsolute - 4) * 72;
+        scrollDuration = MIN(scrollDuration, abs(targetValue));
 
         // Get ready to animate scroll: Initialize values
         beginningValue = (evt.getType() == GestureEvent::SWIPE_VERTICAL) ? getContainedArea().y : getContainedArea().x;
@@ -702,4 +705,25 @@ int16_t ScrollableContainer::getScrolledY() const
 {
     return scrolledYDistance;
 }
+
+void ScrollableContainer::setScrollDurationSpeedup(uint16_t speedup)
+{
+    scrollDurationSpeedup = MAX(1, speedup);
+}
+
+uint16_t ScrollableContainer::getScrollDurationSpeedup() const
+{
+    return scrollDurationSpeedup;
+}
+
+void ScrollableContainer::setScrollDurationSlowdown(uint16_t slowdown)
+{
+    scrollDurationSlowdown = MAX(1, slowdown);
+}
+
+uint16_t ScrollableContainer::getScrollDurationSlowdown() const
+{
+    return scrollDurationSlowdown;
+}
+
 } // namespace touchgfx

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/transitions/NoTransition.hpp
+ *
+ * Declares the touchgfx::NoTransition class.
+ */
 #ifndef NOTRANSITION_HPP
 #define NOTRANSITION_HPP
 
@@ -21,47 +26,21 @@
 namespace touchgfx
 {
 /**
- * @class NoTransition NoTransition.hpp touchgfx/transitions/NoTransition.hpp
- *
- * @brief The most simple Transition without any visual effects.
- *
- *        The most simple Transition without any visual effects.
+ * The most simple Transition without any visual effects. THe screen transition is done by
+ * immediately replace the current Screen with a new Screen.
  *
  * @see Transition
  */
 class NoTransition : public Transition
 {
 public:
-
-    /**
-     * @fn NoTransition::NoTransition()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
-    NoTransition() : Transition() { }
-
-    /**
-     * @fn virtual NoTransition::~NoTransition()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~NoTransition() { }
-
-    /**
-     * @fn virtual void NoTransition::handleTickEvent()
-     *
-     * @brief Indicates that the transition is done after the first tick.
-     *
-     *        Indicates that the transition is done after the first tick.
-     */
+    /** Indicates that the transition is done after the first tick. */
     virtual void handleTickEvent()
     {
         done = true;
     }
 };
+
 } // namespace touchgfx
+
 #endif // NOTRANSITION_HPP

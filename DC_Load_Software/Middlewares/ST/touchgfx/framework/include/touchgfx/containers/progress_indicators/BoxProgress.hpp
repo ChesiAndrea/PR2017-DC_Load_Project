@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/progress_indicators/BoxProgress.hpp
+ *
+ * Declares the touchgfx::BoxProgress class.
+ */
 #ifndef BOXPROGRESS_HPP
 #define BOXPROGRESS_HPP
 
@@ -22,110 +27,50 @@
 namespace touchgfx
 {
 /**
- * @class BoxProgress BoxProgress.hpp touchgfx/containers/progress_indicators/BoxProgress.hpp
- *
- * @brief A box progress.
- *
- *        A Box progress which shows the current progress using a simple Box. It is possible to
- *        set the color and the alpha of the box. It is also possible to control in what
- *        direction the box will progress (up, down, to the left or to the right).
- *
- * @see Box
+ * A BoxProgress which shows the current progress using a simple Box. It is possible to set the
+ * color and the alpha of the box. It is also possible to control in what direction the
+ * box will progress (up, down, to the left or to the right).
  */
 class BoxProgress : public AbstractDirectionProgress
 {
 public:
-
-    /**
-     * @fn BoxProgress::BoxProgress();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
     BoxProgress();
 
-    /**
-     * @fn virtual BoxProgress::~BoxProgress();
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~BoxProgress();
-
-    /**
-     * @fn virtual void BoxProgress::setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height);
-     *
-     * @brief Sets the position and dimension of the box progress indicator.
-     *
-     *        Sets the position and dimension of the box progress indicator relative to the
-     *        background image.
-     *
-     * @param x      The x coordinate.
-     * @param y      The y coordinate.
-     * @param width  The width of the box progress indicator.
-     * @param height The height of the box progress indicator.
-     */
     virtual void setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height);
 
     /**
-     * @fn virtual void BoxProgress::setColor(colortype color);
+     * Sets the color of the Box.
      *
-     * @brief Sets the color.
-     *
-     *        Sets the color of the Box.
-     *
-     * @param color The color.
-     *
-     * @see Box
+     * @param  color The color.
+     * @see getColor
      */
     virtual void setColor(colortype color);
 
     /**
-     * @fn virtual colortype BoxProgress::getColor() const;
-     *
-     * @brief Gets the color.
-     *
-     *        Gets the color of the Box.
+     * Gets the color of the Box.
      *
      * @return The color.
      *
-     * @see Box
+     * @see setColor
      */
     virtual colortype getColor() const;
 
     /**
-     * @fn virtual void BoxProgress::setAlpha(uint8_t alpha);
-     *
-     * @brief Sets the alpha.
-     *
-     *        Sets the alpha of the Box.
-     *
-     * @param alpha The alpha.
-     *
-     * @see Box
+     * @copydoc Image::setAlpha
      */
-    virtual void setAlpha(uint8_t alpha);
+    virtual void setAlpha(uint8_t newAlpha);
 
     /**
-     * @fn virtual uint8_t BoxProgress::getAlpha() const;
-     *
-     * @brief Gets the alpha.
-     *
-     *        Gets the alpha of the Box.
-     *
-     * @return The alpha.
-     *
-     * @see Box
+     * @copydoc Image::getAlpha
      */
     virtual uint8_t getAlpha() const;
 
     virtual void setValue(int value);
 
 protected:
-    Box box;    ///< The box
+    Box box; ///< The box
 };
-}
+
+} // namespace touchgfx
 
 #endif // BOXPROGRESS_HPP

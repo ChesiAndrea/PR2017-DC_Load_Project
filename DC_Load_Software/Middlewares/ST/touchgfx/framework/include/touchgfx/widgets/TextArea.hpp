@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/TextArea.hpp
+ *
+ * Declares the touchgfx::TextArea class.
+ */
 #ifndef TEXTAREA_HPP
 #define TEXTAREA_HPP
 
@@ -27,101 +32,59 @@
 namespace touchgfx
 {
 /**
- * @class TextArea TextArea.hpp touchgfx/widgets/TextArea.hpp
+ * This widget is capable of showing a text area on the screen. The text must be a predefined
+ * TypedText in the text sheet in the assets folder. In order to display a dynamic text,
+ * use TextAreaWithOneWildcard or TextAreaWithTwoWildcards.
  *
- * @brief This widget is capable of showing a text area on the screen.
+ * @see TypedText, TextAreaWithOneWildcard, TextAreaWithTwoWildcards
  *
- *        This widget is capable of showing a text area on the screen. A TextArea can display a
- *        TypedText. Optional configuration include text color.
- *
- *        Example text_example shows how to use a TextArea.
- *
- * @note A TextArea just holds a pointer to the text displayed. The developer must ensure that the
- *       pointer remains valid when drawing.
- *
- * @see TypedText for information about text
- * @see TextAreaWithOneWildcard, @see TextAreaWithTwoWildcards for displaying texts containing
- *      wildcards.
+ * @note A TextArea just holds a pointer to the text displayed. The developer must ensure that
+ *       the pointer remains valid when drawing.
  */
 class TextArea : public Widget
 {
 public:
-    /**
-     * @fn TextArea::TextArea()
-     *
-     * @brief Default constructor.
-     *
-     *        Create an empty TextArea. Default color is black.
-     */
     TextArea()
         : Widget(), typedText(TYPED_TEXT_INVALID), color(0), linespace(0), alpha(255), indentation(0), rotation(TEXT_ROTATE_0), wideTextAction(WIDE_TEXT_NONE)
     {
     }
 
-    /**
-     * @fn virtual Rect TextArea::getSolidRect() const
-     *
-     * @brief Gets solid rectangle.
-     *
-     *        Gets solid rectangle.
-     *
-     * @return the largest solid rectangle for this widget. For a TextArea, this is an empty area.
-     */
     virtual Rect getSolidRect() const
     {
         return Rect(0, 0, 0, 0);
     }
 
     /**
-     * @fn inline void TextArea::setColor(colortype color)
+     * Sets the color of the text. If no color is set, the default color (black) is used.
      *
-     * @brief Sets the color of the text.
-     *
-     *        Sets the color of the text.
-     *
-     * @param color The color to use.
+     * @param  color The color to use.
      */
-    inline void setColor(colortype color)
+    FORCE_INLINE_FUNCTION void setColor(colortype color)
     {
         this->color = color;
     }
 
     /**
-     * @fn inline colortype TextArea::getColor() const
-     *
-     * @brief Gets the color of the text.
-     *
-     *        Gets the color of the text.
+     * Gets the color of the text. If no color has been set, the default color, black, is
+     * returned.
      *
      * @return The color to used for drawing the text.
      */
-    inline colortype getColor() const
+    FORCE_INLINE_FUNCTION colortype getColor() const
     {
         return color;
     }
 
     /**
-     * @fn void TextArea::setAlpha(uint8_t alpha)
-     *
-     * @brief Sets the alpha value of the text.
-     *
-     *        Sets the alpha value of the text.
-     *
-     * @param alpha The alpha value. 255 = completely solid. 0 = invisible.
+     * @copydoc Image::setAlpha
      */
-    void setAlpha(uint8_t alpha)
+    void setAlpha(uint8_t newAlpha)
     {
-        this->alpha = alpha;
+        alpha = newAlpha;
     }
 
     /**
-     * @fn uint8_t TextArea::getAlpha() const
-     *
-     * @brief Gets the alpha value of the text.
-     *
-     *        Gets the alpha value of the text.
-     *
-     * @return The alpha value. 255 = completely solid. 0 = invisible.
+     * @copydoc Image::getAlpha
      */
     uint8_t getAlpha() const
     {
@@ -129,16 +92,13 @@ public:
     }
 
     /**
-     * @fn virtual void TextArea::setBaselineY(int16_t baselineY)
+     * Adjusts the TextArea y coordinate so the text will have its baseline at the specified
+     * value. The placements is relative to the specified TypedText so if the TypedText is
+     * changed, you have to set the baseline again.
      *
-     * @brief Adjusts the TextArea y coordinate to place the text at the specified baseline.
+     * @param  baselineY The y coordinate of the baseline of the text.
      *
-     *        Adjusts the text areas y coordinate so the text will have its baseline at the
-     *        specified value. The placements is relative to the specified TypedText so if this
-     *        changes you have to set the baseline again. Note that setTypedText must be called
-     *        prior to setting the baseline.
-     *
-     * @param baselineY The y coordinate of the baseline.
+     * @note setTypedText() must be called prior to setting the baseline.
      */
     virtual void setBaselineY(int16_t baselineY)
     {
@@ -146,18 +106,15 @@ public:
     }
 
     /**
-     * @fn virtual void TextArea::setXBaselineY(int16_t x, int16_t baselineY)
+     * Adjusts the TextArea x and y coordinates so the text will have its baseline at the
+     * specified y value. The placements is relative to the specified TypedText so if the
+     * TypedText is changed you have to set the baseline again. The specified x coordinate
+     * will be used as the x coordinate of the TextArea.
      *
-     * @brief Adjusts the TextArea y coordinate to place the text at the specified baseline.
+     * @param  x         The x coordinate of the TextArea.
+     * @param  baselineY The y coordinate of the baseline of the text.
      *
-     *        Adjusts the text areas y coordinate so the text will have its baseline at the
-     *        specified value. The placements is relative to the specified TypedText so if this
-     *        changes you have to set the baseline again. Note that setTypedText must be called
-     *        prior to setting the baseline. The specified x coordinate will be used as the x
-     *        coordinate of the TextArea.
-     *
-     * @param x         The x coordinate of the TextArea.
-     * @param baselineY The y coordinate of the baseline.
+     * @note setTypedText() must be called prior to setting the baseline.
      */
     virtual void setXBaselineY(int16_t x, int16_t baselineY)
     {
@@ -166,131 +123,105 @@ public:
     }
 
     /**
-     * @fn inline void TextArea::setLinespacing(int16_t space)
+     * Sets the line spacing of the TextArea. Setting a larger value will increase the space
+     * between lines. It is possible to set a negative value to have lines (partially)
+     * overlap. Default line spacing, if not set, is 0.
      *
-     * @brief Sets the line spacing of the TextArea.
+     * @param  space The line spacing of use in the TextArea.
      *
-     *        Sets the line spacing of the TextArea.
-     *
-     * @param space The line spacing of use in the TextArea.
+     * @see getLinespacing
      */
-    inline void setLinespacing(int16_t space)
+    FORCE_INLINE_FUNCTION void setLinespacing(int16_t space)
     {
         linespace = space;
     }
 
     /**
-     * @fn inline int16_t TextArea::getLinespacing() const
-     *
-     * @brief Gets the line spacing of the TextArea.
-     *
-     *        Gets the line spacing of the TextArea.
+     * Gets the line spacing of the TextArea. If no line spacing has been set, the line
+     * spacing is 0.
      *
      * @return The line spacing.
+     *
+     * @see setLinespacing
      */
-    inline int16_t getLinespacing() const
+    FORCE_INLINE_FUNCTION int16_t getLinespacing() const
     {
         return linespace;
     }
 
     /**
-     * @fn inline void TextArea::setIndentation(uint8_t indent)
+     * Sets the indentation for the text. This can be very useful when a font is an italic
+     * font where letters such as "j" and "g" extend a lot to the left under the previous
+     * character(s). if a line starts with a "j" or "g" this letter would either have to be
+     * pushed to the right to be able to see all of it, e.g. using spaces (which would ruin
+     * a multi line text which is left aligned) - or by clipping the first letter (which
+     * could ruin the nice graphics). The solution is to change
+     * @code
+     *      textarea.setPosition(50, 50, 100, 100);
+     * @endcode
+     * to
+     * @code
+     *      textarea.setPosition(45, 50, 110, 100);
+     *      textarea.setIndentation(5);
+     * @endcode
+     * Characters that do not extend to the left under the previous characters will be drawn
+     * in the same position in either case, but "j" and "g" will be aligned with other lines.
      *
-     * @brief Sets the indentation for the text.
+     * The function Font::getMaxPixelsLeft() will give you the maximum number of pixels any glyph
+     * in the font extends to the left.
      *
-     *        Sets the indentation for the text. This is very useful when a font is an italic
-     *        font where letters such as "j" and "g" extend a lot to the left under the
-     *        previous characters. if a line starts with a "j" or "g" this letter would either
-     *        have to be pushed to the right to be able to see all of it, e.g. using spaces
-     *        which would ruin a multi line text which is left aligned. This could be solved by
-     *        changing a textarea.setPosition(50,50,100,100) to textarea.setPosition(45,50,110,
-     *        100) followed by a textarea.setIndentation(5). Characters that do not extend to
-     *        the left under the previous characters will be drawn in the same position in
-     *        either case, but "j" and "g" will be aligned with other lines.
+     * @param  indent The indentation from left (when left aligned text) and right (when right
+     *                aligned text).
      *
-     *        The function getMaxPixelsLeft() will give you the maximum number of pixels any
-     *        glyph in the font extends to the left.
-     *
-     * @param indent The indentation from left (when left aligned text) and right (when right
-     *               aligned text).
-     *
-     * @see getMaxPixelsLeft
+     * @see Font::getMaxPixelsLeft
      */
-    inline void setIndentation(uint8_t indent)
+    FORCE_INLINE_FUNCTION void setIndentation(uint8_t indent)
     {
         indentation = indent;
     }
 
     /**
-     * @fn inline uint8_t TextArea::getIndentation()
-     *
-     * @brief Gets the indentation.
-     *
-     *        Gets the indentation.
+     * Gets the indentation of text inside the TextArea.
      *
      * @return The indentation.
      *
-     * @see setIndetation
+     * @see setIndentation
      */
-    inline uint8_t getIndentation()
+    FORCE_INLINE_FUNCTION uint8_t getIndentation()
     {
         return indentation;
     }
 
     /**
-     * @fn virtual int16_t TextArea::getTextHeight();
-     *
-     * @brief Gets the total height needed by the text.
-     *
-     *        Gets the total height needed by the text, taking number of lines and line spacing
-     *        into consideration.
+     * Gets the total height needed by the text, taking number of lines and line spacing
+     * into consideration.
      *
      * @return the total height needed by the text.
      */
     virtual int16_t getTextHeight();
 
     /**
-     * @fn virtual uint16_t TextArea::getTextWidth() const;
-     *
-     * @brief Gets the width in pixels of the current associated text in the current selected
-     *        language.
-     *
-     *        Gets the width in pixels of the current associated text in the current selected
-     *        language. In case of multi-lined text the width of the widest line is returned.
+     * Gets the width in pixels of the current associated text in the current selected
+     * language. In case of multi-lined text the width of the widest line is returned.
      *
      * @return The width in pixels of the current text.
      */
     virtual uint16_t getTextWidth() const;
 
-    /**
-     * @fn virtual void TextArea::draw(const Rect& area) const;
-     *
-     * @brief Draws the text.
-     *
-     *        Draws the text. Called automatically.
-     *
-     * @param area The invalidated area.
-     */
     virtual void draw(const Rect& area) const;
 
     /**
-     * @fn void TextArea::setTypedText(TypedText t);
+     * Sets the TypedText of the text area. If no prior size has been set, the TextArea will
+     * be resized to fit the new TypedText.
      *
-     * @brief Sets the TypedText of the text area.
+     * @param  t The TypedText for this widget to display.
      *
-     *        Sets the TypedText of the text area. If no prior size has been set the TextArea
-     *        will be resized to fit the new TypedText.
-     *
-     * @param t The TypedText for this widget to display.
+     * @see resizeToCurrentText
      */
     void setTypedText(TypedText t);
 
     /**
-     * @fn TypedText TextArea::getTypedText() const
-     *
-     * @brief Gets the TypedText of the text area
-     *
-     *        Gets the TypedText of the text area.
+     * Gets the TypedText of the text area.
      *
      * @return The currently used TypedText.
      */
@@ -300,16 +231,12 @@ public:
     }
 
     /**
-     * @fn void TextArea::setRotation(const TextRotation rotation)
+     * Sets rotation of the text in the TextArea. The value TEXT_ROTATE_0 is the default for
+     * normal text. The value TEXT_ROTATE_90 will rotate the text clockwise, thus writing
+     * from the top of the display and down. Similarly TEXT_ROTATE_180 and TEXT_ROTATE_270
+     * will each rotate the text further 90 degrees clockwise.
      *
-     * @brief Sets rotation of the text in the TextArea.
-     *
-     *        Sets rotation of the text in the TextArea. The value TEXT_ROTATE_0 is the default
-     *        for normal text. The value TEXT_ROTATE_90 will rotate the text clockwise, thus
-     *        writing from the top of the display and down. Similarly TEXT_ROTATE_180 and
-     *        TEXT_ROTATE_270 is further rotate 90 degrees clockwise.
-     *
-     * @param rotation The rotation of the text.
+     * @param  rotation The rotation of the text.
      */
     void setRotation(const TextRotation rotation)
     {
@@ -317,13 +244,11 @@ public:
     }
 
     /**
-     * @fn TextRotation TextArea::getRotation() const
-     *
-     * @brief Gets rotation of the text in the TextArea.
-     *
-     *        Gets rotation of the text in the TextArea.
+     * Gets rotation of the text in the TextArea.
      *
      * @return The rotation of the text.
+     *
+     * @see setRotation
      */
     TextRotation getRotation() const
     {
@@ -331,78 +256,67 @@ public:
     }
 
     /**
-     * @fn void TextArea::resizeToCurrentText();
+     * Sets the dimensions of the TextArea to match the width and height of the current
+     * associated text for the current selected language.
      *
-     * @brief Sets the dimensions of the TextArea.
+     * If WordWrap is turned on for the TextArea, the height might be set to an unexpected
+     * value, as only manually insert line breaks in the text will be respected - use
+     * resizeHeightToCurrentText() to keep the width of the TextArea and therefore retain
+     * word wrapping.
      *
-     *        Sets the dimensions of the TextArea to match the width and height of the current
-     *        associated text for the current selected language.
+     * If the text is centered or right aligned, calling resizeToCurrentText() will actually
+     * move the text on the screen, as the x and y coordinates of the TextArea widget is not
+     * changed. To simply minimize the size of the TextArea but keep the TypedText in the
+     * same position on the screen, use resizeToCurrentTextWithAlignment(). This is also the
+     * case if the text is rotated, e.g. 180 degrees.
      *
-     *        Please note that if the current text rotation is either 90 or 270 degrees, the
-     *        width of the text area will be set to the height of the text and vice versa, as
-     *        the text is rotated.
+     * @see setRotation, resizeHeightToCurrentText
      *
-     * @see setRotation
-     * @see resizeHeightToCurrentText
+     * @note If the current text rotation is either 90 or 270 degrees, the width of the text area
+     *       will be set to the height of the text and vice versa, as the text is rotated.
      */
     void resizeToCurrentText();
 
     /**
-     * @fn void TextArea::resizeToCurrentTextWithAlignment();
+     * Sets the dimensions of the TextArea to match the width and height of the current
+     * associated text for the current selected language, and for centered and right aligned
+     * text, the position of the TextArea widget is also updated to keep the text in the
+     * same position on the display. Text that is rotated is also handled properly.
      *
-     * @brief Sets the dimensions of the TextArea.
+     * @see setRotation, resizeHeightToCurrentText
      *
-     *        Sets the dimensions of the TextArea to match the width and height of the current
-     *        associated text for the current selected language.
-     *
-     *        When setting the width, the position of the TextArea might be changed in order to
-     *        keep the text centered or right aligned.
-     *
-     *        Please note that if the current text rotation is either 90 or 270 degrees, the width
-     *        of the text area will be set to the height of the text and vice versa, as the text is
-     *        rotated.
-     *
-     * @see setRotation
-     * @see resizeHeightToCurrentText
+     * @note If the current text rotation is either 90 or 270 degrees, the width of the text area
+     *       will be set to the height of the text and vice versa, as the text is rotated.
      */
     void resizeToCurrentTextWithAlignment();
 
     /**
-     * @fn void TextArea::resizeHeightToCurrentText();
+     * Sets the height of the TextArea to match the height of the current associated text
+     * for the current selected language. This is especially useful for texts with WordWrap
+     * enabled.
      *
-     * @brief Sets the height of the TextArea.
+     * @see resizeToCurrentText, setWideTextAction, setRotation
      *
-     *        Sets the height of the TextArea to match the height of the current associated
-     *        text for the current selected language. This is especially useful for texts with
-     *        WordWrap enabled.
-     *
-     *        Please note that if the current text rotation is either 90 or 270 degrees, the
-     *        width of the text area will be set and not the height, as the text is rotated.
-     *
-     * @see resizeToCurrentText
-     * @see setWordWrap
-     * @see setRotation
+     * @note If the current text rotation is either 90 or 270 degrees, the width of the text area
+     *       will be set and not the height, as the text is rotated.
+     * @note If the current text is rotated e.g. 90 degrees, the x coordinate is not updated,
+     *       which means that the text will be repositioned on the display.
      */
     void resizeHeightToCurrentText();
 
     /**
-     * @fn void TextArea::setWideTextAction(WideTextAction action)
+     * Defines what to do if a line of text is wider than the text area. Default action is
+     * ::WIDE_TEXT_NONE which means that text lines are only broken if there is a manually
+     * inserted newline in the text.
      *
-     * @brief Sets wide text action.
+     * If wrapping is enabled and the text would occupy more lines than the size of the
+     * TextArea, the end of the last line will get an ellipsis (often &hellip;) to signal
+     * that some text is missing. The character used for ellipsis is taken from the text
+     * spreadsheet.
      *
-     *        Sets wide text action. Defines what to do if a line of text is wider than the
-     *        text area. Default action is WIDE_TEXT_NONE which means that text lines are only
-     *        broken if there is a newline in the text.
+     * @param  action The action to perform for wide lines of text.
      *
-     *        If wrapping is enabled and the text would occupy more lines than the size of the
-     *        TextArea, the last line will get an ellipsis to signal that some text is missing.
-     *        The character used for ellipsis is taken from the text spreadsheet.
-     *
-     * @param action The action to perform for wide lines of text.
-     *
-     * @see WideTextAction
-     * @see getWideTextAction
-     * @see resizeHeightToCurrentText
+     * @see WideTextAction, getWideTextAction, resizeHeightToCurrentText
      */
     void setWideTextAction(WideTextAction action)
     {
@@ -410,15 +324,11 @@ public:
     }
 
     /**
-     * @fn WideTextAction TextArea::getWideTextAction() const
-     *
-     * @brief Gets wide text action.
-     *
-     *        Gets wide text action preciously set using setWideTextAction.
+     * Gets wide text action previously set using setWideTextAction.
      *
      * @return current WideTextAction setting.
      *
-     * @see setWideTextAction
+     * @see setWideTextAction, WideTextAction
      */
     WideTextAction getWideTextAction() const
     {
@@ -426,30 +336,27 @@ public:
     }
 
     /**
-     * @fn int16_t TextArea::calculateTextHeight(const Unicode::UnicodeChar* format, ...) const;
+     * Gets the total height needed by the text. Determined by number of lines and
+     * linespace. The number of parameters passed after the format, must match the number of
+     * wildcards in the TypedText.
      *
-     * @brief Gets the total height needed by the text.
-     *
-     *        Gets the total height needed by the text. Determined by number of lines and
-     *        linespace. The number of wildcards in the text should match the number of values
-     *        for the wildcards.
-     *
-     * @param format The text containing %s wildcards.
-     * @param ...    Variable arguments providing additional information.
+     * @param  format The text containing &lt;placeholder> wildcards.
+     * @param  ...    Variable arguments providing additional information.
      *
      * @return the total height needed by the text.
      */
     virtual int16_t calculateTextHeight(const Unicode::UnicodeChar* format, ...) const;
 
 protected:
-    TypedText      typedText;      ///< The TypedText to display
-    colortype      color;          ///< The color to use.
-    int16_t        linespace;      ///< The line spacing to use, in pixels, in case the text contains newlines.
-    uint8_t        alpha;          ///< The alpha to use.
-    uint8_t        indentation;    ///< The indentation of the text inside the text area
-    TextRotation   rotation;       ///< The text rotation to use
-    WideTextAction wideTextAction; ///< What to do if the text is wider than the text area
+    TypedText typedText;           ///< The TypedText to display
+    colortype color;               ///< The color to use for the text.
+    int16_t linespace;             ///< The extra space between lines of text, measured in pixels.
+    uint8_t alpha;                 ///< The alpha to use.
+    uint8_t indentation;           ///< The indentation of the text inside the text area.
+    TextRotation rotation;         ///< The text rotation to use in steps of 90 degrees.
+    WideTextAction wideTextAction; ///< What to do if the lines of text are wider than the text area.
 };
+
 } // namespace touchgfx
 
 #endif // TEXTAREA_HPP

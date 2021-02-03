@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -55,6 +55,10 @@ int32_t ScrollWheelBase::getPositionForItem(int16_t itemIndex)
 
 void ScrollWheelBase::animateToPosition(int32_t position, int16_t steps)
 {
+    if (itemSize == 0)
+    {
+        return;
+    }
     if (animateToCallback && animateToCallback->isValid() && itemSize > 0)
     {
         position = getNearestAlignedOffset(position);
@@ -80,14 +84,21 @@ int ScrollWheelBase::getSelectedItem() const
 
 int32_t ScrollWheelBase::keepOffsetInsideLimits(int32_t newOffset, int16_t overShoot) const
 {
-    newOffset = MIN(newOffset, overShoot);
-    int16_t numberOfItems = getNumberOfItems();
-    newOffset = MAX(newOffset, -(itemSize * (numberOfItems - 1)) - overShoot);
+    if (!getCircular())
+    {
+        newOffset = MIN(newOffset, overShoot);
+        int16_t numberOfItems = getNumberOfItems();
+        newOffset = MAX(newOffset, -(itemSize * (numberOfItems - 1)) - overShoot);
+    }
     return newOffset;
 }
 
 void ScrollWheelBase::handleClickEvent(const ClickEvent& evt)
 {
+    if (itemSize == 0)
+    {
+        return;
+    }
     int32_t offset = getOffset();
     if (evt.getType() == ClickEvent::PRESSED)
     {
@@ -152,8 +163,9 @@ void ScrollWheelBase::handleGestureEvent(const GestureEvent& evt)
         int32_t newOffset = getOffset() + evt.getVelocity() * swipeAcceleration / 10;
         if (maxSwipeItems > 0)
         {
-            newOffset = MIN(newOffset, initialSwipeOffset + maxSwipeItems * itemSize);
-            newOffset = MAX(newOffset, initialSwipeOffset - maxSwipeItems * itemSize);
+            int32_t maxDistance = maxSwipeItems * itemSize;
+            newOffset = MIN(newOffset, initialSwipeOffset + maxDistance);
+            newOffset = MAX(newOffset, initialSwipeOffset - maxDistance);
         }
         animateToPosition(newOffset);
     }

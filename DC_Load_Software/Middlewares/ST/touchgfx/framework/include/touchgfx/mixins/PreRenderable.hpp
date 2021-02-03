@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/mixins/PreRenderable.hpp
+ *
+ * Declares the touchgfx::PreRenderable class.
+ */
 #ifndef PRERENDERABLE_HPP
 #define PRERENDERABLE_HPP
 
@@ -21,46 +26,42 @@
 
 namespace touchgfx
 {
+///@cond
 /**
- * @class PreRenderable PreRenderable.hpp touchgfx/mixins/PreRenderable.hpp
+ * This mix-in can be used on any Drawable. It provides a preRender function, which will cache
+ * the current visual appearance of the Drawable in a cache in a memory region.
+ * Subsequent calls to draw() on this Drawable will result in a simple copying of the
+ * cached memory to the framebuffer instead of the normal draw operation. This mix-in
+ * can therefore be used on Drawables whose visual appearance is static and the normal
+ * draw operation takes a long time to perform.
  *
- * @brief This mixin can be used on any Drawable.
+ * @tparam T specifies the type to extend with the FadeAnimator behavior.
  *
- *        This mixin can be used on any Drawable. It provides a preRender function, which will
- *        cache the current visual appearance of the Drawable to be cache in a memory region.
- *        Subsequent calls to draw() on this Drawable will result in a simple memcpy of the
- *        cached memory instead of the normal draw operation. This mixin can therefore be used
- *        on Drawables whose visual appearance is static and the normal draw operation takes a
- *        long time to compute.
- *
- * @note The actual uses of this mixin are rare, and the class is mainly provided for example
+ * @note The actual uses of this mix-in are rare, and the class is mainly provided for example
  *       purposes.
+ * @note The Drawable is cached in animation storage, which must be available
  *
- * @tparam T The type of Drawable to add this functionality to.
+ * @deprecated Consult CacheableContainer or SnapshotWidget
  */
 template <class T>
-class PreRenderable : public T
+class
+    PreRenderable : public T
 {
 public:
+    /// @cond
+    TOUCHGFX_DEPRECATED(
+        "Consult CacheableContainer or SnapshotWidget as an alternative to PreRenderable",
+        PreRenderable())
+        : preRenderedAddress(0)
+    {
+    }
+    ///@endcond
 
     /**
-     * @fn PreRenderable::PreRenderable()
+     * Overrides the draw function. If preRender() has been called, perform a memcpy of the
+     * cached version. If not, just call the base class version of draw.
      *
-     * @brief Default constructor.
-     *
-     *        Default constructor. Initializes the PreRenderable.
-     */
-    PreRenderable() : preRenderedAddress(0) { }
-
-    /**
-     * @fn void PreRenderable::draw(const Rect& invalidatedArea) const
-     *
-     * @brief Overrides the draw function.
-     *
-     *        Overrides the draw function. If preRender has been called, perform a memcpy of
-     *        the cached version. If not, just call the base class version of draw.
-     *
-     * @param invalidatedArea The subregion of this Drawable which needs to be redrawn.
+     * @param  invalidatedArea The subregion of this Drawable which needs to be redrawn.
      */
     void draw(const Rect& invalidatedArea) const
     {
@@ -83,15 +84,14 @@ public:
         }
     }
 
+    /// @cond
     /**
-     * @fn virtual void PreRenderable::setupDrawChain(const Rect& invalidatedArea, Drawable** nextPreviousElement)
+     * Add to draw chain.
      *
-     * @brief Add to draw chain.
+     * @param          invalidatedArea     Include drawables that intersect with this area only.
+     * @param [in,out] nextPreviousElement Modifiable element in linked list.
      *
      * @note For TouchGFX internal use only.
-     *
-     * @param invalidatedArea              Include drawables that intersect with this area only.
-     * @param [in,out] nextPreviousElement Modifiable element in linked list.
      */
     virtual void setupDrawChain(const Rect& invalidatedArea, Drawable** nextPreviousElement)
     {
@@ -110,28 +110,30 @@ public:
             T::setupDrawChain(invalidatedArea, nextPreviousElement);
         }
     }
+    /// @endcond
 
+    /// @cond
     /**
-     * @fn bool PreRenderable::isPreRendered() const
-     *
-     * @brief Whether or not the snapshot of the widget been taken.
+     * Whether or not the snapshot of the widget been taken.
      *
      * @return Is the widget rendered.
      */
-    bool isPreRendered() const
+    TOUCHGFX_DEPRECATED(
+        "Consult CacheableContainer or SnapshotWidget as an alternative to PreRenderable",
+        bool isPreRendered() const)
     {
         return preRenderedAddress != 0;
     }
+    /// @endcond
 
+    /// @cond
     /**
-     * @fn void PreRenderable::preRender()
-     *
-     * @brief Takes a snapshot of the current visual appearance of this widget.
-     *
-     *        Takes a snapshot of the current visual appearance of this widget. All subsequent
-     *        calls to draw on this mixin will result in the snapshot being draw.
+     * Takes a snapshot of the current visual appearance of this widget. All subsequent
+     * calls to draw on this mix-in will result in the snapshot being draw.
      */
-    void preRender()
+    TOUCHGFX_DEPRECATED(
+        "Consult CacheableContainer or SnapshotWidget as an alternative to PreRenderable",
+        void preRender())
     {
         if (HAL::getInstance()->getBlitCaps() & BLIT_OP_COPY)
         {
@@ -140,8 +142,12 @@ public:
             preRenderedAddress = HAL::getInstance()->copyFBRegionToMemory(meAbs);
         }
     }
+    /// @endcond
+
 private:
     uint16_t* preRenderedAddress;
 };
+///@endcond
 } // namespace touchgfx
+
 #endif // PRERENDERABLE_HPP

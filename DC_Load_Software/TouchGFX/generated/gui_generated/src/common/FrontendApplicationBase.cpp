@@ -9,8 +9,10 @@
 #include <touchgfx/Texts.hpp>
 #include <touchgfx/hal/HAL.hpp>
 #include <platform/driver/lcd/LCD16bpp.hpp>
-#include <gui/screen1_screen/Screen1View.hpp>
-#include <gui/screen1_screen/Screen1Presenter.hpp>
+#include <gui/main_screen_screen/Main_ScreenView.hpp>
+#include <gui/main_screen_screen/Main_ScreenPresenter.hpp>
+#include <gui/init_screen_screen/Init_ScreenView.hpp>
+#include <gui/init_screen_screen/Init_ScreenPresenter.hpp>
 
 using namespace touchgfx;
 
@@ -29,15 +31,26 @@ FrontendApplicationBase::FrontendApplicationBase(Model& m, FrontendHeap& heap)
  * Screen Transition Declarations
  */
 
-// Screen1
+// Main_Screen
 
-void FrontendApplicationBase::gotoScreen1ScreenNoTransition()
+void FrontendApplicationBase::gotoMain_ScreenScreenNoTransition()
 {
-    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplication::gotoScreen1ScreenNoTransitionImpl);
+    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplication::gotoMain_ScreenScreenNoTransitionImpl);
     pendingScreenTransitionCallback = &transitionCallback;
 }
 
-void FrontendApplicationBase::gotoScreen1ScreenNoTransitionImpl()
+void FrontendApplicationBase::gotoMain_ScreenScreenNoTransitionImpl()
 {
-    touchgfx::makeTransition<Screen1View, Screen1Presenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+    touchgfx::makeTransition<Main_ScreenView, Main_ScreenPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+}
+
+void FrontendApplicationBase::gotoMain_ScreenScreenCoverTransitionEast()
+{
+    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplication::gotoMain_ScreenScreenCoverTransitionEastImpl);
+    pendingScreenTransitionCallback = &transitionCallback;
+}
+
+void FrontendApplicationBase::gotoMain_ScreenScreenCoverTransitionEastImpl()
+{
+    touchgfx::makeTransition<Main_ScreenView, Main_ScreenPresenter, touchgfx::CoverTransition<EAST>, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,68 +13,52 @@
   ******************************************************************************
   */
 
+/**
+ * @file mvp/MVPApplication.hpp
+ *
+ * Declares the touchgfx::MVPApplication class.
+ */
 #ifndef MVPAPPLICATION_HPP
 #define MVPAPPLICATION_HPP
 
+#include <cassert>
+#include <new>
+#include <common/Meta.hpp>
+#include <common/Partition.hpp>
+#include <mvp/MVPHeap.hpp>
+#include <mvp/View.hpp>
 #include <touchgfx/Application.hpp>
 #include <touchgfx/Callback.hpp>
 #include <touchgfx/hal/HAL.hpp>
-#include <common/Meta.hpp>
-#include <common/Partition.hpp>
-#include <mvp/View.hpp>
-#include <mvp/MVPHeap.hpp>
-#include <new>
-#include <cassert>
+#include <touchgfx/transitions/Transition.hpp>
 
 namespace touchgfx
 {
 class Presenter;
 
 /**
- * @class MVPApplication MVPApplication.hpp mvp\MVPApplication.hpp
+ * A specialization of the TouchGFX Application class that provides the necessary glue for
+ * transitioning between presenter/view pairs.
  *
- * @brief A specialization of the TouchGFX Application class.
- *
- *        A specialization of the TouchGFX Application class that provides the necessary glue
- *        for transitioning between presenter/view pairs.
- *
- *        It maintains a callback for transitioning and evaluates this at each tick.
+ * It maintains a callback for transitioning and evaluates this at each tick.
  *
  * @see Application
  */
 class MVPApplication : public Application
 {
 public:
-
-    /**
-     * @fn MVPApplication::MVPApplication()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
-    MVPApplication() :
-        currentPresenter(0),
-        pendingScreenTransitionCallback(0)
+    /** Initializes a new instance of the MVPApplication class. */
+    MVPApplication()
+        : currentPresenter(0),
+          pendingScreenTransitionCallback(0)
     {
         instance = this;
     }
 
     /**
-     * @fn virtual MVPApplication::~MVPApplication()
+     * Handles the pending screen transition.
      *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~MVPApplication() { }
-
-    /**
-     * @fn void MVPApplication::handlePendingScreenTransition()
-     *
-     * @brief Handles the pending screen transition.
-     *
-     *        Delegates the work to evaluatePendingScreenTransition()
+     * Delegates the work to evaluatePendingScreenTransition()
      */
     virtual void handlePendingScreenTransition()
     {
@@ -82,17 +66,13 @@ public:
     }
 
 protected:
-    Presenter* currentPresenter;      ///< Pointer to the currently active presenter.
+    Presenter* currentPresenter; ///< Pointer to the currently active presenter.
 
     GenericCallback<>* pendingScreenTransitionCallback; ///< Callback for screen transitions. Will be set to something valid when a transition request is made.
 
     /**
-     * @fn void MVPApplication::evaluatePendingScreenTransition()
-     *
-     * @brief Evaluates the pending Callback instances.
-     *
-     *        Evaluates the pending Callback instances. If a callback is valid, it is executed
-     *        and a Screen transition is executed.
+     * Evaluates the pending Callback instances. If a callback is valid, it is executed and
+     * a Screen transition is executed.
      */
     void evaluatePendingScreenTransition()
     {
@@ -105,15 +85,13 @@ protected:
 };
 
 /**
- * @fn static inline void prepareTransition(Screen** currentScreen, Presenter** currentPresenter, Transition** currentTrans)
- *
- * @brief Prepare screen transition. Private helper function for makeTransition. Do not use.
+ * Prepare screen transition. Private helper function for makeTransition. Do not use.
  *
  * @param [in] currentScreen    If non-null, the current screen.
  * @param [in] currentPresenter If non-null, the current presenter.
  * @param [in] currentTrans     If non-null, the current transaction.
  */
-static inline void prepareTransition(Screen** currentScreen, Presenter** currentPresenter, Transition** currentTrans)
+FORCE_INLINE_FUNCTION static void prepareTransition(Screen** currentScreen, Presenter** currentPresenter, Transition** currentTrans)
 {
     Application::getInstance()->clearAllTimerWidgets();
 
@@ -144,35 +122,30 @@ static inline void prepareTransition(Screen** currentScreen, Presenter** current
 }
 
 /**
- * @fn static inline void finalizeTransition(Screen* newScreen, Presenter* newPresenter, Transition* newTransition)
- *
- * @brief Finalize screen transition. Private helper function for makeTransition. Do not use.
+ * Finalize screen transition. Private helper function for makeTransition. Do not use.
  *
  * @param [in] newScreen     If non-null, the new screen.
  * @param [in] newPresenter  If non-null, the new presenter.
  * @param [in] newTransition If non-null, the new transition.
  */
-static inline void finalizeTransition(Screen* newScreen, Presenter* newPresenter, Transition* newTransition)
+FORCE_INLINE_FUNCTION static void finalizeTransition(Screen* newScreen, Presenter* newPresenter, Transition* newTransition)
 {
     newScreen->setupScreen();
     newPresenter->activate();
     newScreen->bindTransition(*newTransition);
     newTransition->init();
-
-    Application::getInstance()->draw();
+    newTransition->invalidate();
 }
 
 /**
- * @fn template< class ScreenType, class PresenterType, class TransType, class ModelType > PresenterType* makeTransition(Screen** currentScreen, Presenter** currentPresenter, MVPHeap& heap, Transition** currentTrans, ModelType* model)
+ * Function for effectuating a screen transition (i.e. makes the requested new presenter/view
+ * pair active). Once this function has returned, the new screen has been transitioned
+ * to. Due to the memory allocation strategy of using the same memory area for all
+ * screens, the old view/presenter will no longer exist when this function returns.
  *
- * @brief Function for effectuating a screen transition (i.e. makes the requested new presenter/view
- *        pair active). Once this function has returned, the new screen has been transitioned
- *        to. Due to the memory allocation strategy of using the same memory area for all
- *        screens, the old view/presenter will no longer exist when this function returns.
- *
- *        Will properly clean up old screen (tearDownScreen, Presenter::deactivate) and call
- *        setupScreen/activate on new view/presenter pair. Will also make sure the view,
- *        presenter and model are correctly bound to each other.
+ * Will properly clean up old screen (tearDownScreen, Presenter::deactivate) and call
+ * setupScreen/activate on new view/presenter pair. Will also make sure the view,
+ * presenter and model are correctly bound to each other.
  *
  * @tparam ScreenType    Class type for the View.
  * @tparam PresenterType Class type for the Presenter.
@@ -188,7 +161,7 @@ static inline void finalizeTransition(Screen* newScreen, Presenter* newPresenter
  * @return Pointer to the new Presenter of the requested type. Incidentally it will be the same
  *         value as the old presenter due to memory reuse.
  */
-template< class ScreenType, class PresenterType, class TransType, class ModelType  >
+template <class ScreenType, class PresenterType, class TransType, class ModelType>
 PresenterType* makeTransition(Screen** currentScreen, Presenter** currentPresenter, MVPHeap& heap, Transition** currentTrans, ModelType* model)
 {
     assert(sizeof(ScreenType) <= heap.screenStorage.element_size() && "View allocation error: Check that all views are added to FrontendHeap::ViewTypes");
@@ -197,9 +170,9 @@ PresenterType* makeTransition(Screen** currentScreen, Presenter** currentPresent
 
     prepareTransition(currentScreen, currentPresenter, currentTrans);
 
-    TransType* newTransition = new (&heap.transitionStorage.at< TransType >(0)) TransType;
-    ScreenType* newScreen = new (&heap.screenStorage.at< ScreenType >(0)) ScreenType;
-    PresenterType* newPresenter = new (&heap.presenterStorage.at< PresenterType >(0)) PresenterType(*newScreen);
+    TransType* newTransition = new (&heap.transitionStorage.at<TransType>(0)) TransType;
+    ScreenType* newScreen = new (&heap.screenStorage.at<ScreenType>(0)) ScreenType;
+    PresenterType* newPresenter = new (&heap.presenterStorage.at<PresenterType>(0)) PresenterType(*newScreen);
     *currentTrans = newTransition;
     *currentPresenter = newPresenter;
     *currentScreen = newScreen;
@@ -211,5 +184,7 @@ PresenterType* makeTransition(Screen** currentScreen, Presenter** currentPresent
 
     return newPresenter;
 }
+
 } // namespace touchgfx
+
 #endif // MVPAPPLICATION_HPP

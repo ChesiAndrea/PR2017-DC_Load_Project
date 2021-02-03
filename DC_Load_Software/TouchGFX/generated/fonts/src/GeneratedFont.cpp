@@ -5,8 +5,8 @@
 
 namespace touchgfx
 {
-GeneratedFont::GeneratedFont(const GlyphNode* list, uint16_t size, uint16_t height, uint8_t pixBelowBase, uint8_t bitsPerPixel, uint8_t dataFormatA4, uint8_t maxLeft, uint8_t maxRight, const uint8_t* const* glyphDataInternalFlash, const KerningNode* kerningList, const Unicode::UnicodeChar fallbackChar, const Unicode::UnicodeChar ellipsisChar, const uint16_t* const gsubData) :
-    ConstFont(list, size, height, pixBelowBase, bitsPerPixel, dataFormatA4, maxLeft, maxRight, fallbackChar, ellipsisChar),
+GeneratedFont::GeneratedFont(const GlyphNode* list, uint16_t size, uint16_t height, uint8_t pixBelowBase, uint8_t bitsPerPixel, uint8_t byteAlignRow, uint8_t maxLeft, uint8_t maxRight, const uint8_t* const* glyphDataInternalFlash, const KerningNode* kerningList, const Unicode::UnicodeChar fallbackChar, const Unicode::UnicodeChar ellipsisChar, const uint16_t* const gsubData) :
+    ConstFont(list, size, height, pixBelowBase, bitsPerPixel, byteAlignRow, maxLeft, maxRight, fallbackChar, ellipsisChar),
     glyphData(glyphDataInternalFlash),
     kerningData(kerningList),
     gsubTable(gsubData)
@@ -26,12 +26,16 @@ int8_t GeneratedFont::getKerning(Unicode::UnicodeChar prevChar, const GlyphNode*
         return 0;
     }
 
-    uint16_t kerningTablePos = glyph->kerningTablePos();
-    for (uint16_t i = kerningTablePos; i < kerningTablePos + glyph->kerningTableSize; i++)
+    const KerningNode* kerndata = kerningData + glyph->kerningTablePos();
+    for (uint16_t i = glyph->kerningTableSize; i > 0; i--, kerndata++)
     {
-        if (prevChar == kerningData[i].unicodePrevChar)
+        if (prevChar == kerndata->unicodePrevChar)
         {
-            return kerningData[i].distance;
+            return kerndata->distance;
+        }
+        if (prevChar < kerndata->unicodePrevChar)
+        {
+            break;
         }
     }
     return 0;

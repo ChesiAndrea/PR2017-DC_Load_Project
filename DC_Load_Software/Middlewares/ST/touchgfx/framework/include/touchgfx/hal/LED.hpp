@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,75 +13,66 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/hal/LED.hpp
+ *
+ * Declares the touchgfx::LED class.
+ */
 #ifndef LED_HPP
 #define LED_HPP
 
-#include "lpc_types.h"
 namespace touchgfx
 {
-/**
- * @class LED LED.hpp touchgfx/hal/LED.hpp
- *
- * @brief A led.
- */
+/** A class for controlling a LED. */
 class LED
 {
 public:
+    ///@cond
+    /** Perform configuration of IO pins. */
+    TOUCHGFX_DEPRECATED(
+        "Class LED is scheduled for removal",
+        static void init());
 
     /**
-     * @fn static void LED::init();
+     * Turn on a LED.
      *
-     * @brief Perform configuration of IO pins.
-     *
-     *        Perform configuration of IO pins.
+     * @param  nr of the LED to switch on.
      */
-    static void init();
+    TOUCHGFX_DEPRECATED(
+        "Class LED is scheduled for removal",
+        static void on(uint8_t nr));
 
     /**
-     * @fn static void LED::on(uint8_t nr);
+     * Turn off a LED.
      *
-     * @brief Turn on a LED.
-     *
-     *        Turn on a LED.
-     *
-     * @param nr of the LED to switch on.
+     * @param  nr of the LED to switch off.
      */
-    static void on(uint8_t nr);
+    TOUCHGFX_DEPRECATED(
+        "Class LED is scheduled for removal",
+        static void off(uint8_t nr));
 
     /**
-     * @fn static void LED::off(uint8_t nr);
+     * Toggles a LED.
      *
-     * @brief Turn off a LED.
-     *
-     *        Turn off a LED.
-     *
-     * @param nr of the LED to switch off.
+     * @param  nr of the LED to toggle.
      */
-    static void off(uint8_t nr);
+    TOUCHGFX_DEPRECATED(
+        "Class LED is scheduled for removal",
+        static void toggle(uint8_t nr));
 
     /**
-     * @fn static void LED::toggle(uint8_t nr);
+     * Get state of a LED.
      *
-     * @brief Toggles a LED.
-     *
-     *        Toggles a LED.
-     *
-     * @param nr of the LED to toggle.
-     */
-    static void toggle(uint8_t nr);
-
-    /**
-     * @fn static bool LED::get(uint8_t nr);
-     *
-     * @brief Get state of a LED.
-     *
-     *        Get state of a LED.
-     *
-     * @param nr of the LED to toggle.
+     * @param  nr of the LED to toggle.
      *
      * @return the state of the LED.
      */
-    static bool get(uint8_t nr);
+    TOUCHGFX_DEPRECATED(
+        "Class LED is scheduled for removal",
+        static bool get(uint8_t nr));
+    ///@endcond
 };
-}
+
+} // namespace touchgfx
+
 #endif // LED_HPP

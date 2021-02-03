@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/RepeatButton.hpp
+ *
+ * Declares the touchgfx::RepeatButton class.
+ */
 #ifndef REPEATBUTTON_HPP
 #define REPEATBUTTON_HPP
 
@@ -21,105 +26,65 @@
 namespace touchgfx
 {
 /**
-* @class RepeatButton RepeatButton.hpp touchgfx/widgets/RepeatButton.hpp
+ * A RepeatButton is similar to a regular Button, but it will 'repeat' if pressed for a long
+ * period of time. The RepeatButton differs from a regular Button with regards to
+ * activation. A Button is activated when the button is released, whereas a RepeatButton
+ * is activated immediately when pressed and then at regular intervals. A RepeatButton
+ * does not activate when released.
  *
- * @brief A button with two states.
+ * As for other well-known repeat buttons, the interval from the first activation until
+ * the second activation as well as the subsequent interval between activations can be
+ * set for the RepeatButton.
  *
- *        A button consists of two images, one for its normal state and one when it is pressed
- *        down. The button activates its pressed action immediately, the after a given delay
- *        and then repeatedly after an interval.
- *
- * @see Button
+ * The default values for initial delay is 10 ticks, and the default value for the
+ * following delays between button activations is 5 ticks.
  */
-class RepeatButton : public touchgfx::Button
+class RepeatButton : public Button
 {
 public:
-
-    /**
-     * @fn RepeatButton::RepeatButton();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor. Sets delay to 10 ticks and interval to 5 ticks.
-     *
-     * @see setDelay
-     * @see setInterval
-     */
     RepeatButton();
 
     /**
-     * @fn virtual void RepeatButton::setDelay(int delay);
+     * Sets the delay (in number of ticks) from the first button activation until the next
+     * time it will be automatically activated.
      *
-     * @brief Sets the delay.
+     * @param  delay The delay, measured in ticks, between first activation and second activation.
      *
-     *        Sets the number of ticks from the first button activation until the next time it gets activated.
-     *
-     * @param delay The delay.
-     *
-     @see setInterval
-     @see getDelay
+     * @see setInterval, getDelay
      */
     virtual void setDelay(int delay);
 
     /**
-     * @fn virtual int RepeatButton::getDelay();
+     * Gets the delay in ticks from first button activation until next activation.
      *
-     * @brief Gets the delay.
-     *
-     Gets the delay in ticks.
-     *
-     * @return The delay.
+     * @return The delay, measured in ticks, between first activation and second activation.
      *
      * @see setDelay
      */
     virtual int getDelay();
 
     /**
-     * @fn virtual void RepeatButton::setInterval(int interval);
+     * Sets the interval in number of ticks between each each activation of the pressed
+     * button after the second activation.
      *
-     * @brief Sets the interval.
+     * @param  interval The interval between repeated activations, measured in ticks.
      *
-     *        Sets the interval in number of ticks between each each activation of the pressed
-     *        button.
-     *
-     * @param interval The interval.
-     *
-     * @see setDelay
-     * @see getInterval
+     * @see setDelay, getInterval
      */
     virtual void setInterval(int interval);
 
     /**
-     * @fn virtual int RepeatButton::getInterval();
+     * The interval between repeated activations, measured in ticks. This is the number of
+     * ticks between the an activation beyond the first and the following activation.
      *
-     * @brief Gets the interval.
+     * @return The interval between repeated activations, measured in ticks.
      *
-     *        Gets the interval in ticks.
-     *
-     * @return The interval.
+     * @see setInterval
      */
     virtual int getInterval();
 
-    /**
-     * @fn virtual void RepeatButton::handleClickEvent(const touchgfx::ClickEvent& event);
-     *
-     * @brief Handles the click event.
-     *
-     *        Handles the click event by immediately activating the button and then setting up
-     *        a timer to repeatedly activate the button.
-     *
-     * @param event The event.
-     */
-    virtual void handleClickEvent(const touchgfx::ClickEvent& event);
+    virtual void handleClickEvent(const ClickEvent& event);
 
-    /**
-     * @fn virtual void RepeatButton::handleTickEvent();
-     *
-     * @brief Handles the tick event.
-     *
-     *        Handles the tick event that takes care of counting down until the next time the
-     *        buttons should be activated.
-     */
     virtual void handleTickEvent();
 
 private:
@@ -129,6 +94,7 @@ private:
     int16_t ticks;
     int16_t ticksBeforeContinuous;
 };
+
 } // namespace touchgfx
 
 #endif // REPEATBUTTON_HPP

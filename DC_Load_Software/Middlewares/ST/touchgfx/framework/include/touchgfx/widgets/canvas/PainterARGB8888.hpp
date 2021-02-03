@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,87 +13,65 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/canvas/PainterARGB8888.hpp
+ *
+ * Declares the touchgfx::PainterARGB8888 class.
+ */
 #ifndef PAINTERARGB8888_HPP
 #define PAINTERARGB8888_HPP
 
 #include <stdint.h>
-#include <touchgfx/widgets/canvas/AbstractPainterARGB8888.hpp>
+#include <touchgfx/Color.hpp>
 #include <touchgfx/hal/Types.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainterARGB8888.hpp>
 
 namespace touchgfx
 {
 /**
- * @class PainterARGB8888 PainterARGB8888.hpp touchgfx/widgets/canvas/PainterARGB8888.hpp
- *
- * @brief A Painter that will paint using a color and an alpha value.
- *
- *        The PainterARGB8888 class allows a shape to be filled with a given color and alpha
- *        value. This allows transparent, anti-aliased elements to be drawn.
+ * The PainterARGB8888 class allows a shape to be filled with a given color and alpha
+ * value. This allows transparent, anti-aliased elements to be drawn.
  *
  * @see AbstractPainter
  */
 class PainterARGB8888 : public AbstractPainterARGB8888
 {
 public:
-
     /**
-     * @fn PainterARGB8888::PainterARGB8888(colortype color = 0, uint8_t alpha = 255);
+     * Initializes a new instance of the PainterARGB8888 class.
      *
-     * @brief Constructor.
-     *
-     *        Constructor.
-     *
-     * @param color the color.
-     * @param alpha the alpha.
+     * @param  color (Optional) the color, default is black.
+     * @param  alpha (Optional) the alpha, default is 255 i.e. solid.
      */
-    PainterARGB8888(colortype color = 0, uint8_t alpha = 255);
+    PainterARGB8888(colortype color = 0, uint8_t alpha = 255)
+        : AbstractPainterARGB8888()
+    {
+        setColor(color);
+        setAlpha(alpha);
+    }
 
     /**
-     * @fn void PainterARGB8888::setColor(colortype color, uint8_t alpha = 255);
+     * Sets color and alpha to use when drawing the CanvasWidget.
      *
-     * @brief Sets color and alpha to use when drawing the CanvasWidget.
-     *
-     *        Sets color and alpha to use when drawing the CanvasWidget.
-     *
-     * @param color The color.
-     * @param alpha The alpha.
+     * @param  color The color.
      */
-    void setColor(colortype color, uint8_t alpha = 255);
+    void setColor(colortype color)
+    {
+        painterRed = Color::getRedColor(color);
+        painterGreen = Color::getGreenColor(color);
+        painterBlue = Color::getBlueColor(color);
+    }
 
     /**
-     * @fn colortype PainterARGB8888::getColor() const;
-     *
-     * @brief Gets the current color.
-     *
-     *        Gets the current color.
+     * Gets the current color.
      *
      * @return The color.
      */
-    colortype getColor() const;
 
-    /**
-     * @fn void PainterARGB8888::setAlpha(uint8_t alpha);
-     *
-     * @brief Sets an alpha value for the painter.
-     *
-     *        Sets an alpha value for the painter.
-     *
-     * @param alpha The alpha value to use.
-     */
-    void setAlpha(uint8_t alpha);
-
-    /**
-     * @fn uint8_t PainterARGB8888::getAlpha() const;
-     *
-     * @brief Gets the current alpha value.
-     *
-     *        Gets the current alpha value.
-     *
-     * @return The current alpha value.
-     *
-     * @see setAlpha
-     */
-    uint8_t getAlpha() const;
+    colortype getColor() const
+    {
+        return Color::getColorFrom24BitRGB(painterRed, painterGreen, painterBlue);
+    }
 
     virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
@@ -103,8 +81,8 @@ protected:
     uint8_t painterRed;   ///< The red part of the color
     uint8_t painterGreen; ///< The green part of the color
     uint8_t painterBlue;  ///< The blue part of the color
-    uint8_t painterAlpha; ///< The alpha value
-}; // class PainterARGB8888
+};
+
 } // namespace touchgfx
 
 #endif // PAINTERARGB8888_HPP

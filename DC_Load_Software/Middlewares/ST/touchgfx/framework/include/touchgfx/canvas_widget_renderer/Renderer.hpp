@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/canvas_widget_renderer/Renderer.hpp
+ *
+ * Declares the touchgfx::Renderer class. Used internally by CanvasWidgetRenderer.
+ */
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
@@ -21,37 +26,18 @@
 #include <touchgfx/hal/HAL.hpp>
 #include <touchgfx/widgets/canvas/AbstractPainter.hpp>
 
+/// @cond
 namespace touchgfx
 {
 /**
- * @class Renderer Renderer.hpp touchgfx/canvas_widget_renderer/Renderer.hpp
- *
- * @brief This class template is used basically for rendering scan lines.
- *
- *        This class template is used basically for rendering scanlines. The 'Span' argument is
- *        one of the span renderers, such as SpanRGB565 and others.
+ * This class template is used basically for rendering scanlines. The 'Span' argument is one of
+ * the span renderers, such as SpanRGB565 and others.
  */
 class Renderer
 {
 public:
     /**
-     * @fn Renderer::Renderer()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor. Function setRenderingBuffer() should be called to specify
-     *        where the polygon should be rendered.
-     */
-    Renderer()
-    {
-    }
-
-    /**
-     * @fn Renderer::Renderer(RenderingBuffer& renderingBuffer, AbstractPainter &painter)
-     *
-     * @brief Constructor.
-     *
-     *        Constructor.
+     * Initializes a new instance of the Renderer class.
      *
      * @param [in] renderingBuffer The screen buffer to render the polygon in.
      * @param [in] painter         The painter to use for drawing individual pixels in a
@@ -63,11 +49,7 @@ public:
     }
 
     /**
-     * @fn void Renderer::setRenderingBuffer(RenderingBuffer& renderingBuffer)
-     *
-     * @brief Sets rendering buffer.
-     *
-     *        Sets rendering buffer.
+     * Sets rendering buffer.
      *
      * @param [in] renderingBuffer The screen buffer to render the polygon in.
      */
@@ -77,13 +59,9 @@ public:
     }
 
     /**
-     * @fn void Renderer::render(const Scanline& scanline)
+     * Render the given Scanline in the given color.
      *
-     * @brief Render the given Scanline in the given color.
-     *
-     *        Render the given Scanline in the given color.
-     *
-     * @param scanline The Scanline.
+     * @param  scanline The Scanline.
      */
     void render(const Scanline& scanline)
     {
@@ -123,16 +101,11 @@ public:
                 }
             }
             painter->render(row, x, xAdjust, y, numPix, covers);
-        }
-        while (--numSpans);
+        } while (--numSpans);
     }
 
     /**
-     * @fn RenderingBuffer& Renderer::getRenderingBuffer()
-     *
-     * @brief Gets the getRenderingBuffer.
-     *
-     *        Gets the getRenderingBuffer.
+     * Gets the getRenderingBuffer.
      *
      * @return A RenderingBuffer&amp;
      */
@@ -142,9 +115,11 @@ public:
     }
 
 private:
-    RenderingBuffer* renderingBuffer;   ///< Buffer for rendering data
+    RenderingBuffer* renderingBuffer; ///< Buffer for rendering data
     AbstractPainter* painter;         ///< The painter
 };
+
 } // namespace touchgfx
+/// @endcond
 
 #endif // RENDERER_HPP

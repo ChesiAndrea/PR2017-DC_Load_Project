@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,88 +13,61 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/ScalableImage.hpp
+ *
+ * Declares the touchgfx::ScalableImage class.
+ */
 #ifndef SCALABLEIMAGE_HPP
 #define SCALABLEIMAGE_HPP
 
-#include <touchgfx/widgets/Image.hpp>
 #include <touchgfx/Bitmap.hpp>
+#include <touchgfx/widgets/Image.hpp>
 
 namespace touchgfx
 {
 /**
- * @class ScalableImage ScalableImage.hpp touchgfx/widgets/ScalableImage.hpp
+ * Widget for representing a scaled version of a bitmap. Simply change the width/height of the
+ * widget to resize the image. The quality of the scaled image depends of the rendering
+ * algorithm used. The rendering algorithm can be changed dynamically. Please note that
+ * scaling images is done at runtime and may require a lot of calculations.
  *
- * @brief Widget for representing a scaled version of a bitmap.
- *
- *        Widget for representing a scaled version of a bitmap. Simply change the width/height
- *        of the widget to resize the image. The quality of the scaled image depends of the
- *        rendering algorithm used. The rendering algorithm can be changed dynamically. Please
- *        note that scaling images is done at runtime and requires a lot of calculations.
- *        Therefore use it with some care.
- *
- *        Note that this widget does not support 1 bit per pixel color depth.
- *
- * @see Widget
+ * @note Note that this widget does not support 1 bit per pixel color depth.
  */
 class ScalableImage : public Widget
 {
 public:
     /**
-     * @enum ScalingAlgorithm
-     *
-     * @brief Rendering algorithms of the scaled bitmap.
-     *
-     *        Rendering algorithms of the scaled bitmap.
-     *
-     *        NEAREST_NEIGHBOR: Fast but not a very good image quality. Good for fast
-     *        animations.
-     *
-     *        BILINEAR_INTERPOLATION: Slow but good image quality. Good for static
-     *        representation of a scaled image.
+     * Rendering algorithm to use when scaling the bitmap. Nearest neighbor simply finds the
+     * closest pixel in the source bitmap. Bilinear interpolation averages 4 pixels to find
+     * a much better pixel representation.
      */
     enum ScalingAlgorithm
     {
-        NEAREST_NEIGHBOR,
-        BILINEAR_INTERPOLATION
+        NEAREST_NEIGHBOR,      ///< Fast but not a very good image quality. Good for fast animations.
+        BILINEAR_INTERPOLATION ///< Slower but better image quality. Good for static representation of a scaled image.
     };
 
-    /**
-     * @fn ScalableImage::ScalableImage();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
     ScalableImage();
 
     /**
-     * @fn virtual ScalableImage::~ScalableImage();
+     * Sets the bitmap for this Image and updates the width and height of this widget to
+     * match those of the Bitmap.
      *
-     * @brief Destructor.
+     * @param  bmp The bitmap instance.
      *
-     *        Destructor.
-     */
-    virtual ~ScalableImage();
-
-    /**
-     * @fn virtual void ScalableImage::setBitmap(const Bitmap& bmp);
-     *
-     * @brief Sets the bitmap for the image.
-     *
-     *        Sets the bitmap for the image.
-     *
-     * @param bmp The bitmap to be used by the widget.
+     * @note The user code must call invalidate() in order to update the image on the display.
      */
     virtual void setBitmap(const Bitmap& bmp);
 
     /**
-     * @fn Bitmap ScalableImage::getBitmap() const
+     * Gets the Bitmap currently being used by the ScaleableImage widget.
      *
-     * @brief Gets the bitmap for the image.
+     * @return The current Bitmap of the widget.
      *
-     *        Gets the bitmap for the image.
+     * @see setBitmap
      *
-     * @return the small bitmap.
+     * @note The returned bitmap is the original, unscaled, bitmap.
      */
     Bitmap getBitmap() const
     {
@@ -102,27 +75,15 @@ public:
     }
 
     /**
-     * @fn virtual void ScalableImage::setAlpha(uint8_t alpha)
-     *
-     * @brief Sets the alpha channel for the image.
-     *
-     *        Sets the alpha channel for the image.
-     *
-     * @param alpha The alpha value. 255 = completely solid.
+     * @copydoc Image::setAlpha
      */
-    virtual void setAlpha(uint8_t alpha)
+    virtual void setAlpha(uint8_t newAlpha)
     {
-        this->alpha = alpha;
+        alpha = newAlpha;
     }
 
     /**
-     * @fn virtual uint8_t ScalableImage::getAlpha() const
-     *
-     * @brief Gets the current alpha value.
-     *
-     *        Gets the current alpha value.
-     *
-     * @return The current alpha value.
+     * @copydoc Image::getAlpha
      */
     virtual uint8_t getAlpha() const
     {
@@ -130,88 +91,60 @@ public:
     }
 
     /**
-     * @fn virtual void ScalableImage::setScalingAlgorithm(ScalingAlgorithm algorithm);
+     * Sets the algorithm to be used. In short, there is currently a value for fast (nearest
+     * neighbor) and a value for slow (bilinear interpolation).
      *
-     * @brief Sets the algorithm to be used.
+     * @param  algorithm The algorithm to use when rendering.
      *
-     *        Sets the algorithm to be used.
-     *
-     * @param algorithm The algorithm to use when rendering.
+     * @see ScalingAlgorithm
      */
     virtual void setScalingAlgorithm(ScalingAlgorithm algorithm);
 
     /**
-     * @fn virtual ScalingAlgorithm ScalableImage::getScalingAlgorithm();
-     *
-     * @brief Gets the algorithm used when rendering.
-     *
-     *        Gets the algorithm used when rendering.
+     * Gets the algorithm used when rendering.
      *
      * @return The algorithm used when rendering.
+     *
+     * @see ScalingAlgorithm
      */
     virtual ScalingAlgorithm getScalingAlgorithm();
 
-    /**
-     * @fn virtual void ScalableImage::draw(const Rect& invalidatedArea) const;
-     *
-     * @brief Draws the given invalidated area.
-     *
-     *        Draws the given invalidated area.
-     *
-     * @param invalidatedArea The rectangle to draw, with coordinates relative to this drawable.
-     *
-     * @see Drawable::draw()
-     */
     virtual void draw(const Rect& invalidatedArea) const;
 
-    /**
-     * @fn virtual Rect ScalableImage::getSolidRect() const;
-     *
-     * @brief Gets solid rectangle.
-     *
-     *        Gets solid rectangle.
-     *
-     * @return largest possible solid rect.
-     *
-     * @see Drawable::getSolidRect()
-     */
     virtual Rect getSolidRect() const;
 
 protected:
     ScalingAlgorithm currentScalingAlgorithm; ///< The current scaling algorithm.
-    Bitmap           bitmap;                  ///< The bitmap to render.
-    uint8_t          alpha;                   ///< An alpha value that is applied to the entire image.
+    Bitmap bitmap;                            ///< The bitmap to scale and display.
+    uint8_t alpha;                            ///< An alpha value that is applied to the entire image.
 
+    /// @cond
     /**
-     * @fn void ScalableImage::drawTriangle(const Rect& invalidatedArea, uint16_t* fb, const float* triangleXs, const float* triangleYs, const float* triangleZs, const float* triangleUs, const float* triangleVs) const;
+     * Draw a triangle part of the bitmap.
      *
-     * @brief Draw a triangle part of the bitmap.
-     *
-     *        Draw a triangle part of the bitmap.
-     *
-     * @param invalidatedArea The invalidated area.
-     * @param [in,out] fb     If non-null, the fb.
-     * @param triangleXs      The triangle xs.
-     * @param triangleYs      The triangle ys.
-     * @param triangleZs      The triangle zs.
-     * @param triangleUs      The triangle us.
-     * @param triangleVs      The triangle vs.
+     * @param      invalidatedArea The invalidated area.
+     * @param [in] fb              If non-null, the fb.
+     * @param      triangleXs      The triangle xs.
+     * @param      triangleYs      The triangle ys.
+     * @param      triangleZs      The triangle zs.
+     * @param      triangleUs      The triangle us.
+     * @param      triangleVs      The triangle vs.
      */
     void drawTriangle(const Rect& invalidatedArea, uint16_t* fb, const float* triangleXs, const float* triangleYs, const float* triangleZs, const float* triangleUs, const float* triangleVs) const;
 
     /**
-     * @fn RenderingVariant ScalableImage::lookupRenderVariant() const;
+     * Looks up the appropriate render variant based on the bitmap format and scaling
+     * algorithm.
      *
-     * @brief Looks up the appropriate render variant based on the bitmap format and scaling
-     *        algorithm.
-     *
-     *        Looks up the appropriate render variant based on the bitmap format and scaling
-     *        algorithm.
+     * Looks up the appropriate render variant based on the bitmap format and scaling
+     * algorithm.
      *
      * @return A RenderingVariant.
      */
     RenderingVariant lookupRenderVariant() const;
+    /// @endcond
 };
+
 } // namespace touchgfx
 
 #endif // SCALABLEIMAGE_HPP

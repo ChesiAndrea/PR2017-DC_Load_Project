@@ -3,13 +3,13 @@
 **  The code in this folder is based on "The Lightweight Rasterizer"      **
 **  which in turn is based on project "Anti-Grain Geometry".              **
 **                                                                        **
-**  The Lightweight Rasterizer is availble from                           **
+**  The Lightweight Rasterizer is available from                          **
 **                           http://www.antigrain.com/lite/agg2_lite.zip  **
 **                                                                        **
 **  You can read more about Anti-Grain Geometry on                        **
 **                                              http://www.antigrain.com  **
 **                                                                        **
-**  The code has been heavily modified by Draphner Graphics to allow the  **
+**  The code has been heavily modified for TouchGFX to allow the          **
 **  rasterizer to be used in embedded devices.                            **
 **                                                                        **
 **  Below you find the original copyright notice.                         **

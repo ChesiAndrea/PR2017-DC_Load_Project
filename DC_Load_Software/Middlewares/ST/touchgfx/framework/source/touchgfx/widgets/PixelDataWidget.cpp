@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -36,9 +36,9 @@ void PixelDataWidget::setBitmapFormat(Bitmap::BitmapFormat f)
     format = f;
 }
 
-void PixelDataWidget::setAlpha(uint8_t a)
+void PixelDataWidget::setAlpha(uint8_t newAlpha)
 {
-    this->alpha = a;
+    alpha = newAlpha;
 }
 
 uint8_t PixelDataWidget::getAlpha() const

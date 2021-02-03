@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,80 +13,51 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/canvas/PainterARGB8888Bitmap.hpp
+ *
+ * Declares the touchgfx::PainterARGB8888Bitmap class.
+ */
 #ifndef PAINTERARGB8888BITMAP_HPP
 #define PAINTERARGB8888BITMAP_HPP
 
 #include <stdint.h>
-#include <touchgfx/widgets/canvas/AbstractPainterARGB8888.hpp>
 #include <touchgfx/Bitmap.hpp>
 #include <touchgfx/transforms/DisplayTransformation.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainterARGB8888.hpp>
 
 namespace touchgfx
 {
 /**
- * @class PainterARGB8888Bitmap PainterARGB8888Bitmap.hpp touchgfx/widgets/canvas/PainterARGB8888Bitmap.hpp
- *
- * @brief A Painter that will paint using a bitmap.
- *
- *        PainterARGB8888Bitmap will take the color for a given point in the shape from a bitmap.
- *        Please be aware, the the bitmap is used by the CWR (not Shape), so any rotation you
- *        might specify for a Canvas Widget (e.g. Shape) is not applied to the bitmap as CWR is
- *        not aware of this rotation.
+ * PainterARGB8888Bitmap will take the color for a given point in the shape from a bitmap.
+ * Please be aware, the the bitmap is used by the CanvasWidgetRenderer (not Shape), so
+ * any rotation you might specify for a Canvas Widget (e.g. Shape) is not applied to the
+ * bitmap as CWR is not aware of this rotation.
  *
  * @see AbstractPainter
  */
 class PainterARGB8888Bitmap : public AbstractPainterARGB8888
 {
 public:
-
     /**
-     * @fn PainterARGB8888Bitmap::PainterARGB8888Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID), uint8_t alpha = 255);
+     * Initializes a new instance of the PainterARGB8888Bitmap class.
      *
-     * @brief Constructor.
-     *
-     *        Constructor.
-     *
-     * @param bmp   The bitmap.
-     * @param alpha the alpha.
+     * @param  bmp   (Optional) The bitmap, default is #BITMAP_INVALID.
+     * @param  alpha (Optional) the alpha, default is 255 i.e. solid.
      */
-    PainterARGB8888Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID), uint8_t alpha = 255);
+    PainterARGB8888Bitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID), uint8_t alpha = 255)
+        : AbstractPainterARGB8888(), bitmapARGB8888Pointer(0), bitmapRGB565Pointer(0), bitmapRGB888Pointer(0)
+    {
+        setBitmap(bmp);
+        setAlpha(alpha);
+    }
 
     /**
-     * @fn void PainterARGB8888Bitmap::setBitmap(const Bitmap& bmp);
+     * Sets a bitmap to be used when drawing the CanvasWidget.
      *
-     * @brief Sets a bitmap to be used when drawing the CanvasWidget.
-     *
-     *        Sets a bitmap to be used when drawing the CanvasWidget.
-     *
-     * @param bmp The bitmap.
+     * @param  bmp The bitmap.
      */
     void setBitmap(const Bitmap& bmp);
-
-    /**
-     * @fn void PainterARGB8888Bitmap::setAlpha(uint8_t alpha);
-     *
-     * @brief Sets an alpha value for the bitmap.
-     *
-     *        Sets an alpha value for the bitmap. If the image contains an alpha channel, this
-     *        alpha value is combined with the alpha in the bitmap to produce the final alpha
-     *        value.
-     *
-     * @param alpha The alpha value to use if there is no alpha channel in the bitmap.
-     */
-    void setAlpha(uint8_t alpha);
-
-    /**
-     * @fn uint8_t PainterARGB8888Bitmap::getAlpha() const;
-     *
-     * @brief Gets the current alpha value.
-     *
-     *        Gets the current alpha value.
-     *
-     * @return The current alpha value.
-     *
-     * @see setAlpha
-     */
-    uint8_t getAlpha() const;
 
     virtual void render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* covers);
 
@@ -99,11 +70,10 @@ protected:
     const uint16_t* bitmapRGB565Pointer;   ///< Pointer to the bitmap (RGB565)
     const uint8_t* bitmapRGB888Pointer;    ///< Pointer to the bitmap (RGB888)
 
-    Bitmap bitmap;                  ///< The bitmap to be used when painting
-    Rect   bitmapRectToFrameBuffer; ///< Bitmap rectangle translated to frame buffer coordinates
+    Bitmap bitmap;                ///< The bitmap to be used when painting
+    Rect bitmapRectToFrameBuffer; ///< Bitmap rectangle translated to framebuffer coordinates
+};
 
-    uint8_t painterAlpha; ///< The alpha to use combined with alpha data from the bitmap
-}; // class PainterARGB8888Bitmap
 } // namespace touchgfx
 
 #endif // PAINTERARGB8888BITMAP_HPP

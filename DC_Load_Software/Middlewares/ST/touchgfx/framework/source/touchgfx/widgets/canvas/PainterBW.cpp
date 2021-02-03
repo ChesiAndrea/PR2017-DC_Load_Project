@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -17,21 +17,6 @@
 
 namespace touchgfx
 {
-unsigned PainterBW::bw(unsigned red, unsigned green, unsigned blue)
-{
-    return (red * 77 + green * 150 + blue * 29) >> 15;
-}
-
-void PainterBW::setColor(colortype color)
-{
-    painterColor = color ? 1 : 0;
-}
-
-touchgfx::colortype PainterBW::getColor() const
-{
-    return static_cast<colortype>(painterColor);
-}
-
 void PainterBW::render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, const uint8_t* /*covers*/)
 {
     currentX = x + areaOffsetX;
@@ -55,8 +40,7 @@ void PainterBW::render(uint8_t* ptr, int x, int xAdjust, int y, unsigned count, 
             p++;
         }
         currentX++;
-    }
-    while (--count);
+    } while (--count);
 }
 
 bool PainterBW::renderNext(uint8_t& color)

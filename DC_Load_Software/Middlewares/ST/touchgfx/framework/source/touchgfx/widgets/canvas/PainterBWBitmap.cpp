@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -17,12 +17,6 @@
 
 namespace touchgfx
 {
-PainterBWBitmap::PainterBWBitmap(const Bitmap& bmp) :
-    AbstractPainterBW(), bitmapBWPointer(0)
-{
-    setBitmap(bmp);
-}
-
 void PainterBWBitmap::setBitmap(const Bitmap& bmp)
 {
     bitmap = bmp;
@@ -69,7 +63,7 @@ void PainterBWBitmap::render(uint8_t* ptr, int x, int xAdjust, int y, unsigned c
         const uint8_t* src = bitmapBWPointer + currentX / 8;
         uint8_t* RESTRICT dst = p;
         uint16_t srcBitX = currentX % 8; // & 7
-        uint16_t dstBitX = x % 8; // & 7
+        uint16_t dstBitX = x % 8;        // & 7
 
         uint16_t remainingBits = count;
 
@@ -79,7 +73,7 @@ void PainterBWBitmap::render(uint8_t* ptr, int x, int xAdjust, int y, unsigned c
             uint16_t neededBits = 8 - dstBitX;
             if (neededBits > remainingBits)
             {
-                neededBits = remainingBits;    // Very narrow src inside same word
+                neededBits = remainingBits; // Very narrow src inside same word
             }
             uint16_t availableBits = 8 - srcBitX;
             uint8_t mask = (1u << neededBits) - 1u;
@@ -164,8 +158,7 @@ bool PainterBWBitmap::renderInit()
         return false;
     }
 
-    if (currentX >= bitmapRectToFrameBuffer.width ||
-            currentY >= bitmapRectToFrameBuffer.height)
+    if (currentX >= bitmapRectToFrameBuffer.width || currentY >= bitmapRectToFrameBuffer.height)
     {
         // Outside bitmap area, do not draw anything
         return false;

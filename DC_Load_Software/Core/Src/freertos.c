@@ -32,7 +32,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+#define InitTask_BSP_Complete					(0x01)
+#define InitTask_Logic_Complete				(0x02)
+#define InitTask_Default_Complete			(0x04)
+#define InitTask_GUI_Complete					(0x08)
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -47,7 +50,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+EventGroupHandle_t xCreatedEventGroup;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 osThreadId tGFX_TaskHandle;
@@ -137,7 +140,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-       
+  xCreatedEventGroup = xEventGroupCreate();       
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -191,6 +194,9 @@ void StartDefaultTask(void const * argument)
   /* init code for USB_DEVICE */
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN StartDefaultTask */
+	xEventGroupWaitBits(xCreatedEventGroup, InitTask_Logic_Complete, pdFALSE, pdFALSE, osWaitForever);
+	
+	xEventGroupSetBits(xCreatedEventGroup, InitTask_Default_Complete);/* The bits being set. */
   /* Infinite loop */
   for(;;)
   {
@@ -210,7 +216,10 @@ void StartDefaultTask(void const * argument)
 void StartTouchGFX(void const * argument)
 {
   /* USER CODE BEGIN StartTouchGFX */
+	xEventGroupWaitBits(xCreatedEventGroup, InitTask_BSP_Complete, pdFALSE, pdFALSE, osWaitForever);
+	
 	MX_TouchGFX_Process();// Never Returns
+	
   /* Infinite loop */
   for(;;)
   {
@@ -231,11 +240,13 @@ void StartBSPTask(void const * argument)
 {
   /* USER CODE BEGIN StartBSPTask */
 	BSP_Init();
-	BacklightManagement(100);
+	Set_Backlight(100);
+	xEventGroupSetBits(xCreatedEventGroup, InitTask_BSP_Complete);/* The bits being set. */
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1000);
+		BSP_Clk();
+    osDelay(10);
   }
   /* USER CODE END StartBSPTask */
 }
@@ -250,10 +261,14 @@ void StartBSPTask(void const * argument)
 void StartLogicTask(void const * argument)
 {
   /* USER CODE BEGIN StartLogicTask */
+	xEventGroupWaitBits(xCreatedEventGroup, InitTask_GUI_Complete, pdFALSE, pdFALSE, osWaitForever);
+	Logic_Init();
+	xEventGroupSetBits(xCreatedEventGroup, InitTask_Logic_Complete);/* The bits being set. */
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1000);
+		Logic_Clk();
+    osDelay(10);
   }
   /* USER CODE END StartLogicTask */
 }

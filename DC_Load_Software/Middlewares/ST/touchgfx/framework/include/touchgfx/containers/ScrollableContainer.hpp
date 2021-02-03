@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,65 +13,51 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/ScrollableContainer.hpp
+ *
+ * Declares the touchgfx::ScrollableContainer class.
+ */
 #ifndef SCROLLABLECONTAINER_HPP
 #define SCROLLABLECONTAINER_HPP
 
+#include <touchgfx/Application.hpp>
 #include <touchgfx/containers/Container.hpp>
 #include <touchgfx/widgets/Box.hpp>
-#include <touchgfx/Application.hpp>
 
 namespace touchgfx
 {
 /**
- * @class ScrollableContainer ScrollableContainer.hpp touchgfx/containers/ScrollableContainer.hpp
+ * A ScrollableContainer is a container that allows its contents to be scrolled. It will
+ * intercept drag operations and move child nodes accordingly.
  *
- * @brief A ScrollableContainer is a container that allows its contents to be scrolled.
- *
- *        A ScrollableContainer is a container that allows its contents to be scrolled. It will
- *        intercept drag operations and move child nodes accordingly.
- *
- *        The size of the ScrollableContainer should be the visible view port area. If the
- *        container contains drawables that are larger than the ScrollableContainer itself,
- *        scrolling is enabled.
- *
- * @note The ScrollableContainer will consume all DragEvents in the area covered by the container,
- *       and use.
+ * A standard Container will simply clip children that are either larger than the
+ * container itself, or children that extend beyond the borders of the container or
+ * children that are placed outside the borders of the container. A ScrollableContainer
+ * behaves much like a Container, except it enables the user to scroll the children and
+ * thereby act like a viewport. When the contents of the ScrollableContainer is
+ * scrollable, scrollbars can be seen near the edge of the ScrollableContainer.
  *
  * @see Container
+ *
+ * @note The ScrollableContainer will consume all DragEvents in the area covered by the
+ *       container.
  */
 class ScrollableContainer : public Container
 {
 public:
-    /**
-     * @fn ScrollableContainer::ScrollableContainer();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
     ScrollableContainer();
 
     /**
-     * @fn virtual ScrollableContainer::~ScrollableContainer()
+     * Enables horizontal scrolling. By default, scrolling in either direction is enabled,
+     * provided that the content is larger than the size of the ScrollableContainer. This
+     * function can be used to explicitly (dis)allow horizontal scrolling, even if the
+     * content is larger than the container.
      *
-     * @brief Destructor.
+     * @param  enable If true (default), horizontal scrolling is enabled. If false, horizontal
+     *                scrolling is disabled.
      *
-     *        Destructor.
-     */
-    virtual ~ScrollableContainer() { }
-
-    /**
-     * @fn void ScrollableContainer::enableHorizontalScroll(bool enable)
-     *
-     * @brief Enables horizontal scrolling.
-     *
-     *        By default, scrolling in either direction is enabled, provided that the content
-     *        is larger than the size of the scrollable container. This function can be used to
-     *        explicitly (dis)allow scrolling in the horizontal direction, even if the content
-     *        is larger than the container.
-     *
-     * @param enable If true (default), horizontal scrolling is enabled. If false, scrolling is
-     *               disabled.
+     * @see enableVerticalScroll
      */
     void enableHorizontalScroll(bool enable)
     {
@@ -79,17 +65,15 @@ public:
     }
 
     /**
-     * @fn void ScrollableContainer::enableVerticalScroll(bool enable)
+     * Enables vertical scrolling. By default, scrolling in either direction is enabled,
+     * provided that the content is larger than the size of the ScrollableContainer. This
+     * function can be used to explicitly (dis)allow vertical scrolling, even if the content
+     * is larger than the container.
      *
-     * @brief Enables the vertical scroll.
+     * @param  enable If true (default), vertical scrolling is enabled. If false, vertical
+     *                scrolling is disabled.
      *
-     *        Enables the vertical scroll. By default, scrolling in either direction is enabled,
-     *        provided that the content is larger than the size of the scrollable container.
-     *        This function can be used to explicitly (dis)allow scrolling in the vertical
-     *        direction, even if the content is larger than the container.
-     *
-     * @param enable If true (default), vertical scrolling is enabled. If false, scrolling is
-     *               disabled.
+     * @see enableHorizontalScroll
      */
     void enableVerticalScroll(bool enable)
     {
@@ -97,15 +81,14 @@ public:
     }
 
     /**
-     * @fn virtual void ScrollableContainer::isScrollableXY(bool& scrollX, bool& scrollY)
+     * Is the ClickableContainer scrollable in either direction? Takes the width of the
+     * contained elements into account and also checks to see if horizontal or vertical
+     * scrolling is allowed.
      *
-     * @brief Is the ClickableContainer scrollable in either direction?
+     * @param [out] scrollX True if the container is able to scroll horizontally.
+     * @param [out] scrollY True if the container is able to scroll vertically.
      *
-     *        Is the ClickableContainer scrollable in either direction? Takes the width of the
-     *        contained elements into account.
-     *
-     * @param [in,out] scrollX Is the container able to scroll horizontally.
-     * @param [in,out] scrollY Is the container able to scroll vertically.
+     * @see enableHorizontalScroll, enableVerticalScroll
      */
     virtual void isScrollableXY(bool& scrollX, bool& scrollY)
     {
@@ -115,53 +98,30 @@ public:
     }
 
     /**
-     * @fn void ScrollableContainer::setScrollbarsVisible(bool newVisible);
+     * Sets the visibility of the scrollbars, when the scrollable area is pressed. By
+     * default the scrollbars are hidden, but shown when the contents of the
+     * ScrollableContainer is being dragged around. Using setScrollbarsVisible, it is
+     * possble to hide the scrollbars when dragging the contents.
      *
-     * @brief Sets the visibility of the scrollbars, when the scrollable area is pressed.
+     * @param  newVisible If true (default), the scrollbars are visible when scrollable area is
+     *                    pressed. If false, scrollbars are always hidden.
      *
-     *        Sets the visibility of the scrollbars, when the scrollable area is pressed.
-     *
-     * @param newVisible If true (default), the scrollbars are visible when scrollable area is pressed.
-     *                   If false, scrollbars are always hidden.
+     * @see setScrollbarsPermanentlyVisible
      */
     void setScrollbarsVisible(bool newVisible);
 
     /**
-     * @fn void ScrollableContainer::setScrollbarsPermanentlyVisible()
+     * Make scrollbars permanently visible regardless of the size and position of the
+     * children of the ScrollableContainer. Normally the scrollbars are hidden and only
+     * shown when dragging the contents of the ScrollableContainer (unless prohibited using
+     * setScrollbarsVisible()).
      *
-     * @brief sets the visibility for the scrollbars to be permanent.
-     *
-     *        sets the visibility for the scrollbars to be permanent.
-     *
+     * @see setScrollbarsVisible
      */
     void setScrollbarsPermanentlyVisible();
 
-    /**
-     * @fn virtual void ScrollableContainer::add(Drawable& d);
-     *
-     * @brief Adds a Drawable instance as child to this ScrollableContainer.
-     *
-     *        Adds a Drawable instance as child to this ScrollableContainer.
-     *
-     * @param [in] d The drawable.
-     */
     virtual void add(Drawable& d);
 
-    /**
-     * @fn virtual void ScrollableContainer::getLastChild(int16_t x, int16_t y, Drawable** last)
-     *
-     * @brief Gets the last child in the container.
-     *
-     *        Gets the last child in the container. The ScrollableContainer needs to intercept
-     *        click events, since the scrollbars are displayed upon reception of a PRESSED
-     *        ClickEvent. The ScrollableContainer will automatically re-delegate the event to
-     *        the appropriate child.
-     *
-     * @param x          The x coordinate of the (click) event.
-     * @param y          The y coordinate of the (click) event.
-     * @param [out] last The last child intersecting x,y. ScrollableContainer intercepts these, so
-     *                   returns it self.
-     */
     virtual void getLastChild(int16_t x, int16_t y, Drawable** last)
     {
         if (isVisible())
@@ -177,106 +137,50 @@ public:
         }
     }
 
-    /**
-     * @fn virtual void ScrollableContainer::handleClickEvent(const ClickEvent& evt);
-     *
-     * @brief Handle the click event.
-     *
-     *        Handle the click event. Get ready for scrolling, display scrollbars, etc. Send
-     *        the click to appropriate child widget.
-     *
-     * @param evt The ClickEvent.
-     */
     virtual void handleClickEvent(const ClickEvent& evt);
 
-    /**
-     * @fn virtual void ScrollableContainer::handleDragEvent(const DragEvent& evt);
-     *
-     * @brief Handle the drag event.
-     *
-     *        Handle the drag event. Initiate a scrolling of the container. Update scrollbars.
-     *
-     * @param evt The DragEvent.
-     */
     virtual void handleDragEvent(const DragEvent& evt);
 
-    /**
-     * @fn virtual void ScrollableContainer::handleGestureEvent(const GestureEvent& evt);
-     *
-     * @brief Gestures generate a scroll animation so these are intercepted in the same manner as
-     *        drag events.
-     *
-     *        Gestures generate a scroll animation so these are intercepted in the same manner
-     *        as drag events.
-     *
-     * @param evt The GestureEvent.
-     */
     virtual void handleGestureEvent(const GestureEvent& evt);
 
-    /**
-     * @fn virtual void ScrollableContainer::handleTickEvent();
-     *
-     * @brief Handle tick events.
-     *
-     *        Handle tick events. Used in updating the animation of the scroll.
-     */
     virtual void handleTickEvent();
 
     /**
-     * @fn virtual Rect ScrollableContainer::getContainedArea() const;
-     *
-     * @brief Gets contained area.
-     *
-     *        Gets contained area.
+     * Gets the area that contains all children added to the ScrollableContainer. The
+     * scrollbars are not considered in this operation.
      *
      * @return The contained area.
      */
     virtual Rect getContainedArea() const;
 
     /**
-     * @fn virtual void ScrollableContainer::childGeometryChanged();
-     *
-     * @brief Used to signal that the size of one or more children have changed.
-     *
-     *        This function can be called on parent nodes to signal that the size of one or
-     *        more of its children have changed. Currently only used in ScrollableContainer to
-     *        redraw scrollbars when the size of the scrolling contents changes.
-     *
-     * @see Drawable::childGeometryChanged
+     * Used to signal that the size or position of one or more children have changed. This
+     * function can be called on parent nodes to signal that the size of one or more of its
+     * children have changed.
      */
     virtual void childGeometryChanged();
 
     /**
-     * @fn void ScrollableContainer::reset();
-     *
-     * @brief Resets the x/y coordinates of children.
-     *
-     *        Resets the x/y coordinates of childrento the position they were in before the
-     *        first drag event was received or to the position they were in the last time
-     *        reset() was invoked.
+     * Resets the ScrollableContainer to its original state, before the user started
+     * dragging the contents. This reset the x/y coordinates of children to the position
+     * they were in before the first drag event was received.
      */
     void reset();
 
     /**
-     * @fn virtual void ScrollableContainer::moveChildrenRelative(int16_t deltaX, int16_t deltaY);
+     * @copydoc Container::moveChildrenRelative
      *
-     * @brief Moves the scrollable contents relatively.
-     *
-     *        Moves the scrollable contents relatively.
-     *
-     * @param deltaX Horizontal displacement.
-     * @param deltaY Vertical displacement.
+     * @note Takes care not to move the scrollbars, which are also children.
      */
     virtual void moveChildrenRelative(int16_t deltaX, int16_t deltaY);
 
     /**
-     * @fn void ScrollableContainer::setMaxVelocity(uint16_t max)
+     * Sets the maximum velocity of a scroll due to a swipe. This can be used to force
+     * smooth scrolling by limiting the speed of any swipe gesture.
      *
-     * @brief Sets the maximum velocity of a scroll due to a swipe.
+     * @param  max The maximum velocity of the scroll.
      *
-     *        Sets the maximum velocity of a scroll due to a swipe.
-     *
-     * @param max The maximum velocity of the scroll.
+     * @see GestureEvent::getVelocity
      */
     void setMaxVelocity(uint16_t max)
     {
@@ -284,18 +188,14 @@ public:
     }
 
     /**
-     * @fn void ScrollableContainer::setScrollThreshold(int16_t t)
+     * Change the threshold which the first drag event received must exceed before
+     * initiating a scroll. This can be used to avoid touching the screen and moving the
+     * finger only a few pixels resulting in the contents being scrolled.
      *
-     * @brief Change the threshold which the first drag event received must exceed before
-     *        initiating a scroll.
-     *
-     *        Change the threshold which the first drag event received must exceed before
-     *        initiating a scroll.
+     * @param  t The new threshold value.
      *
      * @note All subsequent scrolls will be processed regardless of threshold value until a
      *       ClickEvent::RELEASED is received.
-     *
-     * @param t The new threshold value.
      */
     void setScrollThreshold(int16_t t)
     {
@@ -303,161 +203,147 @@ public:
     }
 
     /**
-     * @fn void ScrollableContainer::setScrollbarsColor(colortype color);
+     * Sets the color of the scrollbars.
      *
-     * @brief Sets the color of the scroll bars.
-     *
-     *        Sets the color of the scroll bars.
-     *
-     * @param color The color of the box.
+     * @param  color The color of the box.
      */
     void setScrollbarsColor(colortype color);
 
     /**
-     * @fn void ScrollableContainer::setScrollbarsAlpha(uint8_t alpha);
+     * Sets the alpha value (transparency) of the scrollbars.
      *
-     * @brief Sets the alpha value for the scroll bars.
-     *
-     *        Sets the alpha value for the scroll bars.
-     *
-     * @param alpha The alpha value. 255 = completely solid.
+     * @param  alpha The alpha value. 255 being completely solid, 0 being completely invisible.
      */
     void setScrollbarsAlpha(uint8_t alpha);
 
     /**
-     * @fn void ScrollableContainer::setScrollbarPadding(uint8_t padding);
+     * Sets the amount of space between the scrollbar and the edge of the ScrollableContainer.
      *
-     * @brief Sets the amount of space the scrollbar has to its borders.
-     *
-     *        Sets the amount of space the scrollbar has to its borders.
-     *
-     * @param padding The padding.
+     * @param  padding The padding.
      */
     void setScrollbarPadding(uint8_t padding);
 
     /**
-     * @fn void ScrollableContainer::setScrollbarWidth(uint8_t width);
+     * Sets the width of the scrollbar measured in pixels.
      *
-     * @brief Sets the width of the scrollbar.
-     *
-     *        Sets the width of the scrollbar.
-     *
-     * @param width The width of the scrollbar.
+     * @param  width The width of the scrollbar.
      */
     void setScrollbarWidth(uint8_t width);
 
     /**
-     * @fn int16_t ScrollableContainer::getScrolledX() const;
-     *
-     * @brief Gets the distance scrolled for the x-axis.
-     *
-     *        Gets the distance scrolled for the x-axis.
+     * Gets the distance scrolled for the x-axis.
      *
      * @return the distance scrolled for the x-axis.
      */
     int16_t getScrolledX() const;
 
     /**
-     * @fn int16_t ScrollableContainer::getScrolledY() const;
-     *
-     * @brief Gets the distance scrolled for the y-axis.
-     *
-     *        Gets the distance scrolled for the y-axis.
+     * Gets the distance scrolled for the y-axis.
      *
      * @return the distance scrolled for the y-axis.
      */
     int16_t getScrolledY() const;
 
-protected:
-    uint8_t   scrollbarPadding;                           ///< The amount of padding. The scrollbar will have a bit of space to the borders of the container.
-    uint8_t   scrollbarWidth;                             ///< The width of the scrollbar.
-    uint8_t   scrollbarAlpha;                             ///< The scrollbar is semitransparent
-    static    const uint8_t SCROLLBAR_LINE = 0;           ///< The scrollbar line.
-    colortype scrollbarColor;                             ///< The color of the scrollbar
-    static    const uint16_t SCROLLBAR_MIN_VELOCITY = 5;  ///< The minimum velocity of a scroll due to a swipe
-    static    const uint16_t SCROLLBAR_MAX_VELOCITY = 17; ///< The (default) maximum velocity of a scroll due to a swipe
-    uint16_t  maxVelocity;                                ///< The maximum velocity of a scroll (due to a swipe)
+    /**
+     * Sets scroll duration speedup multiplier. Default value is 7 which gives a nice speedup on gestures.
+     *
+     * @param  speedup The scroll duration speedup multiplier.
+     *
+     * @see getScrollDurationSpeedup, setScrollDurationSlowdown
+     */
+    void setScrollDurationSpeedup(uint16_t speedup);
 
     /**
-     * @fn Rect ScrollableContainer::getXScrollbar() const;
+     * Gets scroll duration speedup multiplier.
      *
-     * @brief Gets x coordinate of the scrollbar.
+     * @return The swipe acceleration.
      *
-     *        Gets x coordinate of the scrollbar.
+     * @see setScrollDurationSpeedup, getScrollDurationSlowdown
+     */
+    uint16_t getScrollDurationSpeedup() const;
+
+    /**
+     * Sets scroll duration speedup divisor. Default value is 1.
+     *
+     * @param  slowdown The scroll duration speedup divisor.
+     *
+     * @see setScrollDurationSpeedup, getScrollDurationSlowdown
+     */
+    void setScrollDurationSlowdown(uint16_t slowdown);
+
+    /**
+     * Gets scroll duration speedup divisor.
+     *
+     * @return The scroll duration speedup divisor.
+     *
+     * @see setScrollDurationSlowdown
+     */
+    uint16_t getScrollDurationSlowdown() const;
+
+protected:
+    uint8_t scrollbarPadding;                          ///< The amount of padding. The scrollbar will have a bit of space to the borders of the container.
+    uint8_t scrollbarWidth;                            ///< The width of the scrollbar.
+    uint8_t scrollbarAlpha;                            ///< The scrollbar is semitransparent
+    static const uint8_t SCROLLBAR_LINE = 0;           ///< The scrollbar line.
+    colortype scrollbarColor;                          ///< The color of the scrollbar
+    static const uint16_t SCROLLBAR_MIN_VELOCITY = 5;  ///< The minimum velocity of a scroll due to a swipe
+    static const uint16_t SCROLLBAR_MAX_VELOCITY = 17; ///< The (default) maximum velocity of a scroll due to a swipe
+    uint16_t maxVelocity;                              ///< The maximum velocity of a scroll (due to a swipe)
+
+    /**
+     * Gets x coordinate of the scrollbar.
      *
      * @return The horizontal scrollbar area.
      */
     Rect getXScrollbar() const;
 
     /**
-     * @fn Rect ScrollableContainer::getYScrollbar() const;
-     *
-     * @brief Gets y coordinate of the scrollbar.
-     *
-     *        Gets y coordinate of the scrollbar.
+     * Gets y coordinate of the scrollbar.
      *
      * @return The vertical scrollbar area.
      */
     Rect getYScrollbar() const;
 
     /**
-     * @fn Rect ScrollableContainer::getXBorder(const Rect& xBar, const Rect& yBar) const;
+     * Gets the area where the horizontal scrollbar can move.
      *
-     * @brief Gets the area where the horizontal scrollbar can move.
-     *
-     *        Gets the area where the horizontal scrollbar can move.
-     *
-     * @param xBar The current horizontal scrollbar, supplied for caching reasons.
-     * @param yBar The current vertical scrollbar, supplied for caching reasons.
+     * @param  xBar The current horizontal scrollbar, supplied for caching reasons.
+     * @param  yBar The current vertical scrollbar, supplied for caching reasons.
      *
      * @return The area.
      */
     Rect getXBorder(const Rect& xBar, const Rect& yBar) const;
 
     /**
-     * @fn Rect ScrollableContainer::getYBorder(const Rect& xBar, const Rect& yBar) const;
+     * Gets the area where the vertical scrollbar can move.
      *
-     * @brief Gets the area where the vertical scrollbar can move.
-     *
-     *        Gets the area where the vertical scrollbar can move.
-     *
-     * @param xBar The current horizontal scrollbar, supplied for caching reasons.
-     * @param yBar The current vertical scrollbar, supplied for caching reasons.
+     * @param  xBar The current horizontal scrollbar, supplied for caching reasons.
+     * @param  yBar The current vertical scrollbar, supplied for caching reasons.
      *
      * @return The area.
      */
     Rect getYBorder(const Rect& xBar, const Rect& yBar) const;
 
-    /**
-     * @fn void ScrollableContainer::invalidateScrollbars();
-     *
-     * @brief Invalidate the scrollbars.
-     *
-     *        Invalidate the scrollbars.
-     */
+    /** Invalidate the scrollbars. */
     void invalidateScrollbars();
 
     /**
-     * @fn virtual bool ScrollableContainer::doScroll(int16_t deltaX, int16_t deltaY);
+     * Method to actually scroll the container. Passing negative values will scroll the
+     * items in the ScrollableContainer up / left, whereas positive values will scroll items
+     * down / right.
      *
-     * @brief Method to actually scroll the container.
+     * If the distance is larger than allowed, the deltas are adjusted down to make sure the
+     * contained items stay inside view.
      *
-     *        Method to actually scroll the container. Passing negative values will scroll the
-     *        items in the ScrollableContainer up / left, whereas positive values will scroll
-     *        items down / right.
-     *
-     *        If the distance is larger than allowed, the deltas are adjusted down to make sure
-     *        the contained items stay inside view.
-     *
-     * @param deltaX The horizontal amount to scroll.
-     * @param deltaY The vertical amount to scroll.
+     * @param  deltaX The horizontal amount to scroll.
+     * @param  deltaY The vertical amount to scroll.
      *
      * @return did the container actually scroll. The call doScroll(0,0) will always return
      *         false.
      */
     virtual bool doScroll(int16_t deltaX, int16_t deltaY);
 
-    GestureEvent::GestureType accelDirection; ///< The current direction (horizontal or vertical) of scroll
+    GestureEvent::GestureEventType accelDirection; ///< The current direction (horizontal or vertical) of scroll
 
     Box xSlider; ///< The horizontal scrollbar drawable
     Box ySlider; ///< The vertical scrollbar drawable
@@ -478,8 +364,8 @@ protected:
     bool scrollableX; ///< Is the container scrollable in the horizontal direction.
     bool scrollableY; ///< Is the container scrollable in the vertical direction.
 
-    bool scrollbarsVisible; ///< Are scrollbars always visible.
-    bool scrollbarsPermanentlyVisible; ///< Are scrollbars alway visible.
+    bool scrollbarsVisible;            ///< Are scrollbars visible.
+    bool scrollbarsPermanentlyVisible; ///< Are scrollbars always visible.
 
     uint16_t scrollDuration; ///< Number of ticks the scroll animation should use.
 
@@ -493,7 +379,11 @@ protected:
     int16_t fingerAdjustmentY; ///< and how much vertically
 
     bool hasIssuedCancelEvent; ///< true if the pressed drawable has received cancel event
+
+    uint16_t scrollDurationSpeedup; ///< The scroll durations is multipled by this number
+    uint16_t scrollDurationSlowdown; ///< The scroll durations is divided by this number
 };
+
 } // namespace touchgfx
 
 #endif // SCROLLABLECONTAINER_HPP

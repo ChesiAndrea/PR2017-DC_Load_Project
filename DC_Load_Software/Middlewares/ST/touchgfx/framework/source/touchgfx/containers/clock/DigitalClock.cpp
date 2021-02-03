@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -26,10 +26,6 @@ DigitalClock::DigitalClock() :
     text.setXY(0, 0);
     text.setWildcard(buffer);
     Container::add(text);
-}
-
-DigitalClock::~DigitalClock()
-{
 }
 
 void DigitalClock::setWidth(int16_t width)
@@ -57,9 +53,9 @@ void DigitalClock::displayLeadingZeroForHourIndicator(bool displayLeadingZero)
     useLeadingZeroForHourIndicator = displayLeadingZero;
 }
 
-void DigitalClock::setAlpha(uint8_t alpha)
+void DigitalClock::setAlpha(uint8_t newAlpha)
 {
-    text.setAlpha(alpha);
+    text.setAlpha(newAlpha);
 }
 
 uint8_t DigitalClock::getAlpha() const
@@ -103,4 +99,4 @@ void DigitalClock::updateClock()
     }
     text.invalidate();
 }
-}
+} // namespace touchgfx

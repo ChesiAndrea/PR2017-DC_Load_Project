@@ -4,17 +4,13 @@
 #define BITMAPDATABASE_HPP
 
 #include <touchgfx/hal/Types.hpp>
-#include <touchgfx/lcd/LCD.hpp>
 #include <touchgfx/Bitmap.hpp>
 
 const uint16_t BITMAP_BACKGROUND_ID = 0;
 const uint16_t BITMAP_CONFIG_SMALL_BUTTON_PRESSED_ID = 1;
-const uint16_t BITMAP_CURRENT_ID = 2;
-const uint16_t BITMAP_POWER_ID = 3;
-const uint16_t BITMAP_RESISTANCE_ID = 4;
-const uint16_t BITMAP_SETTINGS_ID = 5;
-const uint16_t BITMAP_SETTINGS_PRESSED_ID = 6;
-const uint16_t BITMAP_VOLTAGE_ID = 7;
+const uint16_t BITMAP_POWER_ID = 2;
+const uint16_t BITMAP_SETTINGS_ID = 3;
+const uint16_t BITMAP_SETTINGS_PRESSED_ID = 4;
 
 namespace BitmapDatabase
 {

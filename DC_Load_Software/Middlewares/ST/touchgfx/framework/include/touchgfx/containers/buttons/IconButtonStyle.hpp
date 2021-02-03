@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/buttons/IconButtonStyle.hpp
+ *
+ * Declares the touchgfx::IconButtonStyle class.
+ */
 #ifndef ICONBUTTONSTYLE_HPP
 #define ICONBUTTONSTYLE_HPP
 
@@ -21,58 +26,36 @@
 namespace touchgfx
 {
 /**
- * @class IconButtonStyle IconButtonStyle.hpp touchgfx/containers/buttons/IconButtonStyle.hpp
+ * An icon button style. This class is supposed to be used with one of the ButtonTrigger classes
+ * to create a functional button. This class will show one of two icons depending on the
+ * state of the button (pressed or released).
  *
- * @brief An icon button style.
+ * To get a background behind the icon, use IconButtonStyle together with e.g.
+ * ImageButtonStyle: IconButtonStyle<ImageButtonStyle<ClickButtonTrigger> >
+ * myButton;
  *
- *        An icon button style. This class is supposed to be used
- *        with one of the ButtonTrigger classes to create a functional
- *        button. This class will show one of two icons depending on
- *        the state of the button (pressed or released).
+ * The IconButtonStyle will center the icon on the enclosing container (normally
+ * AbstractButtonContainer). Set the size of the button before setting the icons.
  *
- *        To get a background behind the icon, use IconButtonStyle
- *        together with e.g. ImageButtonStyle:
- *        IconButtonStyle<ImageButtonStyle<ClickButtonTrigger> >
- *        myButton;
- *
- *        The IconButtonStyle will center the icon on the enclosing
- *        container (normally AbstractButtonContainer). Set the size
- *        of the button before setting the icons.
- *
- *        The position of the icon can be adjusted with setIconXY.
- *
- * @tparam T Generic type parameter. Typically a AbstractButtonContainer subclass.
+ * The position of the icon can be adjusted with setIconXY.
  *
  * @see AbstractButtonContainer
  */
-template<class T>
+template <class T>
 class IconButtonStyle : public T
 {
 public:
-    /**
-     * @fn IconButtonStyle::IconButtonStyle()
-     *
-     * @brief Default constructor.
-     */
-    IconButtonStyle() : T()
+    IconButtonStyle()
+        : T()
     {
         T::add(iconImage);
     }
 
     /**
-     * @fn virtual IconButtonStyle::~IconButtonStyle()
+     * Sets icon bitmaps.
      *
-     * @brief Destructor.
-     */
-    virtual ~IconButtonStyle() { }
-
-    /**
-     * @fn virtual void IconButtonStyle::setIconBitmaps(const Bitmap& newIconReleased, const Bitmap& newIconPressed)
-     *
-     * @brief Sets icon bitmaps.
-     *
-     * @param newIconReleased The new icon released.
-     * @param newIconPressed  The new icon pressed.
+     * @param  newIconReleased The new icon released.
+     * @param  newIconPressed  The new icon pressed.
      */
     virtual void setIconBitmaps(const Bitmap& newIconReleased, const Bitmap& newIconPressed)
     {
@@ -85,11 +68,9 @@ public:
     }
 
     /**
-     * @fn void IconButtonStyle::setIconX(int16_t x)
+     * Sets icon x coordinate.
      *
-     * @brief Sets icon x coordinate.
-     *
-     * @param x The x coordinate.
+     * @param  x The x coordinate.
      */
     void setIconX(int16_t x)
     {
@@ -97,11 +78,9 @@ public:
     }
 
     /**
-     * @fn void IconButtonStyle::setIconY(int16_t y)
+     * Sets icon y coordinate.
      *
-     * @brief Sets icon y coordinate.
-     *
-     * @param y The y coordinate.
+     * @param  y The y coordinate.
      */
     void setIconY(int16_t y)
     {
@@ -109,12 +88,10 @@ public:
     }
 
     /**
-     * @fn void IconButtonStyle::setIconXY(int16_t x, int16_t y)
+     * Sets the position of the icon.
      *
-     * @brief Sets icon xy.
-     *
-     * @param x The x coordinate.
-     * @param y The y coordinate.
+     * @param  x The x coordinate.
+     * @param  y The y coordinate.
      */
     void setIconXY(int16_t x, int16_t y)
     {
@@ -123,9 +100,7 @@ public:
     }
 
     /**
-     * @fn Bitmap IconButtonStyle::getCurrentlyDisplayedIcon() const
-     *
-     * @brief Gets currently displayed icon.
+     * Gets currently displayed icon.
      *
      * @return The currently displayed icon.
      */
@@ -135,9 +110,7 @@ public:
     }
 
     /**
-     * @fn int16_t IconButtonStyle::getIconX() const
-     *
-     * @brief Gets icon x coordinate.
+     * Gets icon x coordinate.
      *
      * @return The icon x coordinate.
      */
@@ -147,9 +120,7 @@ public:
     }
 
     /**
-     * @fn int16_t IconButtonStyle::getIconY() const
-     *
-     * @brief Gets icon y coordinate.
+     * Gets icon y coordinate.
      *
      * @return The icon y coordinate.
      */
@@ -159,32 +130,25 @@ public:
     }
 
 protected:
-    Bitmap  iconReleased; ///< Icon to display when button is not pressed.
-    Bitmap  iconPressed;  ///< Icon to display when button is pressed.
-    Image iconImage;      ///< The icon image
+    Bitmap iconReleased; ///< Icon to display when button is not pressed.
+    Bitmap iconPressed;  ///< Icon to display when button is pressed.
+    Image iconImage;     ///< The icon image
 
-    /**
-     * @fn virtual void IconButtonStyle::handlePressedUpdated()
-     *
-     * @brief Handles the pressed updated.
-     */
+    /** @copydoc AbstractButtonContainer::handlePressedUpdated() */
     virtual void handlePressedUpdated()
     {
         iconImage.setBitmap(T::getPressed() ? iconPressed : iconReleased);
         T::handlePressedUpdated();
     }
 
-    /**
-     * @fn virtual void IconButtonStyle::handleAlphaUpdated()
-     *
-     * @brief Handles the alpha updated.
-     */
+    /** @copydoc AbstractButtonContainer::handleAlphaUpdated() */
     virtual void handleAlphaUpdated()
     {
         iconImage.setAlpha(T::getAlpha());
         T::handleAlphaUpdated();
     }
 };
+
 } // namespace touchgfx
 
 #endif // ICONBUTTONSTYLE_HPP

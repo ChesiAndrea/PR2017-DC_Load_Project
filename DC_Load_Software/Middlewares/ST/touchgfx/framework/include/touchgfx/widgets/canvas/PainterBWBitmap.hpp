@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,54 +13,48 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/canvas/PainterBWBitmap.hpp
+ *
+ * Declares the touchgfx::PainterBWBitmap class.
+ */
 #ifndef PAINTERBWBITMAP_HPP
 #define PAINTERBWBITMAP_HPP
 
 #include <stdint.h>
 #include <platform/driver/lcd/LCD1bpp.hpp>
-#include <touchgfx/widgets/canvas/AbstractPainterBW.hpp>
 #include <touchgfx/Bitmap.hpp>
 #include <touchgfx/transforms/DisplayTransformation.hpp>
+#include <touchgfx/widgets/canvas/AbstractPainterBW.hpp>
 
 namespace touchgfx
 {
 /**
- * @class PainterBWBitmap PainterBWBitmap.hpp touchgfx/widgets/canvas/PainterBWBitmap.hpp
- *
- * @brief A Painter that will paint using a bitmap.
- *
- *        PainterBWBitmap will take the color for a given point in the shape from a bitmap.
- *        Please be aware, the the bitmap is used by the CWR (not Shape), so any rotation you
- *        might specify for a Canvas Widget (e.g. Shape) is not applied to the bitmap as CWR is
- *        not aware of this rotation.
+ * PainterBWBitmap will take the color for a given point in the shape from a bitmap. Please be
+ * aware, the the bitmap is used by the CanvasWidgetRenderer (not Shape), so any
+ * rotation you might specify for a Canvas Widget (e.g. Shape) is not applied to the
+ * bitmap as CWR is not aware of this rotation.
  *
  * @see AbstractPainter
  */
 class PainterBWBitmap : public AbstractPainterBW
 {
 public:
-
     /**
-     * @fn PainterBWBitmap::PainterBWBitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID));
+     * Initializes a new instance of the PainterBWBitmap class.
      *
-     * @brief Constructor.
-     *
-     *        Constructor.
-     *
-     * @param bmp   The bitmap.
+     * @param  bmp (Optional) The bitmap, default is #BITMAP_INVALID.
      */
-    PainterBWBitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID));
-
-    virtual ~PainterBWBitmap() {}
+    PainterBWBitmap(const Bitmap& bmp = Bitmap(BITMAP_INVALID))
+        : AbstractPainterBW(), bitmapBWPointer(0)
+    {
+        setBitmap(bmp);
+    }
 
     /**
-     * @fn void PainterBWBitmap::setBitmap(const Bitmap& bmp);
+     * Sets a bitmap to be used when drawing the CanvasWidget.
      *
-     * @brief Sets a bitmap to be used when drawing the CanvasWidget.
-     *
-     *        Sets a bitmap to be used when drawing the CanvasWidget.
-     *
-     * @param bmp The bitmap.
+     * @param  bmp The bitmap.
      */
     void setBitmap(const Bitmap& bmp);
 
@@ -74,9 +68,10 @@ protected:
     const uint8_t* bitmapBWPointer; ///< Pointer to the bitmap (BW)
     LCD1bpp::bwRLEdata bw_rle;      ///< Pointer to class for walking through bw_rle image
 
-    Bitmap bitmap;                  ///< The bitmap to be used when painting
-    Rect   bitmapRectToFrameBuffer; ///< Bitmap rectangle translated to frame buffer coordinates
-}; // class PainterBWBitmap
+    Bitmap bitmap;                ///< The bitmap to be used when painting
+    Rect bitmapRectToFrameBuffer; ///< Bitmap rectangle translated to framebuffer coordinates
+};
+
 } // namespace touchgfx
 
 #endif // PAINTERBWBITMAP_HPP

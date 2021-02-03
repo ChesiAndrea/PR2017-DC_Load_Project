@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -18,37 +18,26 @@
 
 #include <touchgfx/Drawable.hpp>
 
+/// @cond
 namespace touchgfx
 {
 /**
- * @class JSMOCHelper JSMOCHelper.hpp touchgfx/JSMOCHelper.hpp
+ * Helper class providing caching of certain information while the JSMOC algorithm runs during
+ * draw operations.
  *
- * @brief Helper class providing caching of certain information while the JSMOC algorithm runs
- *        during draw operations.
- *
- *         Helper class providing caching of certain information while the JSMOC algorithm runs
- *         during draw operations. Not intented for application-level use.
+ * @note Not intended for application-level use.
+ * @note JSMOC is an abbreviation of <em>Jesper, S&oslash;ren &amp; Martin's Occlusion Culling</em>.
  */
 class JSMOCHelper
 {
 public:
-    /**
-     * @fn JSMOCHelper::JSMOCHelper()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
+    /** Initializes a new instance of the JSMOCHelper class. */
     JSMOCHelper()
     {
     }
 
     /**
-     * @fn void JSMOCHelper::setWidget(Drawable* newWidget)
-     *
-     * @brief Sets a widget.
-     *
-     *        Sets a widget.
+     * Sets a widget.
      *
      * @param [in] newWidget The widget to operate on.
      */
@@ -63,11 +52,7 @@ public:
     }
 
     /**
-     * @fn Drawable* JSMOCHelper::getWidget()
-     *
-     * @brief Gets the widget.
-     *
-     *        Gets the widget.
+     * Gets the widget.
      *
      * @return The widget this helper operates on.
      */
@@ -77,11 +62,7 @@ public:
     }
 
     /**
-     * @fn Rect& JSMOCHelper::getCachedVisibleRect()
-     *
-     * @brief Gets the visible rect for the widget of this helper.
-     *
-     *        Gets the visible rect for the widget of this helper.
+     * Gets the visible rect for the widget of this helper.
      *
      * @return The visible rect for the widget of this helper. Only calculated once.
      */
@@ -99,11 +80,7 @@ public:
     }
 
     /**
-     * @fn int16_t JSMOCHelper::getCachedAbsX()
-     *
-     * @brief Gets the absolute x coordinate for the widget of this helper.
-     *
-     *        Gets the absolute x coordinate for the widget of this helper.
+     * Gets the absolute x coordinate for the widget of this helper.
      *
      * @return The absolute x coordinate for the widget of this helper. Only calculated once.
      */
@@ -119,11 +96,7 @@ public:
     }
 
     /**
-     * @fn int16_t JSMOCHelper::getCachedAbsY()
-     *
-     * @brief Gets the absolute y coordinate for the widget of this helper.
-     *
-     *        Gets the absolute y coordinate for the widget of this helper.
+     * Gets the absolute y coordinate for the widget of this helper.
      *
      * @return The absolute y coordinate for the widget of this helper. Only calculated once.
      */
@@ -139,11 +112,7 @@ public:
     }
 
     /**
-     * @fn int16_t JSMOCHelper::getWidth()
-     *
-     * @brief Gets the width of the widget of this helper.
-     *
-     *        Gets the width of the widget of this helper.
+     * Gets the width of the widget of this helper.
      *
      * @return The width of the widget of this helper.
      */
@@ -153,11 +122,7 @@ public:
     }
 
     /**
-     * @fn int16_t JSMOCHelper::getHeight()
-     *
-     * @brief Gets the height of the widget of this helper.
-     *
-     *        Gets the height of the widget of this helper.
+     * Gets the height of the widget of this helper.
      *
      * @return The height of the widget of this helper.
      */
@@ -167,13 +132,9 @@ public:
     }
 
     /**
-     * @fn void JSMOCHelper::draw(const Rect& invalidatedArea)
+     * Draws the widget of this helper.
      *
-     * @brief Draws the widget of this helper.
-     *
-     *        Draws the widget of this helper.
-     *
-     * @param invalidatedArea The area of the widget to draw.
+     * @param  invalidatedArea The area of the widget to draw.
      */
     void draw(const Rect& invalidatedArea)
     {
@@ -186,6 +147,12 @@ private:
     Drawable* widget;
 
     Rect cachedVisibleRect;
+
+    /**
+     * Query if this object has cached visible rectangle.
+     *
+     * @return True if cached visible rectangle, false if not.
+     */
     bool hasCachedVisibleRect()
     {
         return cachedVisibleRect.x != CACHED_INDICATOR;
@@ -193,15 +160,29 @@ private:
 
     int16_t cachedAbsX;
     int16_t cachedAbsY;
+
+    /**
+     * Query if this object has cached abs x coordinate.
+     *
+     * @return True if cached abs x coordinate, false if not.
+     */
     bool hasCachedAbsX()
     {
         return cachedAbsX != CACHED_INDICATOR;
     }
+
+    /**
+     * Query if this object has cached abs y coordinate.
+     *
+     * @return True if cached abs y coordinate, false if not.
+     */
     bool hasCachedAbsY()
     {
         return cachedAbsY != CACHED_INDICATOR;
     }
 };
+
 } // namespace touchgfx
+/// @endcond
 
 #endif // JSMOCHELPER_HPP

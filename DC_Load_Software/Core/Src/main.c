@@ -40,7 +40,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32746g_bsp.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,8 +115,52 @@ int main(void)
 		HAL_FLASH_OB_Launch();
 	}	
 	
-	MX_GPIO_Init();
+	//--------------------------------------------------------------
+	// Set the uSD power off 
+	//--------------------------------------------------------------		
+	GPIO_InitTypeDef SD_Power = {0};
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+	SD_Power.Pin = GPIO_PIN_13;
+  SD_Power.Mode = GPIO_MODE_OUTPUT_PP;
+  SD_Power.Pull = GPIO_NOPULL;
+  SD_Power.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &SD_Power);	
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   
 	
+	//--------------------------------------------------------------
+	// Set identifier pin of the board version as input 
+	//--------------------------------------------------------------	
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);   
+	GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);	
+	
+	//--------------------------------------------------------------
+	// Set identifier pin of the touch controller as input 
+	//--------------------------------------------------------------	
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);   
+	GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);			
+	MX_GPIO_Init();
+
+	// settings of the touch controller 
+	if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+	{
+		BSP_TS_Settings(&hi2c1, STMPE811, 800,480);	
+	}
+	else
+	{
+		BSP_TS_Settings(&hi2c2, TSC2013, 800,480);	
+	}
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -177,7 +221,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+		HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/buttons/TextButtonStyle.hpp
+ *
+ * Declares the touchgfx::TextButtonStyle class.
+ */
 #ifndef TEXTBUTTONSTYLE_HPP
 #define TEXTBUTTONSTYLE_HPP
 
@@ -21,58 +26,35 @@
 namespace touchgfx
 {
 /**
- * @class TextButtonStyle TextButtonStyle.hpp touchgfx/containers/buttons/TextButtonStyle.hpp
+ * A text button style. This class is supposed to be used with one of the ButtonTrigger classes
+ * to create a functional button. This class will show a text in one of two colors
+ * depending on the state of the button (pressed or released).
  *
- * @brief A text button style.
+ * The TextButtonStyle does not set the size of the enclosing container (normally
+ * AbstractButtonContainer). The size must be set manually.
  *
- *        An text button style. This class is supposed to be used with
- *        one of the ButtonTrigger classes to create a functional
- *        button. This class will show a text in one of two colors
- *        depending on the state of the button (pressed or released).
+ * To get a background behind the text, use TextButtonStyle together with e.g.
+ * ImageButtonStyle: TextButtonStyle<ImageButtonStyle<ClickButtonTrigger> >
+ * myButton;
  *
- *        The TextButtonStyle does not set the size of the enclosing
- *        container (normally AbstractButtonContainer). The size must
- *        be set manually.
- *
- *        To get a background behind the text, use TextButtonStyle
- *        together with e.g. ImageButtonStyle:
- *        TextButtonStyle<ImageButtonStyle<ClickButtonTrigger> >
- *        myButton;
- *
- *        The position of the text can be adjusted with setTextXY
- *        (default is centered).
- *
- * @tparam T Generic type parameter. Typically a AbstractButtonContainer subclass.
+ * The position of the text can be adjusted with setTextXY (default is centered).
  *
  * @see AbstractButtonContainer
  */
-template<class T>
+template <class T>
 class TextButtonStyle : public T
 {
 public:
-    /**
-     * @fn TextButtonStyle::TextButtonStyle()
-     *
-     * @brief Default constructor.
-     */
-    TextButtonStyle() : T()
+    TextButtonStyle()
+        : T()
     {
         T::add(text);
     }
 
     /**
-     * @fn virtual TextButtonStyle::~TextButtonStyle()
+     * Sets a text.
      *
-     * @brief Destructor.
-     */
-    virtual ~TextButtonStyle() { }
-
-    /**
-     * @fn void TextButtonStyle::setText(TypedText t)
-     *
-     * @brief Sets a text.
-     *
-     * @param t A TypedText to process.
+     * @param  t A TypedText to process.
      */
     void setText(TypedText t)
     {
@@ -82,11 +64,9 @@ public:
     }
 
     /**
-     * @fn void TextButtonStyle::setTextX(int16_t x)
+     * Sets text x coordinate.
      *
-     * @brief Sets text x coordinate.
-     *
-     * @param x The x coordinate.
+     * @param  x The x coordinate.
      */
     void setTextX(int16_t x)
     {
@@ -94,11 +74,9 @@ public:
     }
 
     /**
-     * @fn void TextButtonStyle::setTextY(int16_t y)
+     * Sets text y coordinate.
      *
-     * @brief Sets text y coordinate.
-     *
-     * @param y The y coordinate.
+     * @param  y The y coordinate.
      */
     void setTextY(int16_t y)
     {
@@ -106,12 +84,10 @@ public:
     }
 
     /**
-     * @fn void TextButtonStyle::setTextXY(int16_t x, int16_t y)
+     * Sets text x and y.
      *
-     * @brief Sets text xy.
-     *
-     * @param x The x coordinate.
-     * @param y The y coordinate.
+     * @param  x The x coordinate.
+     * @param  y The y coordinate.
      */
     void setTextXY(int16_t x, int16_t y)
     {
@@ -120,14 +96,12 @@ public:
     }
 
     /**
-     * @fn void TextButtonStyle::setTextPosition(int16_t x, int16_t y, , int16_t width, int16_t height)
+     * Sets text position.
      *
-     * @brief Sets text position.
-     *
-     * @param x The x coordinate.
-     * @param y The y coordinate.
-     * @param width The width of the text.
-     * @param height The height of the text.
+     * @param  x      The x coordinate.
+     * @param  y      The y coordinate.
+     * @param  width  The width of the text.
+     * @param  height The height of the text.
      */
     void setTextPosition(int16_t x, int16_t y, int16_t width, int16_t height)
     {
@@ -135,11 +109,9 @@ public:
     }
 
     /**
-     * @fn void TextButtonStyle::setTextRotation(TextRotation rotation)
+     * Sets text rotation.
      *
-     * @brief Sets text rotation.
-     *
-     * @param rotation The rotation.
+     * @param  rotation The rotation.
      */
     void setTextRotation(TextRotation rotation)
     {
@@ -147,12 +119,10 @@ public:
     }
 
     /**
-     * @fn void TextButtonStyle::setTextColors(colortype newColorReleased, colortype newColorPressed)
+     * Sets text colors.
      *
-     * @brief Sets text colors.
-     *
-     * @param newColorReleased The new color released.
-     * @param newColorPressed  The new color pressed.
+     * @param  newColorReleased The new color released.
+     * @param  newColorPressed  The new color pressed.
      */
     void setTextColors(colortype newColorReleased, colortype newColorPressed)
     {
@@ -167,28 +137,21 @@ protected:
     colortype colorReleased; ///< The color released
     colortype colorPressed;  ///< The color pressed
 
-    /**
-     * @fn virtual void TextButtonStyle::handlePressedUpdated()
-     *
-     * @brief Handles the pressed updated.
-     */
+    /** @copydoc AbstractButtonContainer::handlePressedUpdated() */
     virtual void handlePressedUpdated()
     {
         text.setColor(T::getPressed() ? colorPressed : colorReleased);
         T::handlePressedUpdated();
     }
 
-    /**
-     * @fn virtual void TextButtonStyle::handleAlphaUpdated()
-     *
-     * @brief Handles the alpha updated.
-     */
+    /** @copydoc AbstractButtonContainer::handleAlphaUpdated() */
     virtual void handleAlphaUpdated()
     {
         text.setAlpha(T::getAlpha());
         T::handleAlphaUpdated();
     }
 };
+
 } // namespace touchgfx
 
 #endif // TEXTBUTTONSTYLE_HPP

@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,44 +13,36 @@
   ******************************************************************************
   */
 
+/**
+ * @file platform/hal/simulator/sdl2/HALSDL2.hpp
+ *
+ * Declares the touchgfx::HALSDL2 class.
+ */
 #ifndef HALSDL2_HPP
 #define HALSDL2_HPP
 
-#include <touchgfx/hal/HAL.hpp>
-#include <platform/driver/touch/TouchController.hpp>
-#include <touchgfx/lcd/LCD.hpp>
-#include <SDL2/SDL_video.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
+#include <platform/driver/touch/TouchController.hpp>
+#include <touchgfx/hal/HAL.hpp>
+#include <touchgfx/lcd/LCD.hpp>
 
 namespace touchgfx
 {
-/**
- * @fn void simulator_enable_stdio();
- *
- * @brief Simulator enable stdio
- *
- *        Simulator enable stdio
- */
+/** Simulator enable stdio. */
 void simulator_enable_stdio();
 
 /**
- * @fn void simulator_printf(const char* format, va_list pArg);
+ * Simulator printf.
  *
- * @brief Simulator printf
- *
- *        Simulator printf
- *
- * @param format Describes the format to use.
- * @param pArg   The argument list.
+ * @param  format Describes the format to use.
+ * @param  pArg   The argument list.
  */
 void simulator_printf(const char* format, va_list pArg);
 
 /**
- * @class HALSDL2 HALSDL2.hpp platform/hal/simulator/sdl/HALSDL2.hpp
- *
- * @brief HAL implementation for the TouchGFX simulator.
- *
- *        HAL implementation for the TouchGFX simulator.
+ * HAL implementation for the TouchGFX simulator. This particular simulator HAL implementation
+ * uses SDL2 to show the content of the framebuffer in a window.
  *
  * @see HAL
  */
@@ -58,22 +50,16 @@ class HALSDL2 : public HAL
 {
 public:
     /**
-     * @fn HALSDL2::HALSDL2(DMA_Interface& dma, LCD& lcd, TouchController& touchCtrl, uint16_t width, uint16_t height)
-     *
-     * @brief Constructor. Initializes members.
-     *
-     *        Constructor. Initializes members.
+     * Initializes a new instance of the HALSDL2 class.
      *
      * @param [in] dma       Reference to DMA interface.
      * @param [in] lcd       Reference to the LCD.
      * @param [in] touchCtrl Reference to Touch Controller driver.
-     * @param width          Width of the display.
-     * @param height         Height of the display.
+     * @param      width     Width of the display.
+     * @param      height    Height of the display.
      */
     HALSDL2(DMA_Interface& dma, LCD& lcd, TouchController& touchCtrl, uint16_t width, uint16_t height)
         : HAL(dma, lcd, touchCtrl, width, height),
-          debugInfoEnabled(false),
-          customTitle(0),
           portraitSkin(),
           landscapeSkin(),
           currentSkin(0),
@@ -87,23 +73,15 @@ public:
     }
 
     /**
-     * @fn virtual void HALSDL2::taskEntry();
-     *
-     * @brief Main event loop.
-     *
-     *        Main event loop. Will wait for VSYNC signal, and then process next frame. Call
-     *        this function from your GUI task.
+     * Main event loop. Will wait for VSYNC signal, and then process next frame. Call this
+     * function from your GUI task.
      *
      * @note This function never returns!
      */
     virtual void taskEntry();
 
     /**
-     * @fn virtual bool HALSDL2::sampleKey(uint8_t& key);
-     *
-     * @brief Sample key event from keyboard.
-     *
-     *        Sample key event from keyboard.
+     * Sample key event from keyboard.
      *
      * @param [out] key Output parameter that will be set to the key value if a key press was
      *                  detected.
@@ -113,86 +91,68 @@ public:
     virtual bool sampleKey(uint8_t& key);
 
     /**
-     * @fn virtual void HALSDL2::flushFrameBuffer();
+     * This function is called whenever the framework has performed a complete draw.
      *
-     * @brief This function is called whenever the framework has performed a complete draw.
-     *
-     *        On some platforms, a local frame buffer needs to be pushed to the display through
-     *        a SPI channel or similar. Implement that functionality here. This function is
-     *        called whenever the framework has performed a complete draw.
+     * On some platforms, a local framebuffer needs to be pushed to the display through a
+     * SPI channel or similar. Implement that functionality here. This function is called
+     * whenever the framework has performed a complete draw.
      */
     virtual void flushFrameBuffer();
 
     /**
-     * @fn virtual void HALSDL2::flushFrameBuffer(const Rect& rect);
+     * This function is called whenever the framework has performed a partial draw.
      *
-     * @brief This function is called whenever the framework has performed a partial draw.
-     *
-     *        This function is called whenever the framework has performed a partial draw.
-     *
-     * @param rect The area of the screen that has been drawn, expressed in absolute coordinates.
-     *
-     * @see flushFrameBuffer(). This function is called whenever the framework has performed a
-     *      partial draw.
+     * @param  rect The area of the screen that has been drawn, expressed in absolute coordinates.
      */
     virtual void flushFrameBuffer(const Rect& rect);
 
     /**
-     * @fn virtual bool HALSDL2::blockCopy(void* RESTRICT dest, const void* RESTRICT src, uint32_t numBytes);
+     * This function performs a platform-specific memcpy, if supported by the hardware.
      *
-     * @brief This function performs a platform-specific memcpy.
-     *
-     *        This function performs a platform-specific memcpy, if supported by the hardware.
-     *
-     * @param [out] dest Pointer to destination memory.
-     * @param src        Pointer to source memory.
-     * @param numBytes   Number of bytes to copy.
+     * @param [out] dest     Pointer to destination memory.
+     * @param       src      Pointer to source memory.
+     * @param       numBytes Number of bytes to copy.
      *
      * @return true if the copy succeeded, false if copy was not performed.
      */
     virtual bool blockCopy(void* RESTRICT dest, const void* RESTRICT src, uint32_t numBytes);
 
+    ///@cond
     /**
-     * @fn virtual void HALSDL2::blitSetTransparencyKey(uint16_t key);
+     * If Blit-operations are supported, transparency-keying support is implicitly assumed.
      *
-     * @brief If Blit-operations are supported, transparency-keying support is implicitly assumed.
+     * @param  key The "transparent" color value.
      *
-     *        If Blit-operations are supported, transparency-keying support is implicitly
-     *        assumed.
-     *
-     * @param key The "transparent" color value.
+     * @deprecated Transparancy key is no longer supported.
      */
-    virtual void blitSetTransparencyKey(uint16_t key);
+    TOUCHGFX_DEPRECATED(
+        "Transparancy key is no longer supported.",
+        virtual void blitSetTransparencyKey(uint16_t key));
+    ///@endcond
 
     /**
-     * @fn void HALSDL2::setVsyncInterval(float ms);
+     * Sets vsync interval for simulating same tick speed as the real hardware. Due to
+     * limitations in the granularity of SDL, the generated ticks in the simulator might not
+     * occur at the exact time, but accumulated over several ticks, the precision is very
+     * good.
      *
-     * @brief Sets vsync interval.
-     *
-     *        Sets vsync interval for simulating same tick speed as the real hardware. Due to
-     *        limitations in the granularity of SDL, the generated ticks in the simulator might
-     *        not occur at the exact time, but accumulated over several ticks, the precision is
-     *        very good.
-     *
-     * @param ms The milliseconds between ticks.
+     * @param  ms The milliseconds between ticks.
      *
      * @note That you can also use HAL::setFrameRateCompensation() in the simulator. The effect of
      *       this can easily be demonstrated by dragging the console output window of the
-     *       simulator (when running from Visual Studio) as this will pause the SDL and generate a
-     *       lot of ticks when the console window is released. Beware that since the missed vsyncs
-     *       are accumulated in an 8 bit counter, only up to 255 ticks may be missed, so at
-     *       VsyncInterval = 16.6667, dragging the windows for more than 255 * 16.6667ms = 4250ms
-     *       = 4.25s will not generate all the ticks that were actually missed. This situation is,
-     *       however, not very realistic, as normally just a couple of vsyncs are skipped.
+     *       simulator (when running from Visual Studio) as this will pause the SDL and
+     *       generate a lot of ticks when the console window is released. Beware that
+     *       since the missed vsyncs are accumulated in an 8 bit counter, only up to 255
+     *       ticks may be missed, so at VsyncInterval = 16.6667, dragging the windows for
+     *       more than 255 * 16.6667ms = 4250ms
+     *       = 4.25s will not generate all the ticks that were actually missed. This
+     *       situation is, however, not very realistic, as normally just a couple of
+     *       vsyncs are skipped.
      */
     void setVsyncInterval(float ms);
 
     /**
-     * @fn bool HALSDL2::doSampleTouch(int32_t& x, int32_t& y) const;
-     *
-     * @brief Samples the position of the mouse cursor.
-     *
-     *        Samples the position of the mouse cursor.
+     * Samples the position of the mouse cursor.
      *
      * @param [out] x The x coordinate.
      * @param [out] y The y coordinate.
@@ -202,135 +162,122 @@ public:
     bool doSampleTouch(int32_t& x, int32_t& y) const;
 
     /**
-     * @fn virtual bool HALSDL2::sdl_init(int argcount, char** args);
+     * Initializes SDL.
      *
-     * @brief Initializes SDL.
-     *
-     *        Initializes SDL.
-     *
-     * @param argcount  Number of arguments.
-     * @param [in] args Arguments.
+     * @param      argcount Number of arguments.
+     * @param [in] args     Arguments.
      *
      * @return True if init went well, false otherwise.
      */
     virtual bool sdl_init(int argcount, char** args);
 
     /**
-     * @fn void HALSDL2::setWindowTitle(const char* title)
+     * Sets window title.
      *
-     * @brief Sets window title.
+     * Sets window title of the TouchGFX simulator.
      *
-     *        Sets window title of the TouchGFX simulator.
-     *
-     * @param title The title, if null the original "TouchGFX simulator" will be used.
+     * @param  title The title, if null the original "TouchGFX simulator" will be used.
      *
      * @see getWindowTitle
      */
-    void setWindowTitle(const char* title);
+    static void setWindowTitle(const char* title);
 
     /**
-     * @fn const char* HALSDL2::getWindowTitle() const
-     *
-     * @brief Gets window title.
-     *
-     *        Gets window title.
+     * Gets window title.
      *
      * @return null "TouchGFX simulator" unless set to something else using setWindowTitle().
      *
      * @see setWindowTitle
      */
-    const char* getWindowTitle() const;
+    static const char* getWindowTitle();
 
     /**
-     * @fn void HALSDL2::loadSkin(touchgfx::DisplayOrientation orientation, int x, int y);
+     * Loads a skin for a given display orientation that will be rendered in the simulator
+     * window with the the TouchGFX framebuffer placed inside the bitmap at the given
+     * coordinates. Different bitmaps can be loaded in landscape and portrait mode. If the
+     * provided bitmap cannot be loaded, the TouchGFX framebuffer will be displayed as
+     * normal. If the png files contain areas with alpha
+     * < 255, this will be used to create a shaped window.
      *
-     * @brief Loads a skin for a given display orientation.
-     *
-     *        Loads a skin for a given display orientation that will be rendered in the
-     *        simulator window with the the TouchGFX framebuffer placed inside the bitmap at
-     *        the given coordinates. Different bitmaps can be loaded in landscape and portrait
-     *        mode. If the provided bitmap cannot be loaded, the TouchGFX framebuffer will be
-     *        displayed as normal. If the png files contain areas with alpha &lt; 255, this
-     *        will be used to create a shaped window.
-     *
-     * @param orientation The orientation.
-     * @param x           The x coordinate.
-     * @param y           The y coordinate.
+     * @param  orientation The orientation.
+     * @param  x           The x coordinate.
+     * @param  y           The y coordinate.
      *
      * @note The skins must be named "portrait.png" and "landscape.png" and placed inside the
-     *       "simulator/" folder. The build process of the simulator will automatically copy the
-     *       skins to the folder where the executable simulator is generated.
+     *       "simulator/" folder. The build process of the simulator will automatically
+     *       copy the skins to the folder where the executable simulator is generated.
      * @note When as skin is set, the entire framebuffer is rendered through SDL whenever there is
      *       a change. Without a skin, only the areas with changes is rendered through SDL.
      */
     void loadSkin(touchgfx::DisplayOrientation orientation, int x, int y);
 
-    /**
-     * @fn void HALSDL2::saveScreenshot();
-     *
-     * @brief Saves a screenshot.
-     *
-     *        Saves a screenshot to the default folder and default filename.
-     */
+    /** Saves a screenshot to the default folder and default filename. */
     void saveScreenshot();
 
     /**
-     * @fn virtual void HALSDL2::saveNextScreenshots(int n);
+     * Copy the next N screenshots to disk. On each screen update, the new screen is saved
+     * to disk.
      *
-     * @brief Copy the next N screenshots to disk
-     *
-     *        Copy the next N screenshots to disk. On each screen update, the new screen is saved
-     *        to disk.
-     *
-     * @param n Number of screenshots to save. These are added to any ongoing amount of screenshots
-     *          in queue.
+     * @param  n Number of screenshots to save. These are added to any ongoing amount of
+     *           screenshots in queue.
      */
     virtual void saveNextScreenshots(int n);
 
     /**
-     * @fn virtual void HALSDL2::saveScreenshot(char* folder, char* filename);
-     *
-     * @brief Saves a screenshot.
-     *
-     *        Saves a screenshot.
+     * Saves a screenshot.
      *
      * @param [in] folder   Folder name to place the screenshot in.
      * @param [in] filename Filename to save the screenshot to.
      */
     virtual void saveScreenshot(char* folder, char* filename);
 
-    /**
-     * @fn virtual void HALSDL2::copyScreenshotToClipboard();
-     *
-     * @brief Copies the screenshot to clipboard
-     *
-     *        Copies the screenshot to clipboard.
-     */
+    /** Copies the screenshot to clipboard. */
     virtual void copyScreenshotToClipboard();
+
+    /**
+     * Single stepping enable/disable. When single stepping is enabled, F10 will execute one
+     * tick and F9 will disable single stepping.
+     *
+     * @param  singleStepping (Optional) True to pause the simulation and start single stepping.
+     *
+     * @see isSingleStepping
+     */
+    static void setSingleStepping(bool singleStepping = true);
+
+    /**
+     * Is single stepping.
+     *
+     * @return True if single stepping, false if not.
+     *
+     * @see setSingleStepping
+     */
+    static bool isSingleStepping();
+
+    /**
+     * Single step a number of steps. Only works if single stepping is already enabled.
+     *
+     * @param  steps (Optional) The steps Default is 1 step.
+     *
+     * @see setSingleStepping, isSingleStepping
+     */
+    static void singleStep(uint16_t steps = 1);
 
 #ifndef __linux__
     /**
-     * @fn static char** getArgv(int* argc);
+     * Gets the argc and argv for a Windows program.
      *
-     * @brief Gets the argc and argv.
+     * @param [in,out] argc Pointer to where to store number of arguments.
      *
-     *        Gets the argc and argv for a Windows program.
-     *
-     * @param argc Pointer to where to store number of arguments
      * @return The argv list of arguments.
      */
     static char** getArgv(int* argc);
 #endif
 
     /**
-     * @fn uint8_t* HALSDL2::scaleTo24bpp(uint8_t* dst, uint16_t* src, Bitmap::BitmapFormat format);
-     *
-     * @brief Scale framebuffer to 24bpp
-     *
-     *        Scale framebuffer to 24bpp. The format of the framebuffer (src) is given in
-     *        parameter format. The result is placed in the pre-allocated memory pointed to by
-     *        parameter dst. If the frambebuffer is in format Bitmap::RGB888, parameter dst is not
-     *        used and the parameter src is simply returned.
+     * Scale framebuffer to 24bpp. The format of the framebuffer (src) is given in parameter
+     * format. The result is placed in the pre-allocated memory pointed to by parameter dst.
+     * If the frambebuffer is in format Bitmap::RGB888, parameter dst is not used and the
+     * parameter src is simply returned.
      *
      * @param [out] dst    Destination for the framebuffer. must be non-null unless format is
      *                     Bitmap::RGB888.
@@ -342,14 +289,10 @@ public:
     static uint8_t* scaleTo24bpp(uint8_t* dst, uint16_t* src, Bitmap::BitmapFormat format);
 
     /**
-     * @fn uint8_t* HALSDL2::doRotate(uint8_t *dst, uint8_t* src);
+     * Rotates a framebuffer if the display is rotated.
      *
-     * @brief Rotates a framebuffer if the display is rotated.
-     *
-     *        Rotates a framebuffer if the display is rotated.
-     *
-     * @param [out] dst Destination for the rotated framebuffer. must be non-null if the screen is
-     *                  rotated.
+     * @param [out] dst Destination for the rotated framebuffer. must be non-null if the
+     *                  screen is rotated.
      * @param [in]  src The framebuffer.
      *
      * @return Null if it fails, else a pointer to an uint8_t.
@@ -357,14 +300,10 @@ public:
     static uint8_t* doRotate(uint8_t* dst, uint8_t* src);
 
     /**
-     * @fn void HALSDL2::setWindowVisible(bool visible, bool redrawWindow = true)
+     * Change visibility of window (hidden vs. shown).
      *
-     * @brief Change visibility of window (hidden vs. shown).
-     *
-     *        Change visibility of window (hidden vs. shown).
-     *
-     * @param visible      Should the window be visible?
-     * @param redrawWindow (Optional) Should the window be redrawn? Default = yes.
+     * @param  visible      Should the window be visible?
+     * @param  redrawWindow (Optional) Should the window be redrawn? Default is true.
      */
     void setWindowVisible(bool visible, bool redrawWindow = true)
     {
@@ -377,11 +316,7 @@ public:
     }
 
     /**
-     * @fn bool HALSDL2::getWindowVisible() const
-     *
-     * @brief Are windows visible?
-     *
-     *        Are windows visible?
+     * Are windows visible?
      *
      * @return True if it is visible, false if it is hidden.
      */
@@ -392,121 +327,75 @@ public:
 
 protected:
     /**
-     * @fn virtual uint16_t* HALSDL2::getTFTFrameBuffer() const;
+     * Gets TFT framebuffer.
      *
-     * @brief Gets TFT frame buffer.
-     *
-     *        Gets TFT frame buffer.
-     *
-     * @return null if it fails, else the TFT frame buffer.
+     * @return null if it fails, else the TFT framebuffer.
      */
     virtual uint16_t* getTFTFrameBuffer() const;
 
     /**
-     * @fn void HALSDL2::setTFTFrameBuffer(uint16_t* addr);
+     * Sets TFT framebuffer.
      *
-     * @brief Sets TFT frame buffer.
-     *
-     *        Sets TFT frame buffer.
-     *
-     * @param [in] addr The address of the TFT frame buffer.
+     * @param [in] addr The address of the TFT framebuffer.
      */
     void setTFTFrameBuffer(uint16_t* addr);
 
     /**
-     * @fn virtual void HALSDL2::renderLCD_FrameBufferToMemory(const Rect& _rectToUpdate, uint8_t* frameBuffer);
-     *
-     * @brief Update frame buffer using an SDL Surface.
-     *
-     *        Update frame buffer using an SDL Surface.
+     * Update framebuffer using an SDL Surface.
      *
      * @param      _rectToUpdate Area to update.
-     * @param [in] frameBuffer   Target frame buffer.
+     * @param [in] frameBuffer   Target framebuffer.
      */
     virtual void renderLCD_FrameBufferToMemory(const Rect& _rectToUpdate, uint8_t* frameBuffer);
 
-    /**
-     * @fn virtual void HALSDL2::disableInterrupts()
-     *
-     * @brief Disables the DMA and LCD interrupts.
-     *
-     *        Disables the DMA and LCD interrupts.
-     */
+    /** Disables the DMA and LCD interrupts. */
     virtual void disableInterrupts()
     {
     }
 
-    /**
-     * @fn virtual void HALSDL2::enableInterrupts()
-     *
-     * @brief Enables the DMA and LCD interrupts.
-     *
-     *        Enables the DMA and LCD interrupts.
-     */
+    /** Enables the DMA and LCD interrupts. */
     virtual void enableInterrupts()
     {
     }
 
-    /**
-     * @fn virtual void HALSDL2::configureLCDInterrupt()
-     *
-     * @brief Configures LCD interrupt.
-     *
-     *        Configures LCD interrupt.
-     */
+    /** Configures LCD interrupt. */
     virtual void configureLCDInterrupt()
     {
     }
 
-    /**
-     * @fn virtual void HALSDL2::enableLCDControllerInterrupt()
-     *
-     * @brief Enables the LCD interrupt.
-     *
-     *        Enables the LCD interrupt.
-     */
+    /** Enables the LCD interrupt. */
     virtual void enableLCDControllerInterrupt()
     {
     }
 
     /**
-     * @fn virtual void HALSDL2::configureInterrupts()
-     *
-     * @brief Configures the interrupts relevant for TouchGFX.
-     *
-     *        Configures the interrupts relevant for TouchGFX. This primarily entails setting
-     *        the interrupt priorities for the DMA and LCD interrupts.
+     * Configures the interrupts relevant for TouchGFX. This primarily entails setting the
+     * interrupt priorities for the DMA and LCD interrupts.
      */
     virtual void configureInterrupts()
     {
     }
 
-    /**
-     * @fn void HALSDL2::performDisplayOrientationChange();
-     *
-     * @brief Perform the actual display orientation change.
-     *
-     *        Perform the actual display orientation change.
-     */
+    /** Perform the actual display orientation change. */
     void performDisplayOrientationChange();
 
 private:
     void recreateWindow(bool updateContent = true);
     void pushTouch(bool down) const;
     bool popTouch() const;
-    void updateTitle(int32_t x, int32_t y) const;
+    static void updateTitle(int32_t x, int32_t y);
     void alphaChannelCheck(SDL_Surface* surface, bool& isOpaque, bool& hasSemiTransparency);
     void updateCurrentSkin();
     int getCurrentSkinX() const;
     int getCurrentSkinY() const;
 
-    bool debugInfoEnabled;
+    static bool debugInfoEnabled;
 
     float msBetweenTicks;
     float msPassed;
 
     static uint16_t icon[];
-    const char* customTitle;
+    static const char* customTitle;
 
     class SkinInfo
     {
@@ -532,7 +421,7 @@ private:
     bool isSkinActive;
     bool isWindowBorderless;
     bool isWindowVisible;
-    bool flashInvalidatedRect;
+    static bool flashInvalidatedRect;
 
     bool windowDrag;
     int windowDragX;
@@ -552,6 +441,9 @@ private:
     static int _numTouches;
 
     static uint8_t keyPressed;
+
+    static bool singleSteppingEnabled;
+    static uint16_t singleSteppingSteps;
 };
 
 } // namespace touchgfx

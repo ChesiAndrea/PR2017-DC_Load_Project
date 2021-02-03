@@ -7,9 +7,11 @@
 #include <stdint.h>
 #include <touchgfx/Unicode.hpp>
 
-extern const uint32_t indices<%= language %>[];
+TEXT_LOCATION_FLASH_PRAGMA
+KEEP extern const uint32_t indices<%= language %>[] TEXT_LOCATION_FLASH_ATTRIBUTE;
 <% if not remap_strings? %>
-extern const touchgfx::Unicode::UnicodeChar texts<%= language %>[];
+TEXT_LOCATION_FLASH_PRAGMA
+KEEP extern const touchgfx::Unicode::UnicodeChar texts<%= language %>[]  TEXT_LOCATION_FLASH_ATTRIBUTE;
 <% end %>
 
 <% if remap_strings? %>

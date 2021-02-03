@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file mvp/MVPHeap.hpp
+ *
+ * Declares the touchgfx::MVPHeap class.
+ */
 #ifndef MVPHEAP_HPP
 #define MVPHEAP_HPP
 
@@ -22,28 +27,20 @@ class AbstractPartition;
 class MVPApplication;
 
 /**
- * @class MVPHeap MVPHeap.hpp mvp/MVPHeap.hpp
+ * Generic heap class for MVP applications. Serves as a way of obtaining the memory storage
+ * areas for presenters, screens, transitions and the concrete application.
  *
- * @brief Generic heap class for MVP applications.
- *
- *        Generic heap class for MVP applications. Serves as a way of obtaining the memory
- *        storage areas for presenters, screens, transitions and the concrete application.
- *
- *        Subclassed by an application-specific heap which provides the actual storage areas.
- *        This generic interface is used only in makeTransition.
+ * Subclassed by an application-specific heap which provides the actual storage areas.
+ * This generic interface is used only in makeTransition.
  */
 class MVPHeap
 {
 public:
-
     /**
-     * @fn MVPHeap::MVPHeap(AbstractPartition& pres, AbstractPartition& scr, AbstractPartition& tra, MVPApplication& app)
+     * Initializes a new instance of the MVPHeap class.
      *
-     * @brief Constructor.
-     *
-     *        Constructs an MVPHeap.
-     *
-     * @param [in] pres A memory partition containing enough memory to hold the largest presenter.
+     * @param [in] pres A memory partition containing enough memory to hold the largest
+     *                  presenter.
      * @param [in] scr  A memory partition containing enough memory to hold the largest view.
      * @param [in] tra  A memory partition containing enough memory to hold the largest
      *                  transition.
@@ -52,28 +49,25 @@ public:
     MVPHeap(AbstractPartition& pres,
             AbstractPartition& scr,
             AbstractPartition& tra,
-            MVPApplication& app) : presenterStorage(pres),
-        screenStorage(scr),
-        transitionStorage(tra),
-        frontendApplication(app)
+            MVPApplication& app)
+        : presenterStorage(pres),
+          screenStorage(scr),
+          transitionStorage(tra),
+          frontendApplication(app)
     {
     }
 
-    /**
-     * @fn virtual MVPHeap::~MVPHeap()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
+    /** Finalizes an instance of the MVPHeap class. */
     virtual ~MVPHeap()
     {
     }
 
-    AbstractPartition& presenterStorage;    ///< A memory partition containing enough memory to hold the largest presenter.
-    AbstractPartition& screenStorage;       ///< A memory partition containing enough memory to hold the largest view.
-    AbstractPartition& transitionStorage;   ///< A memory partition containing enough memory to hold the largest transition.
-    MVPApplication&    frontendApplication; ///< A reference to the MVPApplication instance.
+    AbstractPartition& presenterStorage;  ///< A memory partition containing enough memory to hold the largest presenter.
+    AbstractPartition& screenStorage;     ///< A memory partition containing enough memory to hold the largest view.
+    AbstractPartition& transitionStorage; ///< A memory partition containing enough memory to hold the largest transition.
+    MVPApplication& frontendApplication;  ///< A reference to the MVPApplication instance.
 };
+
 } // namespace touchgfx
+
 #endif // MVPHEAP_HPP

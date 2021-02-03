@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/mixins/Draggable.hpp
+ *
+ * Declares the touchgfx::Draggable class.
+ */
 #ifndef DRAGGABLE_HPP
 #define DRAGGABLE_HPP
 
@@ -21,49 +26,27 @@
 namespace touchgfx
 {
 /**
- * @class Draggable Draggable.hpp touchgfx/mixins/Draggable.hpp
+ * Mix-in class that extends a class to become Draggable, which means that the object on screen
+ * can be freely moved around using the touch screen.
  *
- * @brief Mix-in class that extends a class to become draggable.
- *
- *        Mix-in class that extends a class to become draggable.
- *
- * @tparam T specifies the type to extend with the draggable behavior.
+ * @tparam T specifies the type to extend with the Draggable behavior.
  */
-template<class T>
+template <class T>
 class Draggable : public T
 {
 public:
-
-    /**
-     * @fn Draggable::Draggable()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
-    Draggable() : T()
+    /** Initializes a new instance of the Draggable class. Make the object touchable. */
+    Draggable()
+        : T()
     {
         T::setTouchable(true);
     }
 
     /**
-     * @fn virtual Draggable::~Draggable()
+     * Called when dragging the Draggable object. The object is moved according to the drag
+     * event.
      *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
-    virtual ~Draggable() { }
-
-    /**
-     * @fn virtual void Draggable::handleDragEvent(const DragEvent& evt)
-     *
-     * @brief Called when dragging the draggable object.
-     *
-     *        Called when dragging the draggable object. The object is moved according to the
-     *        drag event.
-     *
-     * @param evt The drag event.
+     * @param  evt The drag event.
      */
     virtual void handleDragEvent(const DragEvent& evt)
     {
@@ -72,4 +55,5 @@ public:
     }
 };
 } //namespace touchgfx
+
 #endif // DRAGGABLE_HPP

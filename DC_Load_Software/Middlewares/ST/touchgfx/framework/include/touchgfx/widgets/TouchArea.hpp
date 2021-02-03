@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,107 +13,60 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/widgets/TouchArea.hpp
+ *
+ * Declares the touchgfx::TouchArea class.
+ */
 #ifndef TOUCHAREA_HPP
 #define TOUCHAREA_HPP
 
-#include <touchgfx/widgets/AbstractButton.hpp>
 #include <touchgfx/lcd/LCD.hpp>
+#include <touchgfx/widgets/AbstractButton.hpp>
 
 namespace touchgfx
 {
 /**
- * @class TouchArea TouchArea.hpp touchgfx/widgets/TouchArea.hpp
- *
- * @brief Invisible widget used to capture touch events.
- *
- *        Invisible widget used to capture touch events. The TouchArea consumes drag events
- *        without the widget it self moving.
- *
- * @see AbstractButton
+ * Invisible widget used to capture touch events. The TouchArea consumes drag events without the
+ * widget it self moving.
  */
 class TouchArea : public AbstractButton
 {
 public:
-    /**
-     * @fn TouchArea::TouchArea()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
-    TouchArea() : AbstractButton(), pressedAction(0)
+    TouchArea()
+        : AbstractButton(), pressedAction(0)
     {
     }
 
-    /**
-     * @fn virtual void TouchArea::draw(const Rect& invalidatedArea) const
-     *
-     * @brief A TouchArea will not draw anything.
-     *
-     *        A TouchArea will not draw anything.
-     *
-     * @param invalidatedArea The region of the toucharea to draw. Ignored.
-     */
     virtual void draw(const Rect& invalidatedArea) const
     {
     }
 
-    /**
-     * @fn virtual void TouchArea::handleDragEvent(const DragEvent& evt)
-     *
-     * @brief A TouchArea will not move when dragged.
-     *
-     *        A TouchArea will not move when dragged.
-     *
-     * @param evt The event to handle. Ignored.
-     */
     virtual void handleDragEvent(const DragEvent& evt)
     {
     }
 
-    /**
-     * @fn virtual void TouchArea::handleClickEvent(const ClickEvent& event);
-     *
-     * @brief A TouchArea will refine the handling of click events.
-     *
-     *        A TouchArea will refine the handling of click events in order to enable the
-     *        callback to the pressedAction.
-     *
-     * @param event The event to handle.
-     */
     virtual void handleClickEvent(const ClickEvent& event);
 
-    /**
-     * @fn virtual Rect TouchArea::getSolidRect() const
-     *
-     * @brief A TouchArea has no solid rectangle.
-     *
-     *        A TouchArea has no solid rectangle.
-     *
-     * @return an empty rect.
-     */
     virtual Rect getSolidRect() const
     {
         return Rect(0, 0, 0, 0);
     }
 
     /**
-     * @fn void TouchArea::setPressedAction(GenericCallback< const AbstractButton& >& callback)
+     * Associates an action to be performed when the TouchArea is pressed.
      *
-     * @brief Associates an action to be performed when the TouchArea is pressed.
-     *
-     *        Associates an action to be performed when the TouchArea is pressed.
-     *
-     * @param callback The callback is given a reference to this touch area.
+     * @param  callback The callback is given a reference to this touch area.
      */
-    void setPressedAction(GenericCallback< const AbstractButton& >& callback)
+    void setPressedAction(GenericCallback<const AbstractButton&>& callback)
     {
         pressedAction = &callback;
     }
 
 protected:
-    GenericCallback< const AbstractButton& >* pressedAction;    ///< The action to perform when the TouchArea is clicked
+    GenericCallback<const AbstractButton&>* pressedAction; ///< The action to perform when the TouchArea is clicked
 };
+
 } // namespace touchgfx
 
 #endif // TOUCHAREA_HPP

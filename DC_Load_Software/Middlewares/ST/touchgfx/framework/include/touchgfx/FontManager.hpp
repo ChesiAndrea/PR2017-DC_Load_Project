@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/FontManager.hpp
+ *
+ * Declares the touchgfx::FontProvider class.
+ */
 #ifndef FONTMANAGER_HPP
 #define FONTMANAGER_HPP
 
@@ -21,38 +26,23 @@
 namespace touchgfx
 {
 /**
- * @class FontProvider FontManager.hpp touchgfx/FontManager.hpp
- *
- * @brief A generic pure virtual definition of a FontProvider.
- *
- *        A generic pure virtual definition of a FontProvider, which is a class capable of
- *        returning a font based on a font id. An application-specific derivation of this class
- *        must be implemented.
+ * A generic pure virtual definition of a FontProvider, which is a class capable of returning a
+ * Font based on a FontId. An application-specific derivation of this class must be
+ * implemented.
  */
 class FontProvider
 {
 public:
-
     /**
-     * @fn virtual Font* FontProvider::getFont(FontId fontId) = 0;
+     * Gets a Font.
      *
-     * @brief Gets a font.
-     *
-     *        Gets a font.
-     *
-     * @param fontId The font id of the font to get.
+     * @param  fontId The FontId of the font to get.
      *
      * @return The font with a font id of fontId.
      */
     virtual Font* getFont(FontId fontId) = 0;
 
-    /**
-     * @fn virtual FontProvider::~FontProvider()
-     *
-     * @brief Destructor.
-     *
-     *        Destructor.
-     */
+    /** Finalizes an instance of the FontProvider class. */
     virtual ~FontProvider()
     {
     }
@@ -61,46 +51,34 @@ private:
 };
 
 /**
- * @class FontManager FontManager.hpp touchgfx/FontManager.hpp
- *
- * @brief This class is the entry point for looking up a font based on a font id.
- *
- *        This class is the entry point for looking up a font based on a font id. Must be
- *        initialized with the appropriate FontProvider by the application.
+ * This class is the entry point for looking up a font based on a font id. Must be initialized
+ * with the appropriate FontProvider by the application.
  */
 class FontManager
 {
 public:
-
     /**
-     * @fn static void FontManager::setFontProvider(FontProvider* fontProvider);
+     * Sets the font provider. Must be initialized with the appropriate FontProvider by the
+     * application.
      *
-     * @brief Sets the font provider.
-     *
-     *        Sets the font provider. Must be initialized with the appropriate FontProvider by
-     *        the application.
-     *
-     * @param [in] fontProvider Sets the font provider. Must be initialized with the appropriate
-     *                          FontProvider by the application.
+     * @param [in] fontProvider Sets the font provider. Must be initialized with the
+     *                          appropriate FontProvider by the application.
      */
     static void setFontProvider(FontProvider* fontProvider);
 
     /**
-     * @fn static Font* FontManager::getFont(FontId fontId);
+     * Gets a font.
      *
-     * @brief Gets a font.
+     * @param  fontId The FontId of the font to get.
      *
-     *        Gets a font.
-     *
-     * @param fontId The font id of the font to get.
-     *
-     * @return The font with a font id of fontId.
+     * @return The font with a FontId of fontId.
      */
     static Font* getFont(FontId fontId);
 
 private:
     static FontProvider* provider;
 };
+
 } // namespace touchgfx
 
 #endif // FONTMANAGER_HPP

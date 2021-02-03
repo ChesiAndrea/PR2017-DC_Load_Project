@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/mixins/ClickListener.hpp
+ *
+ * Declares the touchgfx::ClickListener class.
+ */
 #ifndef CLICKLISTENER_HPP
 #define CLICKLISTENER_HPP
 
@@ -21,50 +26,27 @@
 namespace touchgfx
 {
 /**
- * @class ClickListener ClickListener.hpp touchgfx/mixins/ClickListener.hpp
- *
- * @brief Mix-in class that extends a class with a click action event.
- *
- *        Mix-in class that extends a class with a click action event that is called when the
- *        class receives a click event.
+ * Mix-in class that extends a class with a click action event that is called when the class
+ * receives a click event.
  *
  * @tparam T specifies the type to extend with the ClickListener behavior.
  */
-template<class T>
+template <class T>
 class ClickListener : public T
 {
 public:
-
-    /**
-     * @fn ClickListener::ClickListener()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
-    ClickListener() : T(), clickAction(0)
+    /** Initializes a new instance of the ClickListener class. Make the object touchable. */
+    ClickListener()
+        : T(), clickAction(0)
     {
         T::setTouchable(true);
     }
 
     /**
-     * @fn virtual ClickListener::~ClickListener()
+     * Ensures that the clickEvent is propagated to the super class T and to the clickAction
+     * listener.
      *
-     * @brief Destructor.
-     */
-    virtual ~ClickListener() { }
-
-    /**
-     * @fn virtual void ClickListener::handleClickEvent(const ClickEvent& event)
-     *
-     * @brief Ensures that the clickEvent is propagated to the super class.
-     *
-     *         Ensures that the clickEvent is propagated to the super class T and to the
-     *         clickAction listener.
-     *
-     * @param event Information about the click.
-     *
-     * @see Drawable::handleClickEvent()
+     * @param  event Information about the click.
      */
     virtual void handleClickEvent(const ClickEvent& event)
     {
@@ -76,23 +58,18 @@ public:
     }
 
     /**
-     * @fn void ClickListener::setClickAction(GenericCallback< const T&, const ClickEvent& >& callback)
+     * Associates an action to be performed when the class T is clicked.
      *
-     * @brief Associates an action to be performed when the class T is clicked.
-     *
-     *        Associates an action to be performed when the class T is clicked.
-     *
-     * @param callback The callback to be executed. The callback will be given a reference to T.
-     *
-     * @see GenericCallback
+     * @param  callback The callback to be executed. The callback will be given a reference
+     *                  to T.
      */
-    void setClickAction(GenericCallback< const T&, const ClickEvent& >& callback)
+    void setClickAction(GenericCallback<const T&, const ClickEvent&>& callback)
     {
         clickAction = &callback;
     }
 
 protected:
-    GenericCallback<const T&, const ClickEvent&>* clickAction;  ///< The callback to be executed when T is clicked
+    GenericCallback<const T&, const ClickEvent&>* clickAction; ///< The callback to be executed when T is clicked
 };
 } //namespace touchgfx
 

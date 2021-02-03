@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,6 +13,11 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/containers/progress_indicators/TextProgress.hpp
+ *
+ * Declares the touchgfx::TextProgress class.
+ */
 #ifndef TEXTPROGRESS_HPP
 #define TEXTPROGRESS_HPP
 
@@ -22,71 +27,40 @@
 namespace touchgfx
 {
 /**
- * @class TextProgress TextProgress.hpp touchgfx/containers/progress_indicators/TextProgress.hpp
- *
- * @brief A text progress.
- *
- *        A text progress will display progress as a number with a given number of decimals.
+ * A text progress will display progress as a number with a given number of decimals.
  *
  * @note The implementation does not use floating point variables to calculate the progress.
  */
 class TextProgress : public AbstractProgressIndicator
 {
 public:
-
-    /**
-     * @fn TextProgress::TextProgress();
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor.
-     */
     TextProgress();
 
     /**
-     * @fn virtual TextProgress::~TextProgress();
+     * Sets the position and dimensions of the text progress indicator.
      *
-     * @brief Destructor.
+     * Sets the position and dimensions of the text progress indicator relative to the
+     * background image.
      *
-     *        Destructor.
-     */
-    virtual ~TextProgress();
-
-    /**
-     * @fn virtual void TextProgress::setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height);
-     *
-     * @brief Sets the position and dimension of the text progress indicator.
-     *
-     *        Sets the position and dimension of the text progress indicator relative to the
-     *        background image.
-     *
-     * @param x      The x coordinate.
-     * @param y      The y coordinate.
-     * @param width  The width of the text progress indicator.
-     * @param height The height of the text progress indicator.
+     * @param  x      The x coordinate.
+     * @param  y      The y coordinate.
+     * @param  width  The width of the text progress indicator.
+     * @param  height The height of the text progress indicator.
      */
     virtual void setProgressIndicatorPosition(int16_t x, int16_t y, int16_t width, int16_t height);
 
     /**
-     * @fn virtual void TextProgress::setTypedText(TypedText t);
+     * Sets the typed text. The text should have exactly one wildcard and could for example
+     * look like this: "&lt;progress&gt;\%".
      *
-     * @brief Sets the typed text.
-     *
-     *        Sets the typed text. The text should have one wildcard and could for example "&lt;
-     *        progress&gt;%".
-     *
-     * @param t The TypedText to process.
+     * @param  t The TypedText to process.
      *
      * @see getTypedText
      */
     virtual void setTypedText(const TypedText& t);
 
     /**
-     * @fn virtual TypedText TextProgress::getTypedText() const;
-     *
-     * @brief Gets the typed text.
-     *
-     *        Gets the typed text.
+     * Gets the typed text.
      *
      * @return The typed text.
      *
@@ -95,79 +69,57 @@ public:
     virtual TypedText getTypedText() const;
 
     /**
-     * @fn virtual void TextProgress::setColor(colortype color);
+     * Sets the color of the text in the used text area.
      *
-     * @brief Sets the color.
+     * @param  color The color.
      *
-     *        Sets the color of the text in the used text area.
-     *
-     * @param color The color.
-     *
-     * @see getColor
-     * @see TextArea::setColor
+     * @see getColor, TextArea::setColor
      */
     virtual void setColor(colortype color);
 
     /**
-     * @fn virtual colortype TextProgress::getColor() const;
-     *
-     * @brief Gets the color.
-     *
-     *        Gets the color of the text in the used text area.
+     * Gets the color of the text in the used text area.
      *
      * @return The color.
      */
     virtual colortype getColor() const;
 
     /**
-     * @fn virtual void TextProgress::setAlpha(uint8_t alpha);
+     * Sets the alpha of the text area.
      *
-     * @brief Sets the alpha.
+     * @param  alpha The alpha.
      *
-     *        Sets the alpha of the text area.
-     *
-     * @param alpha The alpha.
-     *
-     * @see getAlpha
-     * @see TextArea::setAlpha
+     * @see getAlpha, TextArea::setAlpha
      */
     virtual void setAlpha(uint8_t alpha);
 
     /**
-     * @fn virtual uint8_t TextProgress::getAlpha() const;
-     *
-     * @brief Gets the alpha.
-     *
-     *        Gets the alpha of the text area.
+     * Gets the alpha of the text area.
      *
      * @return The alpha.
      *
-     * @see setAlpha
-     * @see TextArea::getAlpha
+     * @see setAlpha, TextArea::getAlpha
      */
     virtual uint8_t getAlpha() const;
 
+    /**
+     * Sets the new value for the progress indicator.
+     *
+     * @param  value The value.
+     */
     virtual void setValue(int value);
 
     /**
-     * @fn virtual void TextProgress::setNumberOfDecimals(uint16_t numberOfDecimals);
+     * Sets number of decimals when displaying progress.
      *
-     * @brief Sets number of decimals.
-     *
-     *        Sets number of decimals when displaying progress.
-     *
-     * @param numberOfDecimals Number of decimals. Only up to two decimals is supported.
+     * @param  numberOfDecimals Number of decimals. Only up to two decimals is supported.
      *
      * @see getNumberOfDecimals
      */
     virtual void setNumberOfDecimals(uint16_t numberOfDecimals);
 
     /**
-     * @fn virtual uint16_t TextProgress::getNumberOfDecimals() const;
-     *
-     * @brief Gets number of decimals.
-     *
-     *        Gets number of decimals.
+     * Gets number of decimals.
      *
      * @return The number of decimals.
      *
@@ -180,6 +132,7 @@ protected:
     Unicode::UnicodeChar textBuffer[9]; ///< Room for 100.0000
     uint16_t decimals;                  ///< The number of decimals
 };
-}
+
+} // namespace touchgfx
 
 #endif // TEXTPROGRESS_HPP

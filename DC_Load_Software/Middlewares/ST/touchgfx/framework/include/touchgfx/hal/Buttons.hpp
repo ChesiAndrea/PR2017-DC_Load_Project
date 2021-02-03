@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,39 +13,31 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/hal/Buttons.hpp
+ *
+ * Declares the touchgfx::Buttons class.
+ */
 #ifndef BUTTONS_HPP
 #define BUTTONS_HPP
 
 namespace touchgfx
 {
-/**
- * @class Buttons Buttons.hpp touchgfx/hal/Buttons.hpp
- *
- * @brief A buttons.
- */
+/** A class for accessing a physical button. */
 class Buttons
 {
 public:
-
-    /**
-     * @fn static void Buttons::init();
-     *
-     * @brief Perform configuration of IO pins.
-     *
-     *        Perform configuration of IO pins.
-     */
+    /** Perform configuration of IO pins. */
     static void init();
 
     /**
-     * @fn static unsigned int Buttons::sample();
-     *
-     * @brief Sample button states.
-     *
-     *        Sample button states.
+     * Sample button states.
      *
      * @return the sampled state of the buttons.
      */
     static unsigned int sample();
 };
-}
+
+} // namespace touchgfx
+
 #endif // BUTTONS_HPP

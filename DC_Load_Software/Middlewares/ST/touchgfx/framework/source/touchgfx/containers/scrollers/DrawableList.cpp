@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -356,6 +356,12 @@ void DrawableList::refreshDrawables()
             drawable->setPosition(0, 0, getWidth(), itemSize - 2 * itemMargin);
         }
         // Add each drawable for later positioning
+        if (drawable->getParent() != 0)
+        {
+            // Remove drawable from the current parent
+            Container* parent = static_cast<Container*>(drawable->getParent());
+            parent->remove(*drawable);
+        }
         Container::add(*drawable);
     }
 

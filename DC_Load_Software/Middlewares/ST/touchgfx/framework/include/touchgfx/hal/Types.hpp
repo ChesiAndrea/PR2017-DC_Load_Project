@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -13,103 +13,83 @@
   ******************************************************************************
   */
 
+/**
+ * @file touchgfx/hal/Types.hpp
+ *
+ * Declares the touchgfx::colortype, touchgfx::Rect, touchgfx::Vector, touchgfx::Point,
+ * touchgfx::Pair classes as well as some less used classes and structs.
+ */
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
-#include <stdint.h>
 #include <assert.h>
+#include <stdint.h>
 #include <touchgfx/hal/Config.hpp>
 
 /**
- * @def MIN(a,b) (((a) < (b)) ? (a) : (b))
+ * A macro that returns the smallest of two items.
  *
- * @brief A macro that returns the smallest of two items.
- *
- *        A macro that returns the smallest of two items.
- *
- * @param a The first item.
- * @param b The second item.
+ * @param  a The first item.
+ * @param  b The second item.
  */
 #ifndef MIN
-#define MIN(a,b) (((a) < (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
 /**
- * @def MAX(a,b) (((a) > (b)) ? (a) : (b))
- *
- * @brief A macro that returns the largest of two items.
+ * A macro that returns the largest of two items.
  *
  * @param a The first item.
  * @param b The second item.
  */
 #ifndef MAX
-#define MAX(a,b) (((a) > (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #endif
 
 /**
- * @def ROUNDUP(num,multiple)
- *      ((multiple) == 0 ? (num) : (num) + (abs(multiple) - ((num) % abs(multiple))) % abs(multiple))
- *
- * @brief A macro that rounds a number up to the next multiple.
- *
- *        A macro that rounds a number up to the next multiple. Works for negative numbers, too.
+ * A macro that rounds a number up to the next multiple. Works for negative numbers, too.
  *
  * @param num      The number to round up.
  * @param multiple The multiple.
  */
 #ifndef ROUNDUP
-#define ROUNDUP(num,multiple) ((multiple) == 0 ? (num) : ((num) + (abs(multiple) - ((num) % abs(multiple))) % abs(multiple)))
+#define ROUNDUP(num, multiple) ((multiple) == 0 ? (num) : ((num) + (abs(multiple) - ((num) % abs(multiple))) % abs(multiple)))
 #endif
 
 /**
- * @def ROUNDDOWN(num,multiple)
- *      (-(ROUNDUP(-(num), multiple)))
- *
- * @brief A macro that rounds a number down to the next multiple.
- *
- *        A macro that rounds a number down to the next multiple. Works for negative numbers, too.
+ * A macro that rounds a number down to the next multiple. Works for negative numbers, too.
  *
  * @param num      The number to round down.
  * @param multiple The multiple.
  */
 #ifndef ROUNDDOWN
-#define ROUNDDOWN(num,multiple) (-(ROUNDUP(-(num), multiple)))
+#define ROUNDDOWN(num, multiple) (-(ROUNDUP(-(num), multiple)))
 #endif
 
 namespace touchgfx
 {
+static const float PI = 3.14159265358979323846f; ///< PI
+
 /**
- * @struct colortype Types.hpp touchgfx/hal/Types.hpp
- *
- * @brief Type for representing a color.
- *
- *        This type can contain a color value. Note that in order to maintain backwards
- *        compatibility, casting this type to an integral value will yield a 16-bit value. To
- *        extract a 24/32-bit color from this type, use the getColor32 function.
+ * This type can contain a color value. Note that in order to maintain backwards
+ * compatibility, casting this type to an integral value will yield a 16-bit value. To
+ * extract a 24/32-bit color from this type, use the getColor32 function.
  */
 struct colortype
 {
-    /**
-     * @fn colortype()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor. Creates a black (0) color.
-     */
-    colortype() : color(0) {}
+    /** Default constructor. Creates a black (0) color. */
+    colortype()
+        : color(0)
+    {
+    }
 
     /**
-     * @fn colortype(uint32_t col)
+     * Constructor which creates a colortype with the given color. Use
+     * Color::getColorFrom24BitRGB() to create a color that will work on your selected LCD type.
      *
-     * @brief Constructor.
+     * @param  col The color.
      *
-     *        Contructor which creates a colortype with the given color. Use
-     *        Color::getColorFrom24BitRGB() to create a color that will work on both 16 bit LCD
-     *        and 24 bit LCD.
-     *
-     * @param col The color.
-     *
-     * @see Color::getColorFrom24BitRGB()
+     * @see Color::getColorFrom24BitRGB
      */
     colortype(uint32_t col)
     {
@@ -117,59 +97,36 @@ struct colortype
     }
 
     /**
-     * @fn inline uint32_t getColor32() const
-     *
-     * @brief Gets color 32 as a 32bit value suitable for passing to Color::getRedColor(),
-     *        Color::getGreenColor() and Color::getBlueColor() which will handle both 16 bit
-     *        colortypes and 24 bit colortypes.
+     * Gets color as a 32bit value suitable for passing to Color::getRedColor(),
+     * Color::getGreenColor() and Color::getBlueColor() which will handle all bitdeptchs.
      *
      * @return The color 32.
      *
-     * @see Color::getRedColor()
-     * @see Color::getGreenColor()
-     * @see Color::getBlueColor()
+     * @see Color::getRedColor, Color::getGreenColor, Color::getBlueColor
      */
-    inline uint32_t getColor32() const
+    FORCE_INLINE_FUNCTION uint32_t getColor32() const
     {
         return color;
     }
 
     /**
-     * @fn operator uint16_t() const
-     *
-     * @brief Cast that converts the given colortype to an uint16_t.
-     *
-     *        Cast that converts the given colortype to an uint16_t. Provided only for backward
-     *        compatibility. Not recommended to use.
+     * Cast that converts the given colortype to an uint32_t.
      *
      * @return The result of the operation.
      */
-    operator uint16_t() const
+    operator uint32_t() const
     {
-        return (uint16_t)color;
+        return color;
     }
 
     uint32_t color; ///< The color
 };
 
-/**
- * @class Rect Types.hpp touchgfx/hal/Types.hpp
- *
- * @brief Class representing a Rectangle with a few convenient methods.
- *
- *        Class representing a Rectangle with a few convenient methods. Size: 8 bytes.
- */
+/** Class representing a Rectangle with a few convenient methods. */
 class Rect
 {
 public:
-
-    /**
-     * @fn Rect::Rect()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor. Resulting in an empty Rect with coordinates 0,0.
-     */
+    /** Default constructor. Resulting in an empty Rect with coordinates 0,0. */
     Rect()
     {
         this->x = 0;
@@ -179,16 +136,12 @@ public:
     }
 
     /**
-     * @fn Rect::Rect(int16_t x, int16_t y, int16_t width, int16_t height)
+     * Initializes a new instance of the Rect class.
      *
-     * @brief Constructor.
-     *
-     *        Constructor.
-     *
-     * @param x      The x coordinate.
-     * @param y      The y coordinate.
-     * @param width  The width.
-     * @param height The height.
+     * @param  x      The x coordinate.
+     * @param  y      The y coordinate.
+     * @param  width  The width.
+     * @param  height The height.
      */
     Rect(int16_t x, int16_t y, int16_t width, int16_t height)
     {
@@ -204,102 +157,74 @@ public:
     int16_t height; ///< The height
 
     /**
-     * @fn inline int16_t Rect::right() const
-     *
-     * @brief Gets the x coordinate of the right edge of the Rect.
-     *
-     *        Gets the x coordinate of the right edge of the Rect.
+     * Gets the x coordinate of the right edge of the Rect.
      *
      * @return x coordinate of the right edge.
      */
-    inline int16_t right() const
+    FORCE_INLINE_FUNCTION int16_t right() const
     {
         return x + width;
     }
 
     /**
-     * @fn inline int16_t Rect::bottom() const
-     *
-     * @brief Gets the y coordinate of the bottom edge of the Rect.
-     *
-     *        Gets the y coordinate of the bottom edge of the Rect.
+     * Gets the y coordinate of the bottom edge of the Rect.
      *
      * @return y coordinate of the buttom edge.
      */
-    inline int16_t bottom() const
+    FORCE_INLINE_FUNCTION int16_t bottom() const
     {
         return y + height;
     }
 
     /**
-     * @fn bool Rect::intersect(int16_t otherX, int16_t otherY) const
+     * Determines whether specified point lies inside this rectangle.
      *
-     * @brief Determines whether specified point lies inside this rectangle.
-     *
-     *        Determines whether specified point lies inside this rectangle.
-     *
-     * @param otherX The x coordinate of the point.
-     * @param otherY The y coordinate of the point.
+     * @param  otherX The x coordinate of the point.
+     * @param  otherY The y coordinate of the point.
      *
      * @return true if point lies inside rectangle.
      */
     bool intersect(int16_t otherX, int16_t otherY) const
     {
-        return (otherX >= x && otherX < right() &&
-                otherY >= y && otherY < bottom());
+        return (otherX >= x && otherX < right() && otherY >= y && otherY < bottom());
     }
 
     /**
-     * @fn bool Rect::intersect(const Rect& other) const
+     * Determines whether specified rectangle intersects with this rectangle.
      *
-     * @brief Determines whether specified rectangle intersects with this rectangle.
-     *
-     *        Determines whether specified rectangle intersects with this rectangle.
-     *
-     * @param other The other rectangle.
+     * @param  other The other rectangle.
      *
      * @return true if the two rectangles intersect.
      */
     bool intersect(const Rect& other) const
     {
-        return !(x >= other.right() || right() <= other.x ||
-                 y >= other.bottom() || bottom() <= other.y);
+        return !(x >= other.right() || right() <= other.x || y >= other.bottom() || bottom() <= other.y);
     }
 
     /**
-     * @fn bool Rect::includes(const Rect& other) const
+     * Determines whether the specified rectangle is completely included in this rectangle.
      *
-     * @brief Determines whether the specified rectangle is completely included in this rectangle.
-     *
-     *        Determines whether the specified rectangle is completely included in this
-     *        rectangle.
-     *
-     * @param other The other rectangle.
+     * @param  other The other rectangle.
      *
      * @return true if the specified rectangle is completely included.
      */
     bool includes(const Rect& other) const
     {
-        return (other.x >= x &&
-                other.y >= y &&
-                other.right() <= right() &&
-                other.bottom() <= bottom());
+        return other.x >= x
+               && other.y >= y
+               && other.right() <= right()
+               && other.bottom() <= bottom();
     }
 
     /**
-     * @fn Rect Rect::operator&(const Rect& other) const
+     * Gets a rectangle describing the intersecting area between this rectangle and the
+     * supplied rectangle.
      *
-     * @brief Gets a rectangle describing the intersecting area between this rectangle and the
-     *        supplied rectangle.
-     *
-     *        Gets a rectangle describing the intersecting area between this rectangle and the
-     *        supplied rectangle.
-     *
-     * @param other The other rectangle.
+     * @param  other The other rectangle.
      *
      * @return Intersecting rectangle or Rect(0, 0, 0, 0) in case of no intersection.
      */
-    Rect operator &(const Rect& other) const
+    Rect operator&(const Rect& other) const
     {
         Rect r = *this;
         r &= other;
@@ -307,16 +232,12 @@ public:
     }
 
     /**
-     * @fn void Rect::operator&=(const Rect& other)
+     * Assigns this Rect to the intersection of the current Rect and the assigned Rect. The
+     * assignment will result in a Rect(0, 0, 0, 0) if they do not intersect.
      *
-     * @brief Assigns this Rect to the intersection of the current Rect and the assigned Rect.
-     *
-     *        Assigns this Rect to the intersection of the current Rect and the assigned Rect.
-     *        The assignment will result in a Rect(0, 0, 0, 0) if they do not intersect.
-     *
-     * @param other The rect to intersect with.
+     * @param  other The rect to intersect with.
      */
-    void operator &=(const Rect& other)
+    void operator&=(const Rect& other)
     {
         if (intersect(other))
         {
@@ -338,15 +259,10 @@ public:
     }
 
     /**
-     * @fn void Rect::expandToFit(const Rect& other)
+     * Increases the area covered by this rectangle to encompass the area covered by
+     * supplied rectangle.
      *
-     * @brief Increases the area covered by this rectangle to encompass the area covered by
-     *        supplied rectangle.
-     *
-     *        Increases the area covered by this rectangle to encompass the area covered by
-     *        supplied rectangle.
-     *
-     * @param other The other rectangle.
+     * @param  other The other rectangle.
      */
     void expandToFit(const Rect& other)
     {
@@ -376,57 +292,41 @@ public:
     }
 
     /**
-     * @fn bool Rect::operator==(const Rect& other) const
+     * Compares equality of two Rect by the dimensions and position of these.
      *
-     * @brief Compares equality of two Rect by the dimensions and position of these.
-     *
-     *        Compares equality of two Rect by the dimensions and position of these.
-     *
-     * @param other The Rect to compare with.
+     * @param  other The Rect to compare with.
      *
      * @return true if the compared Rect have the same dimensions and coordinates.
      */
-    bool operator ==(const Rect& other) const
+    bool operator==(const Rect& other) const
     {
         return isEqual(other);
     }
 
     /**
-     * @fn bool Rect::operator!=(const Rect& other) const
+     * Opposite of the == operator.
      *
-     * @brief Opposite of the == operator.
-     *
-     *        Opposite of the == operator.
-     *
-     * @param other The Rect to compare with.
+     * @param  other The Rect to compare with.
      *
      * @return true if the compared Rect differ in dimensions or coordinates.
      */
-    bool operator !=(const Rect& other) const
+    bool operator!=(const Rect& other) const
     {
         return !isEqual(other);
     }
 
     /**
-     * @fn bool Rect::isEmpty() const
-     *
-     * @brief Query if this object is empty.
-     *
-     *        Query if this object is empty.
+     * Query if this object is empty.
      *
      * @return true if any of the dimensions are 0.
      */
     bool isEmpty() const
     {
-        return ((width == 0) || (height == 0));
+        return width <= 0 || height <= 0;
     }
 
     /**
-     * @fn uint32_t Rect::area() const
-     *
-     * @brief Calculate the area of the rectangle.
-     *
-     *        Calculate the area of the rectangle.
+     * Calculate the area of the rectangle.
      *
      * @return area of the rectangle.
      */
@@ -438,48 +338,33 @@ public:
 private:
     bool isEqual(const Rect& other) const
     {
-        return ((x == other.x) &&
-                (y == other.y) &&
-                (width == other.width) &&
-                (height == other.height));
+        return x == other.x
+               && y == other.y
+               && width == other.width
+               && height == other.height;
     }
 };
 
 /**
- * @class Vector Types.hpp touchgfx/hal/Types.hpp
- *
- * @brief A very simple container class using pre-allocated memory.
- *
- *        A very simple container class using pre-allocated memory.
+ * A very simple container class using pre-allocated memory.
  *
  * @tparam T        The type of objects this container works on.
  * @tparam capacity The maximum number of objects this container can store.
  */
-template<class T, uint16_t capacity>
+template <class T, uint16_t capacity>
 class Vector
 {
 public:
-
-    /**
-     * @fn Vector::Vector()
-     *
-     * @brief Default constructor.
-     *
-     *        Default constructor. Constructs an empty vector.
-     */
+    /** Default constructor. Constructs an empty vector. */
     Vector()
     {
         clear();
     }
 
     /**
-     * @fn T& Vector::operator[](uint16_t idx)
+     * Index operator.
      *
-     * @brief Index operator.
-     *
-     *        Index operator.
-     *
-     * @param idx The index of the element to obtain.
+     * @param  idx The index of the element to obtain.
      *
      * @return A reference to the element placed at index idx.
      */
@@ -489,13 +374,9 @@ public:
     }
 
     /**
-     * @fn const T& Vector::operator[](uint16_t idx) const
+     * Const version of the index operator.
      *
-     * @brief Const version of the index operator.
-     *
-     *        Const version of the index operator.
-     *
-     * @param idx The index of the element to obtain.
+     * @param  idx The index of the element to obtain.
      *
      * @return A const reference to the element placed at index idx.
      */
@@ -505,15 +386,13 @@ public:
     }
 
     /**
-     * @fn void Vector::add(T e)
-     *
-     * @brief Adds an element to the Vector if the Vector is not full.
+     * Adds an element to the Vector if the Vector is not full.
      *
      *
-     *        Adds an element to the Vector if the Vector is not full. Does nothing if the
-     *        Vector is full.
+     * Adds an element to the Vector if the Vector is not full. Does nothing if the Vector
+     * is full.
      *
-     * @param e The element to add to the Vector.
+     * @param  e The element to add to the Vector.
      */
     void add(T e)
     {
@@ -525,15 +404,11 @@ public:
     }
 
     /**
-     * @fn void Vector::remove(T e)
+     * Removes an element from the Vector if found in the Vector. Does nothing if the
+     * element is not found in the Vector. The == operator of the element is used when
+     * comparing it with the elements in the Vector.
      *
-     * @brief Removes an element from the Vector if found in the Vector.
-     *
-     *        Removes an element from the Vector if found in the Vector. Does nothing if the
-     *        element is not found in the Vector. The == operator of the element is used when
-     *        comparing it with the elements in the Vector.
-     *
-     * @param e The element to remove from the Vector.
+     * @param  e The element to remove from the Vector.
      */
     void remove(T e)
     {
@@ -551,14 +426,10 @@ public:
     }
 
     /**
-     * @fn T Vector::removeAt(uint16_t index)
+     * Removes an element at the specified index of the Vector. Will "bubble-down" any
+     * remaining elements after the specified index.
      *
-     * @brief Removes an element at the specified index of the Vector.
-     *
-     *        Removes an element at the specified index of the Vector. Will "bubble-down" any
-     *        remaining elements after the specified index.
-     *
-     * @param index The index to remove.
+     * @param  index The index to remove.
      *
      * @return The value of the removed element.
      */
@@ -579,17 +450,13 @@ public:
     }
 
     /**
-    * @fn T Vector::quickRemoveAt(uint16_t index)
-    *
-    * @brief Removes an element at the specified index of the Vector.
-    *
-    *        Removes an element at the specified index of the Vector. The last element in the
-    *        list is moved to the position where the element is removed.
-    *
-    * @param index The index to remove.
-    *
-    * @return The value of the removed element.
-    */
+     * Removes an element at the specified index of the Vector. The last element in the list
+     * is moved to the position where the element is removed.
+     *
+     * @param  index The index to remove.
+     *
+     * @return The value of the removed element.
+     */
     T quickRemoveAt(uint16_t index)
     {
         T tmp;
@@ -607,13 +474,7 @@ public:
         return tmp;
     }
 
-    /**
-     * @fn void Vector::reverse()
-     *
-     * @brief Reverses the ordering of the elements in the Vector.
-     *
-     *        Reverses the ordering of the elements in the Vector.
-     */
+    /** Reverses the ordering of the elements in the Vector. */
     void reverse()
     {
         uint16_t a = 0;
@@ -627,14 +488,10 @@ public:
     }
 
     /**
-     * @fn bool Vector::contains(T elem)
+     * Checks if the Vector contains an element. The == operator of the element is used when
+     * comparing it with the elements in the Vector.
      *
-     * @brief Checks if the Vector contains an element.
-     *
-     *        Checks if the Vector contains an element. The == operator of the element is used
-     *        when comparing it with the elements in the Vector.
-     *
-     * @param elem The element.
+     * @param  elem The element.
      *
      * @return true if the Vector contains the element, false otherwise.
      */
@@ -651,13 +508,11 @@ public:
     }
 
     /**
-     * @fn uint16_t Vector::size() const
+     * Gets the current size of the Vector which is the number of elements contained in the
+     * Vector.
      *
-     * @brief Gets the current size of the Vector which is the number of elements contained in the
-     *        Vector.
-     *
-     *        Gets the current size of the Vector which is the number of elements contained in
-     *        the Vector.
+     * Gets the current size of the Vector which is the number of elements contained in the
+     * Vector.
      *
      * @return The size of the Vector.
      */
@@ -667,11 +522,7 @@ public:
     }
 
     /**
-     * @fn bool Vector::isEmpty() const
-     *
-     * @brief Query if this object is empty.
-     *
-     *        Query if this object is empty.
+     * Query if this object is empty.
      *
      * @return true if the Vector contains no elements.
      */
@@ -681,11 +532,7 @@ public:
     }
 
     /**
-     * @fn uint16_t Vector::maxCapacity() const
-     *
-     * @brief Query the maximum capacity of the vector.
-     *
-     *        Query the maximum capacity of the vector.
+     * Query the maximum capacity of the vector.
      *
      * @return The capacity the Vector was initialized with.
      */
@@ -695,12 +542,8 @@ public:
     }
 
     /**
-     * @fn void Vector::clear()
-     *
-     * @brief Clears the contents of the container.
-     *
-     *        Clears the contents of the container. It does not destruct any of the elements in
-     *        the Vector.
+     * Clears the contents of the container. It does not destruct any of the elements in the
+     * Vector.
      */
     void clear()
     {
@@ -712,22 +555,14 @@ private:
     uint16_t _size;
 };
 
-/**
- * @struct Point Types.hpp touchgfx/hal/Types.hpp
- *
- * @brief A simple struct containing coordinates.
- */
+/** A simple struct containing coordinates. */
 struct Point
 {
     int32_t x; ///< The x coordinate
     int32_t y; ///< The y coordinate
 
     /**
-     * @fn unsigned dist_sqr(struct Point& o)
-     *
-     * @brief The squared distance from this Point to another Point.
-     *
-     *        The squared distance from this Point to another Point.
+     * The squared distance from this Point to another Point.
      *
      * @param [in] o The point to get the squared distance to.
      *
@@ -739,13 +574,7 @@ struct Point
     }
 };
 
-/**
- * @typedef enum Direction
- *
- * @brief Defines a 2D direction type.
- *
- *        Defines a 2D direction type.
- */
+/** Values that represent directions. */
 typedef enum
 {
     NORTH, ///< An enum constant representing the north option
@@ -754,92 +583,47 @@ typedef enum
     WEST   ///< An enum constant representing the west option
 } Direction;
 
-/**
- * @typedef uint8_t Alignment
- *
- * @brief Defines an alignment type.
- *
- *        Defines an alignment type.
- */
+/** Defines an alignment type. */
 typedef uint8_t Alignment;
 static const Alignment LEFT = 0;   ///< Text is left aligned
 static const Alignment CENTER = 1; ///< Text is centered horizontally
-static const Alignment RIGHT = 2; ///< Text is right aligned
+static const Alignment RIGHT = 2;  ///< Text is right aligned
 
-/**
- * @typedef uint8_t TextDirection
- *
- * @brief Defines a the direction to write text.
- *
- *        Defines a the direction to write text.
- */
+/** Defines a the direction to write text. */
 typedef uint8_t TextDirection;
-static const TextDirection TEXT_DIRECTION_LTR = 0;     ///< Text is written Left-To-Right, e.g. English
-static const TextDirection TEXT_DIRECTION_RTL = 1;     ///< Text is written Right-To-Left, e.g. Hebrew
+static const TextDirection TEXT_DIRECTION_LTR = 0; ///< Text is written Left-To-Right, e.g. English
+static const TextDirection TEXT_DIRECTION_RTL = 1; ///< Text is written Right-To-Left, e.g. Hebrew
 
-/**
- * @typedef enum FrameBuffer
- *
- * @brief Defines a FrameBuffer type.
- *
- *        Defines a FrameBuffer type.
- */
+/** Values that represent frame buffers. */
 typedef enum
 {
-    FB_PRIMARY,   ///< First frame buffer
-    FB_SECONDARY, ///< Second frame buffer
-    FB_TERTIARY   ///< Third frame buffer
+    FB_PRIMARY,   ///< First framebuffer
+    FB_SECONDARY, ///< Second framebuffer
+    FB_TERTIARY   ///< Third framebuffer
 } FrameBuffer;
 
-/**
- * @typedef enum Gradient
- *
- * @brief Defines a gradient type.
- *
- *        Defines a gradient type.
- */
+/** Values that represent gradients. */
 typedef enum
 {
     GRADIENT_HORIZONTAL, ///< Horizontal gradient.
     GRADIENT_VERTICAL    ///< Vertical gradient
 } Gradient;
 
-/**
- * @typedef enum DisplayRotation
- *
- * @brief Defines a rotation of the display.
- *
- *        Defines a rotation of the display.
- *
- * @see DisplayOrientation
- */
+/** Values that represent display rotations. */
 typedef enum
 {
-    rotate0, ///< The display is oriented like the frame buffer
-    rotate90 ///< The display is rotated 90 degrees compared to the frame buffer layout
+    rotate0, ///< The display is oriented like the framebuffer
+    rotate90 ///< The display is rotated 90 degrees compared to the framebuffer layout
 } DisplayRotation;
 
-/**
- * @typedef enum DisplayOrientation
- *
- * @brief Defines the orientation of the display.
- *
- *        Defines the orientation of the display.
- */
+/** Values that represent display orientations. */
 typedef enum
 {
     ORIENTATION_LANDSCAPE, ///< The display has more pixels from left to right than from top to bottom
     ORIENTATION_PORTRAIT   ///< The display has more pixels from top to bottom than from right to left
 } DisplayOrientation;
 
-/**
- * @typedef enum TextRotation
- *
- * @brief Defines a rotation of text.
- *
- *        Defines a rotation of text. Each enumeration option specifies the number of degrees
- *        the text is turned clockwise.
- */
+/** Values that represent text rotations. */
 typedef enum
 {
     TEXT_ROTATE_0,   ///< Text is written from left to right
@@ -848,13 +632,7 @@ typedef enum
     TEXT_ROTATE_270  ///< Text is written bottom to top
 } TextRotation;
 
-/**
- * @typedef enum WideTextAction
- *
- * @brief Defines how long text lines should be dealt with if the width exceeds that of the TextArea.
- *
- * @see TextArea::setWideTextAction
- */
+/** Values that represent wide text actions. */
 typedef enum
 {
     WIDE_TEXT_NONE,                          ///< Do nothing, simply cut the text in the middle of any character that extends beyond the width of the TextArea
@@ -865,11 +643,7 @@ typedef enum
 } WideTextAction;
 
 /**
- * @struct Pair Types.hpp touchgfx/hal/Types.hpp
- *
- * @brief A simple struct for holding pairs of data.
- *
- *        A simple struct for holding pairs of data.
+ * A simple struct for holding pairs of data.
  *
  * @tparam T1 The type of the first element.
  * @tparam T2 The type of the second element.
@@ -882,49 +656,42 @@ public:
     T2 second; ///< The second element
 
     /**
-     * @fn Pair::Pair()
-     *
-     * @brief Default constructor.
-     *
-     *        Constructor initializing the elements it holds using their default constructors.
+     * Constructor initializing the elements it holds, using their default constructors.
      */
-    Pair() : first(T1()), second(T2()) { }
+    Pair()
+        : first(T1()), second(T2())
+    {
+    }
 
     /**
-     * @fn Pair::Pair(const T1& x, const T2& y)
+     * Constructor initializing the elements it holds, using their copy constructor.
      *
-     * @brief Constructor initializing the elements it holds using their copy constructor.
-     *
-     *        Constructor initializing the elements it holds using their copy constructor.
-     *
-     * @param x Reference to the first element.
-     * @param y Reference to the second element.
+     * @param  x Reference to the first element.
+     * @param  y Reference to the second element.
      */
-    Pair(const T1& x, const T2& y) : first(x), second(y) { }
+    Pair(const T1& x, const T2& y)
+        : first(x), second(y)
+    {
+    }
 
     /**
-     * @fn Pair::Pair(const Pair<U, V>& p)
-     *
-     * @brief Copy constructor.
-     *
-     *        Copy constructor.
+     * Copy constructor.
      *
      * @tparam U Generic type parameter.
      * @tparam V Generic type parameter.
-     * @param p The pair to copy from.
+     * @param  p The pair to copy from.
      */
     template <class U, class V>
-    Pair(const Pair<U, V>& p) : first(p.first), second(p.second) { }
+    Pair(const Pair<U, V>& p)
+        : first(p.first), second(p.second)
+    {
+    }
 };
 
 /**
- * @typedef uint16_t RenderingVariant
- *
- * @brief Describes a combination of rendering algorithm, image format, and alpha information.
- *
- *        Describes a combination of rendering algorithm, image format, and alpha information.
- *        The lowest bit is 0 for "Nearest neighbor", 1 for "Bilinear". The next bit is "0" for
- *        "no alpha", "2" for "alpha". The rest is the Bitmap::Format shifted up by 2.
+ * Describes a combination of rendering algorithm, image format, and alpha information. The
+ * lowest bit is 0 for "Nearest neighbor", 1 for "Bilinear". The next bit is "0" for "no
+ * alpha", "2" for "alpha". The rest is the Bitmap::Format shifted up by 2.
  */
 typedef uint16_t RenderingVariant;
 static const uint16_t RenderingVariant_NearestNeighbor = 0; ///< The rendering variant nearest neighbor bit value
@@ -933,80 +700,54 @@ static const uint16_t RenderingVariant_NoAlpha = 0;         ///< The rendering v
 static const uint16_t RenderingVariant_Alpha = 2;           ///< The rendering variant alpha bit value
 static const uint16_t RenderingVariant_FormatShift = 2;     ///< The rendering variant format shift
 
-/**
- * @typedef int32_t fixed28_4
- *
- * @brief A fixed point value using 4 bits for the decimal part and 28 bits for the integral part.
- */
+/** A fixed point value using 4 bits for the decimal part and 28 bits for the integral part. */
 typedef int32_t fixed28_4;
 
-/**
- * @typedef int32_t fixed16_16
- *
- * @brief A fixed point value using 16 bits for the decimal part and 16 bits for the integral part.
- */
+/** A fixed point value using 16 bits for the decimal part and 16 bits for the integral part. */
 typedef int32_t fixed16_16;
 
-/**
- * @struct Point3D Types.hpp touchgfx/hal/Types.hpp
- *
- * @brief A 3D point.
- */
+/** A 3D point. */
 struct Point3D
 {
-    fixed28_4 X;    ///< The X coordinate
-    fixed28_4 Y;    ///< The Y coordinate
-    float Z;        ///< The Z coordinate
-    float U;        ///< The U coordinate
-    float V;        ///< The V coordinate
+    fixed28_4 X; ///< The X coordinate
+    fixed28_4 Y; ///< The Y coordinate
+    float Z;     ///< The Z coordinate
+    float U;     ///< The U coordinate
+    float V;     ///< The V coordinate
 };
 
 /**
- * @struct TextureSurface Types.hpp touchgfx/hal/Types.hpp
- *
- * @brief A texture source. Contains a pointer to the data and the width and height of the texture.
- *        The alpha channel is used in 565 rendering with alpha. The stride is the width used
- *        when moving to the next line of the texture.
+ * A texture source. Contains a pointer to the data and the width and height of the texture. The
+ * alpha channel is used in 565 rendering with alpha. The stride is the width used when
+ * moving to the next line of the texture.
  */
 struct TextureSurface
 {
-    const uint16_t* data;           ///< The pixel bits or indexe for color in CLUT entries
-    const uint8_t*  extraData;      ///< The alpha channel or clut data
-    int32_t width;                  ///< The width
-    int32_t height;                 ///< The height
-    int32_t stride;                 ///< The stride
+    const uint16_t* data;     ///< The pixel bits or indexe for color in CLUT entries
+    const uint8_t* extraData; ///< The alpha channel or clut data
+    int32_t width;            ///< The width
+    int32_t height;           ///< The height
+    int32_t stride;           ///< The stride
 };
 
 /**
- * @struct DrawingSurface Types.hpp touchgfx/hal/Types.hpp
- *
- * @brief The destination of a draw operation. Contains a pointer to where to draw and the stride
- *        of the drawing surface.
+ * The destination of a draw operation. Contains a pointer to where to draw and the stride of
+ * the drawing surface.
  */
 struct DrawingSurface
 {
-    uint16_t* address;              ///< The bits
-    int32_t stride;                 ///< The stride
+    uint16_t* address; ///< The bits
+    int32_t stride;    ///< The stride
 };
 
-/**
- * @typedef uint16_t TypedTextId
- *
- * @brief Text IDs as generated by the text converter are simple uint16_t typedefs.
- */
+/** Text IDs as generated by the text converter are simple uint16_t typedefs. */
 typedef uint16_t TypedTextId;
 
-/**
- * @typedef enum DMAType
- *
- * @brief Defines a DMAType type.
- *
- *        Defines a DMAType type.
- */
+/** Values that represent dma types. */
 typedef enum
 {
-    DMA_TYPE_GENERIC,   ///< Generic DMA Implementation
-    DMA_TYPE_CHROMART   ///< ChromART hardware DMA Implementation
+    DMA_TYPE_GENERIC, ///< Generic DMA Implementation
+    DMA_TYPE_CHROMART ///< ChromART hardware DMA Implementation
 } DMAType;
 
 } // namespace touchgfx

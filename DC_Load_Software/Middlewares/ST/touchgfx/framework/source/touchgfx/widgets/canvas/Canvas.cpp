@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * This file is part of the TouchGFX 4.13.0 distribution.
+  * This file is part of the TouchGFX 4.15.0 distribution.
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -31,8 +31,8 @@ Canvas::Canvas(const CanvasWidget* _widget, const Rect& invalidatedArea)
     Rect dirtyAreaAbsolute = dirtyArea;
     widget->translateRectToAbsolute(dirtyAreaAbsolute);
 
-    // Transform rects to match frame buffer coordinates
-    // This is needed if the display is rotated compared to the frame buffer
+    // Transform rects to match framebuffer coordinates
+    // This is needed if the display is rotated compared to the framebuffer
     DisplayTransformation::transformDisplayToFrameBuffer(dirtyArea, widget->getRect());
     DisplayTransformation::transformDisplayToFrameBuffer(dirtyAreaAbsolute);
 
@@ -179,7 +179,7 @@ void Canvas::lineTo(CWRUtil::Q5 x, CWRUtil::Q5 y)
     previousOutside = outside;
 }
 
-bool Canvas::render()
+bool Canvas::render(uint8_t customAlpha)
 {
     // If the invalidated rect is too wide compared to the allocated buffer for CWR,
     // redrawing will not help. The CanvasWidget needs to know about this situation
@@ -200,7 +200,8 @@ bool Canvas::render()
         return true; // Nothing drawn. Done
     }
 
-    if (widget->getAlpha() == 0)
+    const uint8_t alpha = LCD::div255(widget->getAlpha() * customAlpha);
+    if (alpha == 0)
     {
         return true; // Invisible. Done
     }
@@ -208,7 +209,7 @@ bool Canvas::render()
     close();
 
     widget->getPainter().setOffset(offsetX /*+widget->getX()*/, offsetY /*+widget->getY()*/);
-    widget->getPainter().setWidgetAlpha(widget->getAlpha());
+    widget->getPainter().setWidgetAlpha(alpha);
     Renderer renderer(rbuf, widget->getPainter());
     return ras.render(renderer);
 }
