@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_FULL_LL_DRIVER,USE_HAL_DRIVER,STM32F746xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../FATFS/Target;../FATFS/App;../TouchGFX/App;../TouchGFX/target/generated;../TouchGFX/target;../USB_DEVICE/App;../USB_DEVICE/Target;../Drivers/STM32F7xx_HAL_Driver/Inc;../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FatFs/src;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM7/r0p1;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32F7xx/Include;../Drivers/CMSIS/Include;../Middlewares/BSP;../middlewares/st/touchgfx/framework/include;../touchgfx/generated/fonts/include;../touchgfx/generated/gui_generated/include;../touchgfx/generated/images/include;../touchgfx/generated/texts/include;../touchgfx/gui/include;..\Drivers\Components\stmpe811;..\Drivers\Components\tsc2013;..\Drivers\BSP\Src;..\Drivers\BSP\Inc;..\User</IncludePath>
+              <IncludePath>../Core/Inc;../FATFS/Target;../FATFS/App;../TouchGFX/App;../TouchGFX/target/generated;../TouchGFX/target;../USB_DEVICE/App;../USB_DEVICE/Target;../Drivers/STM32F7xx_HAL_Driver/Inc;../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FatFs/src;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM7/r0p1;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32F7xx/Include;../Drivers/CMSIS/Include;../Middlewares/BSP;../Drivers/Components/stmpe811;../Drivers/Components/tsc2013;../Drivers/BSP/Src;../Drivers/BSP/Inc;../User;../middlewares/st/touchgfx/framework/include;../touchgfx/generated/fonts/include;../touchgfx/generated/gui_generated/include;../touchgfx/generated/images/include;../touchgfx/generated/texts/include;../touchgfx/gui/include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -482,6 +482,11 @@
               <FileName>stm32f7xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f7xx_hal_timebase_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>FlashStorage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\FlashStorage.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -929,29 +934,29 @@
               <FilePath>../touchgfx/gui/src/common/frontendapplication.cpp</FilePath>
             </File>
             <File>
-              <FileName>Init_ScreenPresenter.cpp</FileName>
+              <FileName>MainScreenPresenter.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>../touchgfx/gui/src/init_screen_screen/init_screenpresenter.cpp</FilePath>
+              <FilePath>../touchgfx/gui/src/mainscreen_screen/mainscreenpresenter.cpp</FilePath>
             </File>
             <File>
-              <FileName>Init_ScreenView.cpp</FileName>
+              <FileName>MainScreenView.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>../touchgfx/gui/src/init_screen_screen/init_screenview.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Main_ScreenPresenter.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>../touchgfx/gui/src/main_screen_screen/main_screenpresenter.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Main_ScreenView.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>../touchgfx/gui/src/main_screen_screen/main_screenview.cpp</FilePath>
+              <FilePath>../touchgfx/gui/src/mainscreen_screen/mainscreenview.cpp</FilePath>
             </File>
             <File>
               <FileName>Model.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>../touchgfx/gui/src/model/model.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>TouchCalibPresenter.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>../touchgfx/gui/src/touchcalib_screen/touchcalibpresenter.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>TouchCalibView.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>../touchgfx/gui/src/touchcalib_screen/touchcalibview.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -1029,11 +1034,6 @@
               <FilePath>../touchgfx/generated/images/src/image_settings_pressed.cpp</FilePath>
             </File>
             <File>
-              <FileName>Init_ScreenViewBase.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>../touchgfx/generated/gui_generated/src/init_screen_screen/init_screenviewbase.cpp</FilePath>
-            </File>
-            <File>
               <FileName>Kerning_verdana_10_4bpp.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>../touchgfx/generated/fonts/src/kerning_verdana_10_4bpp.cpp</FilePath>
@@ -1049,14 +1049,14 @@
               <FilePath>../touchgfx/generated/fonts/src/kerning_verdana_40_4bpp.cpp</FilePath>
             </File>
             <File>
-              <FileName>LanguageGb.cpp</FileName>
+              <FileName>LanguageIt.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>../touchgfx/generated/texts/src/languagegb.cpp</FilePath>
+              <FilePath>../touchgfx/generated/texts/src/languageit.cpp</FilePath>
             </File>
             <File>
-              <FileName>Main_ScreenViewBase.cpp</FileName>
+              <FileName>MainScreenViewBase.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>../touchgfx/generated/gui_generated/src/main_screen_screen/main_screenviewbase.cpp</FilePath>
+              <FilePath>../touchgfx/generated/gui_generated/src/mainscreen_screen/mainscreenviewbase.cpp</FilePath>
             </File>
             <File>
               <FileName>Table_verdana_10_4bpp.cpp</FileName>
@@ -1077,6 +1077,11 @@
               <FileName>Texts.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>../touchgfx/generated/texts/src/texts.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>TouchCalibViewBase.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>../touchgfx/generated/gui_generated/src/touchcalib_screen/touchcalibviewbase.cpp</FilePath>
             </File>
             <File>
               <FileName>TypedTextDatabase.cpp</FileName>

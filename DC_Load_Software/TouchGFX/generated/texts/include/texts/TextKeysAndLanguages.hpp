@@ -7,7 +7,7 @@
 
 typedef enum
 {
-    GB,
+    IT,
     NUMBER_OF_LANGUAGES
 } LANGUAGES;
 
@@ -15,6 +15,13 @@ typedef enum
 typedef enum
 {
     T_SINGLEUSEID1,
+    T_SINGLEUSEID2,
+    T_CALIB_PRESS_TOPSX,
+    T_CALIB_PRESS_MIDDLEDX,
+    T_CALIB_PRESS_BOTTOMCR,
+    T_CALIB_DONE_FAIL,
+    T_CALIB_DONE_SUCCESS,
+    T_CALIB_START_RELEASE,
     NUMBER_OF_TEXT_KEYS
 } TEXTS;
 

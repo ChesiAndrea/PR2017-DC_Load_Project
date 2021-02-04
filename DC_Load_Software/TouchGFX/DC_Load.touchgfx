@@ -7,7 +7,7 @@
             "Type": "Image",
             "RelativeFilename": "BACKGROUND.png",
             "Alpha": 255,
-            "Name": "BackGround",
+            "Name": "MainScreen_BackGround",
             "X": 0,
             "Y": 0,
             "Width": 800,
@@ -27,7 +27,7 @@
               "Blue": 38
             },
             "Alpha": 255,
-            "Name": "UP_Box",
+            "Name": "Project_Name_Background",
             "X": 0,
             "Y": 0,
             "Width": 800,
@@ -64,8 +64,22 @@
             "Moveable": false
           }
         ],
-        "Interactions": [],
-        "Name": "Main_Screen",
+        "Interactions": [
+          {
+            "InteractionName": "Interaction1",
+            "HasCompletedTrigger": false,
+            "Trigger": {
+              "Type": "TriggerNone"
+            },
+            "Action": {
+              "Type": "ActionGotoScreen",
+              "ScreenTransitionType": "ScreenTransitionWipe",
+              "ScreenTransitionDirection": "East",
+              "ActionComponent": "MainScreen"
+            }
+          }
+        ],
+        "Name": "MainScreen",
         "OverrideDefaultBufferSize": false,
         "CanvasBufferSize": 0
       },
@@ -74,16 +88,257 @@
           {
             "Type": "Box",
             "Color": {
-              "Red": 0,
-              "Green": 0,
-              "Blue": 0
+              "Red": 222,
+              "Green": 66,
+              "Blue": 185
             },
             "Alpha": 255,
-            "Name": "Init_Screen_Backgroung",
+            "Name": "TouchCalib_Background",
             "X": 0,
             "Y": 0,
             "Width": 800,
             "Height": 480,
+            "Visible": true,
+            "LockPosition": false,
+            "Draggable": false,
+            "Clickable": true,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Components": [
+              {
+                "Type": "Line",
+                "Color": {
+                  "Red": 255,
+                  "Green": 255,
+                  "Blue": 255
+                },
+                "FileNameImage": "",
+                "Alpha": 255,
+                "StartX": 25,
+                "StartY": 0,
+                "EndX": 25,
+                "EndY": 50,
+                "LineWidth": 2,
+                "LineEndingStyle": "Round",
+                "Name": "line1_1",
+                "X": 0,
+                "Y": 0,
+                "Width": 50,
+                "Height": 50,
+                "Visible": true,
+                "LockPosition": false,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              },
+              {
+                "Type": "Line",
+                "Color": {
+                  "Red": 255,
+                  "Green": 255,
+                  "Blue": 255
+                },
+                "FileNameImage": "",
+                "Alpha": 255,
+                "StartX": 0,
+                "StartY": 25,
+                "EndX": 50,
+                "EndY": 25,
+                "LineWidth": 2,
+                "LineEndingStyle": "Round",
+                "Name": "line2_1",
+                "X": 0,
+                "Y": 0,
+                "Width": 50,
+                "Height": 50,
+                "Visible": true,
+                "LockPosition": false,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              }
+            ],
+            "Type": "Container",
+            "IsCacheableContainer": false,
+            "Name": "CalibPoint_3",
+            "X": 0,
+            "Y": 50,
+            "Width": 50,
+            "Height": 50,
+            "Visible": false,
+            "LockPosition": false,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Components": [
+              {
+                "Type": "Line",
+                "Color": {
+                  "Red": 255,
+                  "Green": 255,
+                  "Blue": 255
+                },
+                "FileNameImage": "",
+                "Alpha": 255,
+                "StartX": 25,
+                "StartY": 0,
+                "EndX": 25,
+                "EndY": 50,
+                "LineWidth": 2,
+                "LineEndingStyle": "Round",
+                "Name": "line1_2",
+                "X": 0,
+                "Y": 0,
+                "Width": 50,
+                "Height": 50,
+                "Visible": true,
+                "LockPosition": false,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              },
+              {
+                "Type": "Line",
+                "Color": {
+                  "Red": 255,
+                  "Green": 255,
+                  "Blue": 255
+                },
+                "FileNameImage": "",
+                "Alpha": 255,
+                "StartX": 0,
+                "StartY": 25,
+                "EndX": 50,
+                "EndY": 25,
+                "LineWidth": 2,
+                "LineEndingStyle": "Round",
+                "Name": "line2_2",
+                "X": 0,
+                "Y": 0,
+                "Width": 50,
+                "Height": 50,
+                "Visible": true,
+                "LockPosition": false,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              }
+            ],
+            "Type": "Container",
+            "IsCacheableContainer": false,
+            "Name": "CalibPoint_2",
+            "X": 50,
+            "Y": 0,
+            "Width": 50,
+            "Height": 50,
+            "Visible": false,
+            "LockPosition": false,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Components": [
+              {
+                "Type": "Line",
+                "Color": {
+                  "Red": 255,
+                  "Green": 255,
+                  "Blue": 255
+                },
+                "FileNameImage": "",
+                "Alpha": 255,
+                "StartX": 25,
+                "StartY": 0,
+                "EndX": 25,
+                "EndY": 50,
+                "LineWidth": 2,
+                "LineEndingStyle": "Round",
+                "Name": "line1",
+                "X": 0,
+                "Y": 0,
+                "Width": 50,
+                "Height": 50,
+                "Visible": true,
+                "LockPosition": false,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              },
+              {
+                "Type": "Line",
+                "Color": {
+                  "Red": 255,
+                  "Green": 255,
+                  "Blue": 255
+                },
+                "FileNameImage": "",
+                "Alpha": 255,
+                "StartX": 0,
+                "StartY": 25,
+                "EndX": 50,
+                "EndY": 25,
+                "LineWidth": 2,
+                "LineEndingStyle": "Round",
+                "Name": "line2",
+                "X": 0,
+                "Y": 0,
+                "Width": 50,
+                "Height": 50,
+                "Visible": true,
+                "LockPosition": false,
+                "Draggable": false,
+                "Clickable": false,
+                "Fadeable": false,
+                "Moveable": false
+              }
+            ],
+            "Type": "Container",
+            "IsCacheableContainer": false,
+            "Name": "CalibPoint_1",
+            "X": 0,
+            "Y": 0,
+            "Width": 50,
+            "Height": 50,
+            "Visible": false,
+            "LockPosition": false,
+            "Draggable": false,
+            "Clickable": false,
+            "Fadeable": false,
+            "Moveable": false
+          },
+          {
+            "Type": "TextArea",
+            "TextId": "SingleUseId2",
+            "TextRotation": "0",
+            "Color": {
+              "Red": 255,
+              "Green": 255,
+              "Blue": 255
+            },
+            "Alpha": 255,
+            "AutoSize": false,
+            "LineSpacing": 0,
+            "Wildcard1": {
+              "UseBuffer": true,
+              "BufferSize": 64
+            },
+            "Name": "textArea_Message",
+            "X": 100,
+            "Y": 0,
+            "Width": 600,
+            "Height": 25,
             "Visible": true,
             "LockPosition": false,
             "Draggable": false,
@@ -100,16 +355,14 @@
               "Type": "TriggerScreenEntered"
             },
             "Action": {
-              "Type": "ActionGotoScreen",
-              "ScreenTransitionType": "ScreenTransitionCover",
-              "ScreenTransitionDirection": "East",
-              "ActionComponent": "Main_Screen"
+              "Type": "ActionExecuteCode",
+              "Code": "int x = HAL::getInstance()->getDisplayWidth();\r\nint y = HAL::getInstance()->getDisplayHeight();\r\nCalibPoint_1.setPosition((x*0.1)-25, (y*0.1)-25, 50, 50);\r\nCalibPoint_2.setPosition((x*0.9)-25, (y*0.5)-25, 50, 50);\r\nCalibPoint_3.setPosition((x*0.5)-25, (y*0.9)-25, 50, 50);\r\ntextArea_Message.setPosition(100, (y*0.25), 600, 25);"
             }
           }
         ],
-        "Name": "Init_Screen",
+        "Name": "TouchCalib",
         "OverrideDefaultBufferSize": false,
-        "CanvasBufferSize": 0
+        "CanvasBufferSize": 12000
       }
     ],
     "CustomContainerDefinitions": [],
@@ -117,6 +370,34 @@
       {
         "TextEntryId": "SingleUseId1",
         "IsResource": false
+      },
+      {
+        "TextEntryId": "SingleUseId2",
+        "IsResource": false
+      },
+      {
+        "TextEntryId": "CALIB_PRESS_TOPSX",
+        "IsResource": true
+      },
+      {
+        "TextEntryId": "CALIB_PRESS_MIDDLEDX",
+        "IsResource": true
+      },
+      {
+        "TextEntryId": "CALIB_PRESS_BOTTOMCR",
+        "IsResource": true
+      },
+      {
+        "TextEntryId": "CALIB_DONE_FAIL",
+        "IsResource": true
+      },
+      {
+        "TextEntryId": "CALIB_DONE_SUCCESS",
+        "IsResource": true
+      },
+      {
+        "TextEntryId": "CALIB_START_RELEASE",
+        "IsResource": true
       }
     ],
     "Name": "DC_Load",
@@ -125,8 +406,8 @@
       "Height": 480
     },
     "SelectedColorDepth": 16,
-    "StartupScreenName": "Main_Screen",
-    "SelectedStartupLanguage": "GB",
+    "StartupScreenName": "TouchCalib",
+    "SelectedStartupLanguage": "IT",
     "Skin": "Blue",
     "TouchGfxPath": "../Middlewares/ST/touchgfx",
     "UIPath": ".",
@@ -162,7 +443,8 @@
     "LandscapeSkinY": 0,
     "PortraitSkinX": 0,
     "PortraitSkinY": 0,
-    "DisplayOrientation": "Landscape"
+    "DisplayOrientation": "Landscape",
+    "Family": "STM32F7"
   },
   "Version": "4.15.0"
 }

@@ -9,10 +9,10 @@
 #include <touchgfx/Texts.hpp>
 #include <touchgfx/hal/HAL.hpp>
 #include <platform/driver/lcd/LCD16bpp.hpp>
-#include <gui/main_screen_screen/Main_ScreenView.hpp>
-#include <gui/main_screen_screen/Main_ScreenPresenter.hpp>
-#include <gui/init_screen_screen/Init_ScreenView.hpp>
-#include <gui/init_screen_screen/Init_ScreenPresenter.hpp>
+#include <gui/mainscreen_screen/MainScreenView.hpp>
+#include <gui/mainscreen_screen/MainScreenPresenter.hpp>
+#include <gui/touchcalib_screen/TouchCalibView.hpp>
+#include <gui/touchcalib_screen/TouchCalibPresenter.hpp>
 
 using namespace touchgfx;
 
@@ -23,7 +23,7 @@ FrontendApplicationBase::FrontendApplicationBase(Model& m, FrontendHeap& heap)
       model(m)
 {
     touchgfx::HAL::getInstance()->setDisplayOrientation(touchgfx::ORIENTATION_LANDSCAPE);
-    touchgfx::Texts::setLanguage(GB);
+    touchgfx::Texts::setLanguage(IT);
     reinterpret_cast<touchgfx::LCD16bpp&>(touchgfx::HAL::lcd()).enableTextureMapperAll();
 }
 
@@ -31,26 +31,28 @@ FrontendApplicationBase::FrontendApplicationBase(Model& m, FrontendHeap& heap)
  * Screen Transition Declarations
  */
 
-// Main_Screen
+// MainScreen
 
-void FrontendApplicationBase::gotoMain_ScreenScreenNoTransition()
+void FrontendApplicationBase::gotoMainScreenScreenWipeTransitionEast()
 {
-    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplication::gotoMain_ScreenScreenNoTransitionImpl);
+    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplication::gotoMainScreenScreenWipeTransitionEastImpl);
     pendingScreenTransitionCallback = &transitionCallback;
 }
 
-void FrontendApplicationBase::gotoMain_ScreenScreenNoTransitionImpl()
+void FrontendApplicationBase::gotoMainScreenScreenWipeTransitionEastImpl()
 {
-    touchgfx::makeTransition<Main_ScreenView, Main_ScreenPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+    touchgfx::makeTransition<MainScreenView, MainScreenPresenter, touchgfx::WipeTransition<EAST>, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }
 
-void FrontendApplicationBase::gotoMain_ScreenScreenCoverTransitionEast()
+// TouchCalib
+
+void FrontendApplicationBase::gotoTouchCalibScreenNoTransition()
 {
-    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplication::gotoMain_ScreenScreenCoverTransitionEastImpl);
+    transitionCallback = touchgfx::Callback<FrontendApplicationBase>(this, &FrontendApplication::gotoTouchCalibScreenNoTransitionImpl);
     pendingScreenTransitionCallback = &transitionCallback;
 }
 
-void FrontendApplicationBase::gotoMain_ScreenScreenCoverTransitionEastImpl()
+void FrontendApplicationBase::gotoTouchCalibScreenNoTransitionImpl()
 {
-    touchgfx::makeTransition<Main_ScreenView, Main_ScreenPresenter, touchgfx::CoverTransition<EAST>, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
+    touchgfx::makeTransition<TouchCalibView, TouchCalibPresenter, touchgfx::NoTransition, Model >(&currentScreen, &currentPresenter, frontendHeap, &currentTransition, &model);
 }

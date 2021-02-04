@@ -1,17 +1,17 @@
-#ifndef INIT_SCREENPRESENTER_HPP
-#define INIT_SCREENPRESENTER_HPP
+#ifndef TOUCHCALIBPRESENTER_HPP
+#define TOUCHCALIBPRESENTER_HPP
 
 #include <gui/model/ModelListener.hpp>
 #include <mvp/Presenter.hpp>
 
 using namespace touchgfx;
 
-class Init_ScreenView;
+class TouchCalibView;
 
-class Init_ScreenPresenter : public touchgfx::Presenter, public ModelListener
+class TouchCalibPresenter : public touchgfx::Presenter, public ModelListener
 {
 public:
-    Init_ScreenPresenter(Init_ScreenView& v);
+    TouchCalibPresenter(TouchCalibView& v);
 
     /**
      * The activate function is called automatically when this screen is "switched in"
@@ -25,12 +25,15 @@ public:
      */
     virtual void deactivate();
 
-    virtual ~Init_ScreenPresenter() {};
+    virtual ~TouchCalibPresenter() {};
+
+		void saveCalibration(int32_t *p, bool isValid);
+		void setLcdBacklight(uint32_t val, int ignoreMode);			
 
 private:
-    Init_ScreenPresenter();
+    TouchCalibPresenter();
 
-    Init_ScreenView& view;
+    TouchCalibView& view;
 };
 
-#endif // INIT_SCREENPRESENTER_HPP
+#endif // TOUCHCALIBPRESENTER_HPP

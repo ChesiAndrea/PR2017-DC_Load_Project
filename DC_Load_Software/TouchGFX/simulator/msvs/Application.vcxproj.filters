@@ -160,29 +160,29 @@
     <Filter Include="Header Files\generated\gui_generated\common">
       <UniqueIdentifier>BCA9A87F-F6EF-F028-3360-A4EC5F955C7C</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\gui\main_screen_screen">
-      <UniqueIdentifier>3EFE0F7C-AFF9-263C-D868-7FDBD7E8B43C</UniqueIdentifier>
+    <Filter Include="Header Files\gui\touchcalib_screen">
+      <UniqueIdentifier>7FD7B9FE-42CB-3DC0-A088-85106B488001</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\gui\main_screen_screen">
-      <UniqueIdentifier>83EEBCC1-9F72-6104-F48C-7AD528C4171F</UniqueIdentifier>
+    <Filter Include="Header Files\gui\mainscreen_screen">
+      <UniqueIdentifier>A3A772F5-A643-3666-CD60-D83C58CD0204</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\gui\init_screen_screen">
-      <UniqueIdentifier>167FF0DF-79BC-4803-22B4-92472936A763</UniqueIdentifier>
+    <Filter Include="Source Files\gui\touchcalib_screen">
+      <UniqueIdentifier>494403D7-B0FD-04F1-9EAC-A43D5BED9EE1</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\gui\init_screen_screen">
-      <UniqueIdentifier>472F5A8E-D045-5CAC-5F5F-5DCCAF583A35</UniqueIdentifier>
+    <Filter Include="Source Files\gui\mainscreen_screen">
+      <UniqueIdentifier>5BC744D8-3163-37E9-60D9-DD5C7C3CCAC4</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\generated\gui_generated\main_screen_screen">
-      <UniqueIdentifier>3EE6657B-64BB-A3B8-8293-EEFDC77775EF</UniqueIdentifier>
+    <Filter Include="Header Files\generated\gui_generated\mainscreen_screen">
+      <UniqueIdentifier>908E604C-ADDA-97C8-9EE5-2F6942453671</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\generated\gui_generated\main_screen_screen">
-      <UniqueIdentifier>C1738124-6043-2A84-2660-8ACE172507EE</UniqueIdentifier>
+    <Filter Include="Source Files\generated\gui_generated\mainscreen_screen">
+      <UniqueIdentifier>7BB1A5CA-F910-F616-27A8-BF269982C8A0</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\generated\gui_generated\init_screen_screen">
-      <UniqueIdentifier>2268392D-D349-AFFC-CDB8-E78C587BE5D9</UniqueIdentifier>
+    <Filter Include="Source Files\generated\gui_generated\touchcalib_screen">
+      <UniqueIdentifier>C1956CCE-979F-9BBF-F614-5E37759A9E53</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\generated\gui_generated\init_screen_screen">
-      <UniqueIdentifier>334F7E6D-70AC-DB01-6371-4A524F6B2C53</UniqueIdentifier>
+    <Filter Include="Header Files\generated\gui_generated\touchcalib_screen">
+      <UniqueIdentifier>8FB1BB66-7102-3EAC-0C9F-EAD3C6CF31CB</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -213,23 +213,23 @@
     <ClCompile Include="..\..\gui\src\model\Model.cpp">
       <Filter>Source Files\gui\model</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gui\src\init_screen_screen\Init_ScreenPresenter.cpp">
-      <Filter>Source Files\gui\init_screen_screen</Filter>
+    <ClCompile Include="..\..\gui\src\mainscreen_screen\MainScreenPresenter.cpp">
+      <Filter>Source Files\gui\mainscreen_screen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gui\src\init_screen_screen\Init_ScreenView.cpp">
-      <Filter>Source Files\gui\init_screen_screen</Filter>
+    <ClCompile Include="..\..\gui\src\mainscreen_screen\MainScreenView.cpp">
+      <Filter>Source Files\gui\mainscreen_screen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\generated\gui_generated\src\init_screen_screen\Init_ScreenViewBase.cpp">
-      <Filter>Source Files\generated\gui_generated\init_screen_screen</Filter>
+    <ClCompile Include="..\..\generated\gui_generated\src\mainscreen_screen\MainScreenViewBase.cpp">
+      <Filter>Source Files\generated\gui_generated\mainscreen_screen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gui\src\main_screen_screen\Main_ScreenPresenter.cpp">
-      <Filter>Source Files\gui\main_screen_screen</Filter>
+    <ClCompile Include="..\..\gui\src\touchcalib_screen\TouchCalibPresenter.cpp">
+      <Filter>Source Files\gui\touchcalib_screen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gui\src\main_screen_screen\Main_ScreenView.cpp">
-      <Filter>Source Files\gui\main_screen_screen</Filter>
+    <ClCompile Include="..\..\gui\src\touchcalib_screen\TouchCalibView.cpp">
+      <Filter>Source Files\gui\touchcalib_screen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\generated\gui_generated\src\main_screen_screen\Main_ScreenViewBase.cpp">
-      <Filter>Source Files\generated\gui_generated\main_screen_screen</Filter>
+    <ClCompile Include="..\..\generated\gui_generated\src\touchcalib_screen\TouchCalibViewBase.cpp">
+      <Filter>Source Files\generated\gui_generated\touchcalib_screen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -664,23 +664,23 @@
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\common\SimConstants.hpp">
       <Filter>Header Files\generated\gui_generated\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gui\include\gui\init_screen_screen\Init_ScreenPresenter.hpp">
-      <Filter>Header Files\gui\init_screen_screen</Filter>
+    <ClInclude Include="..\..\gui\include\gui\mainscreen_screen\MainScreenPresenter.hpp">
+      <Filter>Header Files\gui\mainscreen_screen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gui\include\gui\init_screen_screen\Init_ScreenView.hpp">
-      <Filter>Header Files\gui\init_screen_screen</Filter>
+    <ClInclude Include="..\..\gui\include\gui\mainscreen_screen\MainScreenView.hpp">
+      <Filter>Header Files\gui\mainscreen_screen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\init_screen_screen\Init_ScreenViewBase.hpp">
-      <Filter>Header Files\generated\gui_generated\init_screen_screen</Filter>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\mainscreen_screen\MainScreenViewBase.hpp">
+      <Filter>Header Files\generated\gui_generated\mainscreen_screen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gui\include\gui\main_screen_screen\Main_ScreenPresenter.hpp">
-      <Filter>Header Files\gui\main_screen_screen</Filter>
+    <ClInclude Include="..\..\gui\include\gui\touchcalib_screen\TouchCalibPresenter.hpp">
+      <Filter>Header Files\gui\touchcalib_screen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gui\include\gui\main_screen_screen\Main_ScreenView.hpp">
-      <Filter>Header Files\gui\main_screen_screen</Filter>
+    <ClInclude Include="..\..\gui\include\gui\touchcalib_screen\TouchCalibView.hpp">
+      <Filter>Header Files\gui\touchcalib_screen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\main_screen_screen\Main_ScreenViewBase.hpp">
-      <Filter>Header Files\generated\gui_generated\main_screen_screen</Filter>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\touchcalib_screen\TouchCalibViewBase.hpp">
+      <Filter>Header Files\generated\gui_generated\touchcalib_screen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

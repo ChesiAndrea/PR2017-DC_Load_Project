@@ -1,6 +1,9 @@
 #ifndef MODEL_HPP
 #define MODEL_HPP
 
+#include <stdint.h>
+#include <touchgfx/events/ClickEvent.hpp>
+
 class ModelListener;
 
 class Model
@@ -14,6 +17,10 @@ public:
     }
 
     void tick();
+		
+	bool getSavedTouchCalibration(int32_t *tcp);
+	bool saveTouchCalibration(int32_t *tcp, bool isValid);
+		
 protected:
     ModelListener* modelListener;
 };

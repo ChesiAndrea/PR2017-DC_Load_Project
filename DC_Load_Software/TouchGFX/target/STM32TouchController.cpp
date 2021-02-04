@@ -30,7 +30,7 @@ void STM32TouchController::init()
 	}
 }
 
-int32_t  mX, qX, mY, qY;
+extern int32_t  mX, qX, mY, qY;
 bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
 {
 /* USER CODE BEGIN  F4TouchController_sampleTouch  */
